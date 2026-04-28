@@ -25,9 +25,9 @@
 
 **Purpose**: Project initialization and directory structure
 
-- [ ] T001 Create component directories: `components/analytics/` (verify `components/dashboard/` already exists from Spec 001)
-- [ ] T002 [P] Create analytics route structure: `app/(dashboard)/analytics/page.tsx`, `app/(dashboard)/analytics/traffic/page.tsx`, `app/(dashboard)/analytics/performance/page.tsx` as empty placeholder files
-- [ ] T003 [P] Verify Recharts, date-fns, and lucide-react are importable (already in package.json — import test only, no install needed)
+- [x] T001 Create component directories: `components/analytics/` (verify `components/dashboard/` already exists from Spec 001)
+- [x] T002 [P] Create analytics route structure: `app/(dashboard)/analytics/page.tsx`, `app/(dashboard)/analytics/traffic/page.tsx`, `app/(dashboard)/analytics/performance/page.tsx` as empty placeholder files
+- [x] T003 [P] Verify Recharts, date-fns, and lucide-react are importable (already in package.json — import test only, no install needed)
 
 ---
 
@@ -37,10 +37,10 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 Create `hooks/useAnalyticsData.ts` — implement the hook returning `{ trafficData, distributionData, histogramData, statusCodeData, kpiCards, slaMetrics, isLoading }` per `contracts/component-api.md`; use `useMemo` keyed to `granularity + dateRange`; simulate 500ms loading delay on filter change; seed all constants from `data-model.md` (`KPI_CARDS`, `DISTRIBUTION_DATA`, `HISTOGRAM_DATA`, `SLA_METRICS`)
-- [ ] T005 [P] Create `hooks/useLiveLogs.ts` — implements `{ logs, isPaused, togglePause, levelFilter, setLevelFilter, filteredLogs }` per contracts; uses `setInterval` with random interval `[800, 2000]ms`; keeps max 50 entries via `.slice(0, 50)`; cleans up interval on unmount; derives `level` from statusCode (≥500 → ERROR, ≥400 → WARN, else SUCCESS)
-- [ ] T006 [P] Add chart design tokens to `app/globals.css` — add all CSS custom properties from `data-model.md` "Chart Design Tokens" section (`--chart-requests`, `--chart-success`, `--chart-errors`, `--chart-p95`, `--chart-warning`, `--chart-teal`, `--chart-orange`, `--chart-grid-stroke`, `--chart-text-fill`, `--chart-tooltip-bg`, `--chart-tooltip-border`)
-- [ ] T007 [P] Create `lib/analytics-utils.ts` — export `getKPIStatus(current, target, lowerIsBetter)` and `generateLogEntry()` utility functions per `contracts/component-api.md`; also export `TREND_STYLES`, `STATUS_STYLES`, `LOG_LEVEL_STYLES`, `STATUS_CODE_COLORS` constants from `data-model.md`
+- [x] T004 Create `hooks/useAnalyticsData.ts` — implement the hook returning `{ trafficData, distributionData, histogramData, statusCodeData, kpiCards, slaMetrics, isLoading }` per `contracts/component-api.md`; use `useMemo` keyed to `granularity + dateRange`; simulate 500ms loading delay on filter change; seed all constants from `data-model.md` (`KPI_CARDS`, `DISTRIBUTION_DATA`, `HISTOGRAM_DATA`, `SLA_METRICS`)
+- [x] T005 [P] Create `hooks/useLiveLogs.ts` — implements `{ logs, isPaused, togglePause, levelFilter, setLevelFilter, filteredLogs }` per contracts; uses `setInterval` with random interval `[800, 2000]ms`; keeps max 50 entries via `.slice(0, 50)`; cleans up interval on unmount; derives `level` from statusCode (≥500 → ERROR, ≥400 → WARN, else SUCCESS)
+- [x] T006 [P] Add chart design tokens to `app/globals.css` — add all CSS custom properties from `data-model.md` "Chart Design Tokens" section (`--chart-requests`, `--chart-success`, `--chart-errors`, `--chart-p95`, `--chart-warning`, `--chart-teal`, `--chart-orange`, `--chart-grid-stroke`, `--chart-text-fill`, `--chart-tooltip-bg`, `--chart-tooltip-border`)
+- [x] T007 [P] Create `lib/analytics-utils.ts` — export `getKPIStatus(current, target, lowerIsBetter)` and `generateLogEntry()` utility functions per `contracts/component-api.md`; also export `TREND_STYLES`, `STATUS_STYLES`, `LOG_LEVEL_STYLES`, `STATUS_CODE_COLORS` constants from `data-model.md`
 
 **Checkpoint**: Foundation ready — hooks, utilities, and tokens available. User story implementation can begin.
 
@@ -54,8 +54,8 @@
 
 ### Implementation for User Story 1
 
-- [ ] T008 [P] [US1] Create `components/dashboard/MetricCard.tsx` — full component with: icon + iconBg, value + unit display, trend badge (color from `TREND_STYLES[isPositive ? 'positive' : 'negative']`), 40px sparkline using Recharts `<AreaChart>` with `<Area>`, no axes, no tooltip, `isAnimationActive={false}`; animate-pulse skeleton when `isLoading=true`; `onClick` drilldown handler; size variants `sm|md|lg`; all props typed per `data-model.md` `MetricCardProps`
-- [ ] T009 [US1] Create `app/(dashboard)/analytics/page.tsx` — main page wrapping `useAnalyticsData(filterState)`; render Section 1 as `<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">` mapping `kpiCards` to `<MetricCard>`; include `isLoading` prop pass-through; default `filterState` = last 7 days, `granularity: 'hourly'`; `useState` for `filterState` and `activeTab`
+- [x] T008 [P] [US1] Create `components/dashboard/MetricCard.tsx` — full component with: icon + iconBg, value + unit display, trend badge (color from `TREND_STYLES[isPositive ? 'positive' : 'negative']`), 40px sparkline using Recharts `<AreaChart>` with `<Area>`, no axes, no tooltip, `isAnimationActive={false}`; animate-pulse skeleton when `isLoading=true`; `onClick` drilldown handler; size variants `sm|md|lg`; all props typed per `data-model.md` `MetricCardProps`
+- [x] T009 [US1] Create `app/(dashboard)/analytics/page.tsx` — main page wrapping `useAnalyticsData(filterState)`; render Section 1 as `<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">` mapping `kpiCards` to `<MetricCard>`; include `isLoading` prop pass-through; default `filterState` = last 7 days, `granularity: 'hourly'`; `useState` for `filterState` and `activeTab`
 
 **Checkpoint**: US1 fully functional — 4 KPI cards render with mock data, trend badges use correct polarity colors, skeletons appear on load, click handlers fire.
 
@@ -69,9 +69,9 @@
 
 ### Implementation for User Story 7
 
-- [ ] T010 [P] [US7] Create `components/analytics/GranularityToggle.tsx` — accepts `value: Granularity` + `onChange: (g: Granularity) => void`; renders 4 buttons (Hourly/Daily/Weekly/Monthly) styled per `quickstart.md` tab spec (`bg-gray-900 border border-gray-800 rounded-lg p-1`; active = `bg-gray-800 text-gray-50`; inactive = `text-gray-500 hover:text-gray-300`)
-- [ ] T011 [P] [US7] Create `components/analytics/DateRangePicker.tsx` — accepts `value: DateRange` + `onChange: (r: DateRange) => void`; renders a simple preset selector (Last 24h / Last 7d / Last 30d / Custom); uses `date-fns` `subDays`/`subMonths` to compute date ranges; "Custom" opens an inline date input pair; styled consistent with dark theme (`bg-gray-900 border border-gray-800`)
-- [ ] T012 [US7] Create `components/analytics/PageHeader.tsx` — assembles the Analytics page header: title "Analytics Engine", `<DateRangePicker>`, `<GranularityToggle>`, Export button placeholder; accepts `filterState: AnalyticsFilterState` + `onFilterChange: (f: AnalyticsFilterState) => void`; integrates into `app/(dashboard)/analytics/page.tsx` replacing any static header
+- [x] T010 [P] [US7] Create `components/analytics/GranularityToggle.tsx` — accepts `value: Granularity` + `onChange: (g: Granularity) => void`; renders 4 buttons (Hourly/Daily/Weekly/Monthly) styled per `quickstart.md` tab spec (`bg-gray-900 border border-gray-800 rounded-lg p-1`; active = `bg-gray-800 text-gray-50`; inactive = `text-gray-500 hover:text-gray-300`)
+- [x] T011 [P] [US7] Create `components/analytics/DateRangePicker.tsx` — accepts `value: DateRange` + `onChange: (r: DateRange) => void`; renders a simple preset selector (Last 24h / Last 7d / Last 30d / Custom); uses `date-fns` `subDays`/`subMonths` to compute date ranges; "Custom" opens an inline date input pair; styled consistent with dark theme (`bg-gray-900 border border-gray-800`)
+- [x] T012 [US7] Create `components/analytics/PageHeader.tsx` — assembles the Analytics page header: title "Analytics Engine", `<DateRangePicker>`, `<GranularityToggle>`, Export button placeholder; accepts `filterState: AnalyticsFilterState` + `onFilterChange: (f: AnalyticsFilterState) => void`; integrates into `app/(dashboard)/analytics/page.tsx` replacing any static header
 
 **Checkpoint**: Global filter state controls all sections. Granularity change updates axis labels; date range change triggers `useAnalyticsData` to regenerate data with 500ms simulated delay and skeleton flash.
 
@@ -85,9 +85,9 @@
 
 ### Implementation for User Story 2
 
-- [ ] T013 [P] [US2] Create `components/analytics/CustomTooltip.tsx` — renders the shared dark tooltip (`bg-gray-900 border border-gray-700 rounded-lg p-3 shadow-xl`); accepts Recharts `TooltipProps`; renders series rows with color dot + name + formatted value; `formatValue(value, name)` applies units (ms for p95, K/M abbreviation for requests)
-- [ ] T014 [US2] Create `components/dashboard/TrafficChart.tsx` — full `ComposedChart` implementation per `contracts/component-api.md` and `02-ANALYTICS.md` §3.2: `<Area>` for requests (blue gradient fill), `<Line>` for p95 (purple dashed, `strokeDasharray="4 4"`, right Y-axis), `<Brush height={24} stroke="#374151" fill="#111827">`, `<CartesianGrid>` horizontal only, `<CustomTooltip>`, toggleable `<Legend>`; `<ResponsiveContainer height={320}>`; `isLoading` shows skeleton; `granularity` prop formats X-axis labels (time strings for hourly, day names for daily)
-- [ ] T015 [US2] Add Traffic chart to `app/(dashboard)/analytics/page.tsx` Section 2 grid — `<div className="grid grid-cols-1 xl:grid-cols-3 gap-4">`: `TrafficChart` in `xl:col-span-2`, placeholder `div` in `xl:col-span-1` (to be filled by US3)
+- [x] T013 [P] [US2] Create `components/analytics/CustomTooltip.tsx` — renders the shared dark tooltip (`bg-gray-900 border border-gray-700 rounded-lg p-3 shadow-xl`); accepts Recharts `TooltipProps`; renders series rows with color dot + name + formatted value; `formatValue(value, name)` applies units (ms for p95, K/M abbreviation for requests)
+- [x] T014 [US2] Create `components/dashboard/TrafficChart.tsx` — full `ComposedChart` implementation per `contracts/component-api.md` and `02-ANALYTICS.md` §3.2: `<Area>` for requests (blue gradient fill), `<Line>` for p95 (purple dashed, `strokeDasharray="4 4"`, right Y-axis), `<Brush height={24} stroke="#374151" fill="#111827">`, `<CartesianGrid>` horizontal only, `<CustomTooltip>`, toggleable `<Legend>`; `<ResponsiveContainer height={320}>`; `isLoading` shows skeleton; `granularity` prop formats X-axis labels (time strings for hourly, day names for daily)
+- [x] T015 [US2] Add Traffic chart to `app/(dashboard)/analytics/page.tsx` Section 2 grid — `<div className="grid grid-cols-1 xl:grid-cols-3 gap-4">`: `TrafficChart` in `xl:col-span-2`, placeholder `div` in `xl:col-span-1` (to be filled by US3)
 
 **Checkpoint**: US2 independently testable — Traffic chart renders, Brush zoom works, tooltip shows on hover, legend toggles series.
 
@@ -101,9 +101,9 @@
 
 ### Implementation for User Story 3
 
-- [ ] T016 [P] [US3] Create `components/analytics/PieTooltip.tsx` — specialized donut tooltip: shows `name`, formatted `value` (abbreviate with K/M), and `percentage%`; same dark card styling as `CustomTooltip`
-- [ ] T017 [US3] Create `components/analytics/PieChart.tsx` — Recharts `<PieChart>` with `<Pie innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value">`; renders `<Cell>` per entry using `entry.color`; `<Label>` custom center component showing total formatted value + "Total" sub-label; `<PieTooltip>`; `<ResponsiveContainer>`; `isLoading` skeleton; all interfaces per `data-model.md` `RequestDistributionData`; also renders a legend list below the chart (protocol name + color dot + percentage)
-- [ ] T018 [US3] Wire `<RequestDistributionChart>` into Section 2 of `app/(dashboard)/analytics/page.tsx` replacing the `xl:col-span-1` placeholder
+- [x] T016 [P] [US3] Create `components/analytics/PieTooltip.tsx` — specialized donut tooltip: shows `name`, formatted `value` (abbreviate with K/M), and `percentage%`; same dark card styling as `CustomTooltip`
+- [x] T017 [US3] Create `components/analytics/PieChart.tsx` — Recharts `<PieChart>` with `<Pie innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value">`; renders `<Cell>` per entry using `entry.color`; `<Label>` custom center component showing total formatted value + "Total" sub-label; `<PieTooltip>`; `<ResponsiveContainer>`; `isLoading` skeleton; all interfaces per `data-model.md` `RequestDistributionData`; also renders a legend list below the chart (protocol name + color dot + percentage)
+- [x] T018 [US3] Wire `<RequestDistributionChart>` into Section 2 of `app/(dashboard)/analytics/page.tsx` replacing the `xl:col-span-1` placeholder
 
 **Checkpoint**: Section 2 complete — Traffic chart (2/3) + Donut chart (1/3) render side-by-side on desktop, stack on mobile.
 
@@ -117,9 +117,9 @@
 
 ### Implementation for User Story 4
 
-- [ ] T019 [P] [US4] Create `components/analytics/ResponseHistogram.tsx` — Recharts `<BarChart layout="vertical">`; `<YAxis type="category" dataKey="range" width={70}>`; `<XAxis type="number">`; `<Bar dataKey="count" radius={[0,4,4,0]}>` with `<Cell>` colored by `severity` (`normal`→`#60A5FA`, `warning`→`#FBBF24`, `critical`→`#F87171`); `<LabelList dataKey="percentage" position="right" formatter={v => v + '%'}>`;  card wrapper with title "Response Time Distribution"; `isLoading` skeleton; typed per `data-model.md` `ResponseTimeBucket`
-- [ ] T020 [P] [US4] Create `components/analytics/StatusCodeChart.tsx` — Recharts `<BarChart>`; 4 stacked `<Bar>` components with `stackId="a"`: `2xx` green `#4ADE80`, `3xx` amber `#FBBF24`, `4xx` orange `#FB923C`, `5xx` red `#F87171` with `radius={[4,4,0,0]}`; `<CartesianGrid>` horizontal only; custom `<Tooltip>`; `<Legend>`; card wrapper with title "Status Code Distribution"; `isLoading` skeleton; typed per `data-model.md` `StatusCodeData`
-- [ ] T021 [US4] Add Section 3 grid to `app/(dashboard)/analytics/page.tsx` — `<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">` containing `<ResponseHistogram>` and `<StatusCodeChart>`, both receiving `data` and `isLoading` from `useAnalyticsData`
+- [x] T019 [P] [US4] Create `components/analytics/ResponseHistogram.tsx` — Recharts `<BarChart layout="vertical">`; `<YAxis type="category" dataKey="range" width={70}>`; `<XAxis type="number">`; `<Bar dataKey="count" radius={[0,4,4,0]}>` with `<Cell>` colored by `severity` (`normal`→`#60A5FA`, `warning`→`#FBBF24`, `critical`→`#F87171`); `<LabelList dataKey="percentage" position="right" formatter={v => v + '%'}>`;  card wrapper with title "Response Time Distribution"; `isLoading` skeleton; typed per `data-model.md` `ResponseTimeBucket`
+- [x] T020 [P] [US4] Create `components/analytics/StatusCodeChart.tsx` — Recharts `<BarChart>`; 4 stacked `<Bar>` components with `stackId="a"`: `2xx` green `#4ADE80`, `3xx` amber `#FBBF24`, `4xx` orange `#FB923C`, `5xx` red `#F87171` with `radius={[4,4,0,0]}`; `<CartesianGrid>` horizontal only; custom `<Tooltip>`; `<Legend>`; card wrapper with title "Status Code Distribution"; `isLoading` skeleton; typed per `data-model.md` `StatusCodeData`
+- [x] T021 [US4] Add Section 3 grid to `app/(dashboard)/analytics/page.tsx` — `<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">` containing `<ResponseHistogram>` and `<StatusCodeChart>`, both receiving `data` and `isLoading` from `useAnalyticsData`
 
 **Checkpoint**: Section 3 complete — both charts render correctly with color-coded bars and proper severity indicators.
 
@@ -133,8 +133,8 @@
 
 ### Implementation for User Story 5
 
-- [ ] T022 [US5] Create `components/analytics/KPICard.tsx` — renders metric name + category icon, current value + unit, SLA target, status badge (from `STATUS_STYLES[metric.status]`), progress bar (`Math.min((current/target)*100, 100)%` width, color matches status); calls `getKPIStatus` from `lib/analytics-utils.ts` to compute live status; `isLoading` skeleton; card wrapper `bg-gray-900 border border-gray-800 rounded-xl p-4`; typed per `data-model.md` `KPIMetric`
-- [ ] T023 [US5] Add Section 4 SLA grid to `app/(dashboard)/analytics/page.tsx` — `<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">` mapping `slaMetrics` to `<KPICard>`, passing `isLoading`
+- [x] T022 [US5] Create `components/analytics/KPICard.tsx` — renders metric name + category icon, current value + unit, SLA target, status badge (from `STATUS_STYLES[metric.status]`), progress bar (`Math.min((current/target)*100, 100)%` width, color matches status); calls `getKPIStatus` from `lib/analytics-utils.ts` to compute live status; `isLoading` skeleton; card wrapper `bg-gray-900 border border-gray-800 rounded-xl p-4`; typed per `data-model.md` `KPIMetric`
+- [x] T023 [US5] Add Section 4 SLA grid to `app/(dashboard)/analytics/page.tsx` — `<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">` mapping `slaMetrics` to `<KPICard>`, passing `isLoading`
 
 **Checkpoint**: SLA section complete — 4 KPI cards render with correct health statuses and animated progress bars reflecting mock data thresholds.
 
@@ -148,8 +148,8 @@
 
 ### Implementation for User Story 6
 
-- [ ] T024 [US6] Create `components/dashboard/LiveLogs.tsx` — renders: filter bar (log level dropdown + Pause/Resume button), scrollable log entries list using `useLiveLogs` hook; each log row shows: timestamp (formatted `HH:mm:ss.SSS`), method badge (`GET`/`POST`/etc in styled pill), path, status code (colored via `STATUS_CODE_COLORS`), latency (`Xms`), API name; `level` indicator colored via `LOG_LEVEL_STYLES`; auto-scroll logic using `useRef` + `useEffect` (scroll to bottom when `autoScroll && !isPaused`); pauses auto-scroll on manual upward scroll (`onScroll` event); card wrapper with title "Live Activity Feed" + entry count badge; no props needed (self-contained via `useLiveLogs`)
-- [ ] T025 [US6] Add Section 5 Live Feed to `app/(dashboard)/analytics/page.tsx` — add `<LiveLogs />` below Section 4 SLA grid as the final section
+- [x] T024 [US6] Create `components/dashboard/LiveLogs.tsx` — renders: filter bar (log level dropdown + Pause/Resume button), scrollable log entries list using `useLiveLogs` hook; each log row shows: timestamp (formatted `HH:mm:ss.SSS`), method badge (`GET`/`POST`/etc in styled pill), path, status code (colored via `STATUS_CODE_COLORS`), latency (`Xms`), API name; `level` indicator colored via `LOG_LEVEL_STYLES`; auto-scroll logic using `useRef` + `useEffect` (scroll to bottom when `autoScroll && !isPaused`); pauses auto-scroll on manual upward scroll (`onScroll` event); card wrapper with title "Live Activity Feed" + entry count badge; no props needed (self-contained via `useLiveLogs`)
+- [x] T025 [US6] Add Section 5 Live Feed to `app/(dashboard)/analytics/page.tsx` — add `<LiveLogs />` below Section 4 SLA grid as the final section
 
 **Checkpoint**: Full Analytics page complete end-to-end — all 5 sections functional with live data simulation.
 
@@ -159,10 +159,10 @@
 
 **Purpose**: Improvements affecting multiple sections
 
-- [ ] T026 [P] Verify zero horizontal scroll at 320px, 768px, 1024px, and 1440px — check all `<ResponsiveContainer>` usages have `width="100%"` and no fixed `minWidth` values; check grid containers have `min-w-0`
-- [ ] T027 [P] Audit all charts for console warnings — suppress Recharts `defaultProps` warnings if present (wrap in `<ChartErrorBoundary>` or use Recharts 2.x compatible prop syntax)
-- [ ] T028 Validate `useAnalyticsData` filter reactivity — confirm changing granularity from Hourly → Weekly → Monthly cycles correctly regenerates `trafficData` with appropriate time labels (hourly: "00:00"–"23:00", daily: "Mon"–"Sun", weekly: "Week 1"–"Week 4", monthly: "Jan"–"Dec")
-- [ ] T029 [P] Verify all loading skeletons appear on simulated slow load — temporarily increase the `useAnalyticsData` delay to 2000ms and confirm skeletons render for all 4 sections before data appears
+- [x] T026 [P] Verify zero horizontal scroll at 320px, 768px, 1024px, and 1440px — check all `<ResponsiveContainer>` usages have `width="100%"` and no fixed `minWidth` values; check grid containers have `min-w-0`
+- [x] T027 [P] Audit all charts for console warnings — suppress Recharts `defaultProps` warnings if present (wrap in `<ChartErrorBoundary>` or use Recharts 2.x compatible prop syntax)
+- [x] T028 Validate `useAnalyticsData` filter reactivity — confirm changing granularity from Hourly → Weekly → Monthly cycles correctly regenerates `trafficData` with appropriate time labels (hourly: "00:00"–"23:00", daily: "Mon"–"Sun", weekly: "Week 1"–"Week 4", monthly: "Jan"–"Dec")
+- [x] T029 [P] Verify all loading skeletons appear on simulated slow load — temporarily increase the `useAnalyticsData` delay to 2000ms and confirm skeletons render for all 4 sections before data appears
 - [ ] T030 Add `app/(dashboard)/analytics/traffic/page.tsx` content — simple 30-day traffic trend area chart using `trafficData` with daily granularity; reuses `TrafficChart` with `granularity="daily"` and 30 data points
 - [ ] T031 [P] Add `app/(dashboard)/analytics/performance/page.tsx` content — performance metrics page showing `PerformanceMetrics` per-API data in a simple table (API name + p50/p75/p90/p95/p99 columns); styled consistent with dark theme
 

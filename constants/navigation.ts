@@ -3,7 +3,7 @@ import {
   BarChart3, Zap, Settings,
   FolderOpen, Link2, FileText,
   Activity, Gauge, FileBarChart,
-  SlidersHorizontal, Shield, Plug
+  SlidersHorizontal, Shield, Plug, Users2
 } from 'lucide-react';
 import { MenuSection } from '@/types/layout';
 
@@ -65,7 +65,8 @@ export const MENU_SECTIONS: MenuSection[] = [
         subItems: [
           { name: "General",      path: "/settings/general",      icon: SlidersHorizontal },
           { name: "Security",     path: "/settings/security",     icon: Shield },
-          { name: "Integrations", path: "/settings/integrations", icon: Plug }
+          { name: "Integrations", path: "/settings/integrations", icon: Plug },
+          { name: "Users",        path: "/settings/users",        icon: Users2 }
         ]
       }
     ]
