@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { 
   FileText, 
@@ -42,7 +42,7 @@ import { DataTable } from '@/components/data-table';
 import { ColumnDef, RowAction } from '@/lib/table-utils';
 import { toast } from 'sonner';
 
-export default function ReportsPage() {
+function ReportsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const activeTab = searchParams.get('tab') || 'overview';
@@ -201,11 +201,9 @@ export default function ReportsPage() {
           ) : val === 'failed' ? (
             <Trash2 className="h-3.5 w-3.5" />
           ) : (
-            <Play className="h-3.5 w-3.5 animate-pulse" />
+            <History className="h-3.5 w-3.5" />
           )}
-          <span className="text-[10px] font-bold uppercase">
-            {val === 'generated' ? 'Ready' : val === 'failed' ? 'Failed' : 'Processing'}
-          </span>
+          <span className="text-xs capitalize">{val}</span>
         </div>
       )
     }
@@ -215,12 +213,12 @@ export default function ReportsPage() {
     {
       label: 'Download',
       icon: Download,
-      onClick: (row) => toast.success(`Downloading ${row.name}...`)
+      onClick: (row) => toast.success('Starting download...')
     },
     {
       label: 'View Online',
       icon: ExternalLink,
-      onClick: (row) => toast.info('Online viewer coming soon')
+      onClick: (row) => toast.info('Opening report viewer...')
     },
     {
       label: 'Delete',
@@ -231,147 +229,166 @@ export default function ReportsPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-6 p-6">
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+    <div className="p-6 space-y-6 max-w-[1600px] mx-auto">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Reports & Insights</h1>
           <p className="text-muted-foreground">
-            Generate, schedule, and analyze reports across your API ecosystem.
+            Generate, schedule, and analyze your API performance reports.
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {activeTab === 'scheduled' && (
-            <Button className="gap-2" onClick={() => setIsScheduleModalOpen(true)}>
-              <Calendar className="h-4 w-4" />
-              Schedule Report
-            </Button>
-          )}
-          {activeTab === 'my-reports' && (
-            <Button className="gap-2" onClick={() => setIsBuilderModalOpen(true)}>
-              <Plus className="h-4 w-4" />
-              New Custom Report
-            </Button>
-          )}
+          <Button variant="outline" size="sm" className="h-9 gap-2">
+            <History className="h-4 w-4" />
+            Export History
+          </Button>
+          <Button size="sm" className="h-9 gap-2" onClick={() => setIsBuilderModalOpen(true)}>
+            <Plus className="h-4 w-4" />
+            Custom Report
+          </Button>
         </div>
       </div>
 
-      <Tabs defaultValue={activeTab} onValueChange={handleTabChange} className="w-full">
-        <div className="flex items-center justify-between border-b border-border/40 pb-px mb-6">
-          <TabsList className="bg-transparent h-auto p-0 gap-6 rounded-none border-b-0">
-            <TabsTrigger 
-              value="overview" 
-              className="px-0 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none font-medium"
-            >
-              <LayoutGrid className="h-4 w-4 mr-2" />
-              Overview
-            </TabsTrigger>
-            <TabsTrigger 
-              value="my-reports" 
-              className="px-0 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none font-medium"
-            >
-              <History className="h-4 w-4 mr-2" />
-              My Reports
-            </TabsTrigger>
-            <TabsTrigger 
-              value="scheduled" 
-              className="px-0 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none font-medium"
-            >
-              <Calendar className="h-4 w-4 mr-2" />
-              Scheduled
-            </TabsTrigger>
-            <TabsTrigger 
-              value="insights" 
-              className="px-0 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none font-medium"
-            >
-              <Lightbulb className="h-4 w-4 mr-2" />
-              Insights
-              {visibleInsights.length > 0 && (
-                <span className="ml-2 px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">
-                  {visibleInsights.length}
-                </span>
-              )}
-            </TabsTrigger>
-          </TabsList>
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
+        <TabsList className="bg-muted/50 p-1 border h-11">
+          <TabsTrigger value="overview" className="gap-2 px-4">
+            <LayoutGrid className="h-4 w-4" />
+            Overview
+          </TabsTrigger>
+          <TabsTrigger value="schedules" className="gap-2 px-4">
+            <Calendar className="h-4 w-4" />
+            Schedules
+          </TabsTrigger>
+          <TabsTrigger value="my-reports" className="gap-2 px-4">
+            <FileText className="h-4 w-4" />
+            Generated Reports
+          </TabsTrigger>
+          <TabsTrigger value="insights" className="gap-2 px-4">
+            <Lightbulb className="h-4 w-4" />
+            AI Insights
+            {visibleInsights.length > 0 && (
+              <span className="ml-1 px-1.5 py-0.5 rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                {visibleInsights.length}
+              </span>
+            )}
+          </TabsTrigger>
+        </TabsList>
 
-          {activeTab === 'overview' && (
-            <div className="relative w-full max-w-sm hidden md:block">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search templates..."
-                className="pl-9 bg-background/50"
-              />
-            </div>
-          )}
-        </div>
-
-        <TabsContent value="overview" className="mt-0 border-0 p-0 outline-none">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {REPORT_TEMPLATES.map((template) => (
+        {/* Tabs Content - Overview */}
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {REPORT_TEMPLATES.map(template => (
               <ReportTemplateCard 
-                key={template.id} 
-                template={template} 
-                onSchedule={(t) => {
-                  setSelectedTemplateForSchedule(t.id);
+                key={template.id}
+                template={template}
+                onSchedule={() => {
+                  setSelectedTemplateForSchedule(template.id);
                   setIsScheduleModalOpen(true);
                 }}
               />
             ))}
           </div>
-        </TabsContent>
 
-        <TabsContent value="my-reports" className="mt-0 border-0 p-0 outline-none">
-          {myReports.length > 0 ? (
-            <DataTable 
-              data={myReports} 
-              columns={myReportsColumns}
-              rowActions={myReportsActions}
-              searchPlaceholder="Search custom reports..."
-            />
-          ) : (
-            <div className="flex flex-col items-center justify-center py-20 bg-card/30 border border-dashed border-border rounded-xl">
-              <div className="p-4 rounded-full bg-secondary/30 mb-4">
-                <History className="h-8 w-8 text-muted-foreground" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <Lightbulb className="h-5 w-5 text-yellow-500" />
+                  Key Insights
+                </h3>
+                <Button variant="ghost" size="sm" className="text-xs">View All</Button>
               </div>
-              <h3 className="text-lg font-medium mb-1">No custom reports yet</h3>
-              <p className="text-sm text-muted-foreground mb-6 text-center max-w-sm">
-                Create a custom report to combine metrics, filters, and date ranges tailored to your specific needs.
-              </p>
-              <Button className="gap-2" onClick={() => setIsBuilderModalOpen(true)}>
-                <Plus className="h-4 w-4" />
-                Create your first report
-              </Button>
+              <div className="space-y-4">
+                {visibleInsights.slice(0, 3).map(insight => (
+                  <InsightCard 
+                    key={insight.id}
+                    insight={insight}
+                    onDismiss={handleDismissInsight}
+                  />
+                ))}
+              </div>
             </div>
-          )}
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-blue-500" />
+                  Upcoming Schedules
+                </h3>
+                <Button variant="ghost" size="sm" className="text-xs" onClick={() => handleTabChange('schedules')}>
+                  Manage
+                </Button>
+              </div>
+              <div className="border rounded-xl bg-card/50 overflow-hidden">
+                <div className="p-4 border-b bg-muted/30">
+                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                    Next 48 Hours
+                  </p>
+                </div>
+                <div className="divide-y">
+                  {schedules.filter(s => s.isActive).slice(0, 3).map(schedule => (
+                    <div key={schedule.id} className="p-4 flex items-center justify-between hover:bg-muted/20 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                          <FileText className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">{schedule.name}</p>
+                          <p className="text-[10px] text-muted-foreground uppercase">
+                            {schedule.frequency} • Next: {new Date(schedule.nextRunAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                          </p>
+                        </div>
+                      </div>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Play className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </TabsContent>
 
-        <TabsContent value="scheduled" className="mt-0 border-0 p-0 outline-none">
+        {/* Tabs Content - Schedules */}
+        <TabsContent value="schedules">
           <DataTable 
-            data={schedules} 
+            data={schedules}
             columns={scheduleColumns}
             rowActions={scheduleActions}
             searchPlaceholder="Search schedules..."
           />
         </TabsContent>
 
-        <TabsContent value="insights" className="mt-0 border-0 p-0 outline-none">
-          <div className="grid grid-cols-1 gap-6">
-            {visibleInsights.length > 0 ? (
-              visibleInsights.map((insight) => (
-                <InsightCard 
-                  key={insight.id} 
-                  insight={insight} 
-                  onDismiss={handleDismissInsight} 
-                />
-              ))
-            ) : (
-              <div className="flex flex-col items-center justify-center py-20 bg-card/30 border border-dashed border-border rounded-xl">
-                <div className="p-4 rounded-full bg-green-500/10 mb-4">
-                  <ShieldCheck className="h-8 w-8 text-green-500" />
+        {/* Tabs Content - My Reports */}
+        <TabsContent value="my-reports">
+          <DataTable 
+            data={myReports}
+            columns={myReportsColumns}
+            rowActions={myReportsActions}
+            searchPlaceholder="Search generated reports..."
+          />
+        </TabsContent>
+
+        {/* Tabs Content - Insights */}
+        <TabsContent value="insights">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {visibleInsights.map(insight => (
+              <InsightCard 
+                key={insight.id}
+                insight={insight}
+                onDismiss={handleDismissInsight}
+              />
+            ))}
+            {visibleInsights.length === 0 && (
+              <div className="col-span-full py-12 flex flex-col items-center justify-center text-center border rounded-xl border-dashed bg-muted/10">
+                <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mb-4">
+                  <ShieldCheck className="h-6 w-6 text-muted-foreground" />
                 </div>
-                <h3 className="text-lg font-medium mb-1">All systems healthy</h3>
-                <p className="text-sm text-muted-foreground text-center">
-                  No automated insights or anomalies detected at this time.
+                <h3 className="text-lg font-medium">All clear!</h3>
+                <p className="text-muted-foreground max-w-sm">
+                  We haven't detected any new patterns or anomalies in your API traffic lately.
                 </p>
               </div>
             )}
@@ -382,18 +399,22 @@ export default function ReportsPage() {
       {/* Modals */}
       <ScheduleReportModal 
         isOpen={isScheduleModalOpen}
-        onClose={() => {
-          setIsScheduleModalOpen(false);
-          setSelectedTemplateForSchedule(undefined);
-        }}
-        onScheduleCreated={(newSchedule) => setSchedules(prev => [newSchedule, ...prev])}
+        onClose={() => setIsScheduleModalOpen(false)}
         initialTemplateId={selectedTemplateForSchedule}
+        onScheduleCreated={(newSchedule) => {
+          setSchedules(prev => [newSchedule, ...prev]);
+          setIsScheduleModalOpen(false);
+          toast.success('Report schedule created');
+        }}
       />
 
       <ReportBuilderModal 
         isOpen={isBuilderModalOpen}
         onClose={() => setIsBuilderModalOpen(false)}
-        onReportCreated={(newReport) => setPendingCustomReport(newReport)}
+        onReportCreated={(newReport) => {
+          setIsBuilderModalOpen(false);
+          setPendingCustomReport(newReport);
+        }}
       />
 
       {(selectedReportForExport || pendingCustomReport) && (
@@ -405,20 +426,42 @@ export default function ReportsPage() {
           }}
           template={selectedReportForExport?.template}
           title={pendingCustomReport?.name}
-          subtitle={pendingCustomReport ? `${pendingCustomReport.name} • PDF Format` : undefined}
-          format={selectedReportForExport?.format || 'pdf'}
+          format={selectedReportForExport?.format || pendingCustomReport?.format || 'pdf'}
           onComplete={(size) => {
             if (pendingCustomReport) {
-              setMyReports(prev => [{
-                ...pendingCustomReport, 
-                fileSize: size,
-                status: 'generated'
-              }, ...prev]);
-              toast.success('Custom report generated successfully');
+              const completed = {
+                ...pendingCustomReport,
+                status: 'generated' as const,
+                fileSize: size
+              };
+              setMyReports(prev => [completed, ...prev]);
+              setPendingCustomReport(null);
+              toast.success('Custom report generated and added to your list.');
+            } else {
+              setSelectedReportForExport(null);
+              toast.success('Export complete! Your file is ready.');
             }
           }}
         />
       )}
     </div>
+  );
+}
+
+export default function ReportsPage() {
+  return (
+    <Suspense fallback={
+      <div className="p-6 space-y-6 max-w-[1600px] mx-auto animate-pulse">
+        <div className="h-20 bg-muted rounded-xl" />
+        <div className="h-10 bg-muted rounded-lg w-1/2" />
+        <div className="grid grid-cols-3 gap-6">
+          <div className="h-64 bg-muted rounded-xl" />
+          <div className="h-64 bg-muted rounded-xl" />
+          <div className="h-64 bg-muted rounded-xl" />
+        </div>
+      </div>
+    }>
+      <ReportsContent />
+    </Suspense>
   );
 }
