@@ -14,6 +14,9 @@ interface User {
   roles: string[];
   defaultRole: string;
   metadata?: Record<string, any>;
+  locale?: string;
+  createdAt?: string;
+  activeMfaType?: string;
 }
 
 export function useAuth() {

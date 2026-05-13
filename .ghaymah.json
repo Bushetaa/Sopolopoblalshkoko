@@ -1,0 +1,21 @@
+{
+  "id": "6fa1bedf-3e6f-4e09-8762-991700d70f0b",
+  "name": "sopo",
+  "projectId": "dcec3220-caed-40a4-aaa6-d66fbe7533d6",
+  "ports": [
+    {
+      "expose": true,
+      "number": 3000
+    }
+  ],
+  "publicAccess": {
+    "enabled": true,
+    "domain": "auto"
+  },
+  "env": {
+    "NEXT_PUBLIC_BACKEND_URL": "https://sopo-backend-server-9d293482f250.hosted.ghaymah.systems",
+    "NEXT_PUBLIC_AUTH_SERVICE_URL": "https://hasura-auth-b78edbdcfb75.hosted.ghaymah.systems"
+  },
+  "resourceTier": "t7",
+  "dockerFileName": "Dockerfile"
+}
