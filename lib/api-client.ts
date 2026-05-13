@@ -97,9 +97,15 @@ class APIClient {
       const response = await this.client.post("/auth/signup/email-password", {
         email,
         password,
-        metadata: {
-          firstName,
-          lastName,
+        options: {
+          allowedRoles: ["me", "user"],
+          defaultRole: "user",
+          displayName: `${firstName} ${lastName}`,
+          locale: "en",
+          metadata: {
+            firstName,
+            lastName,
+          },
         },
       });
 
