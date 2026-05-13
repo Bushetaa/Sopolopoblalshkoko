@@ -9,6 +9,8 @@ interface LayoutContextType {
   toggleMobileSidebar: () => void;
   isCommandPaletteOpen: boolean;
   setCommandPaletteOpen: (open: boolean) => void;
+  isSidebarCollapsed: boolean;
+  toggleSidebarCollapsed: () => void;
 }
 
 const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
@@ -16,10 +18,12 @@ const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
 export function LayoutProvider({ children }: { children: ReactNode }) {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const openMobileSidebar = () => setIsMobileSidebarOpen(true);
   const closeMobileSidebar = () => setIsMobileSidebarOpen(false);
   const toggleMobileSidebar = () => setIsMobileSidebarOpen((prev) => !prev);
+  const toggleSidebarCollapsed = () => setIsSidebarCollapsed((prev) => !prev);
 
   return (
     <LayoutContext.Provider
@@ -30,6 +34,8 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
         toggleMobileSidebar,
         isCommandPaletteOpen,
         setCommandPaletteOpen: setIsCommandPaletteOpen,
+        isSidebarCollapsed,
+        toggleSidebarCollapsed,
       }}
     >
       {children}

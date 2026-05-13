@@ -90,23 +90,23 @@ export default function RootLayout({
           <Suspense fallback={null}>
             <ConditionalFooter />
           </Suspense>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "SoftwareApplication",
-                name: "SOPO API Gateway",
-                applicationCategory: "WebApplication",
-                operatingSystem: "All",
-                description:
-                  "No‑code API gateway for visual policies, safe delivery, and built‑in observability.",
-                url: "https://sopo.dev",
-                offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-              }),
-            }}
-          />
         </Providers>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              name: "SOPO API Gateway",
+              applicationCategory: "WebApplication",
+              operatingSystem: "All",
+              description:
+                "No‑code API gateway for visual policies, safe delivery, and built‑in observability.",
+              url: "https://sopo.dev",
+              offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+            }),
+          }}
+        />
       </body>
     </html>
   );

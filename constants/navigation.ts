@@ -3,7 +3,8 @@ import {
   BarChart3, Zap, Settings,
   FolderOpen, Link2, FileText,
   Activity, Gauge, FileBarChart,
-  SlidersHorizontal, Shield, Plug, Users2
+  SlidersHorizontal, Shield, Plug, Users2,
+  Server, Route, ScrollText
 } from 'lucide-react';
 import { MenuSection } from '@/types/layout';
 
@@ -17,24 +18,20 @@ export const MENU_SECTIONS: MenuSection[] = [
         icon: LayoutDashboard
       },
       {
-        name: "API Manager",
-        path: "/api-manager",
-        icon: Code2,
+        name: "Gateway Manager",
+        path: "/api-gateway",
+        icon: Globe,
         subItems: [
-          { name: "Collections",   path: "/api-manager/collections", icon: FolderOpen },
-          { name: "Endpoints",     path: "/api-manager/endpoints",   icon: Link2 },
-          { name: "Documentation", path: "/api-manager/docs",        icon: FileText }
+          { name: "Gateways", path: "/api-gateway", icon: Globe },
+          { name: "Services", path: "/api-gateway/services", icon: Server },
+          { name: "Routes",   path: "/api-gateway/routes", icon: Route },
+          { name: "Plugins",  path: "/api-gateway/plugins", icon: Plug }
         ]
       },
       {
-        name: "API Gateway",
-        path: "/api-gateway",
-        icon: Globe
-      },
-      {
-        name: "Workspaces",
-        path: "/workspaces",
-        icon: Briefcase
+        name: "Collections",
+        path: "/collections",
+        icon: FolderOpen
       }
     ]
   },
@@ -52,6 +49,11 @@ export const MENU_SECTIONS: MenuSection[] = [
         name: "Rate Limiting",
         path: "/rate-limiting",
         icon: Zap
+      },
+      {
+        name: "Logs",
+        path: "/logs",
+        icon: ScrollText
       }
     ]
   },
