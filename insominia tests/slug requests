@@ -1,0 +1,214 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Sopo Api Gateway schema
+meta:
+  id: wrk_ddfd8e2dc5b249c1a3889eaeceffc99e
+  created: 1778031982785
+  modified: 1778031982785
+  description: ""
+collection:
+  - name: User Profile (Slug)
+    meta:
+      id: fld_ae23b29973fc4ca1a969e36d5f1201cb
+      created: 1777501037100
+      modified: 1777680242800
+      sortKey: -1777677246030
+      description: Manage user slug for URL namespace isolation
+    children:
+      - url: "{{ _.base_url }}"
+        name: Insert User Profile (Set Slug)
+        meta:
+          id: req_1eb76ddaebbf4229adc98bec15db1b6e
+          created: 1777501037101
+          modified: 1778038630466
+          isPrivate: false
+          description: Create slug for the authenticated user
+          sortKey: -1777501037101
+        method: POST
+        body:
+          mimeType: application/graphql
+          text: '{"query":"mutation InsertUserProfile($slug: String!)
+            {\n  insert_gateway_user_profiles_one(object: {slug: $slug})
+            {\n    slug\n    created_at\n    updated_at\n  }\n}","operationName":"InsertUserProfile","variables":"{\n  \"slug\":
+            \"abdo\"\n}"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}"
+        name: Query My Profile (Slug)
+        meta:
+          id: req_75e43d13c58148e5b0fd2b95f62f89fd
+          created: 1777501037102
+          modified: 1778032162624
+          isPrivate: false
+          description: Get current user's slug
+          sortKey: -1777501037102
+        method: POST
+        body:
+          mimeType: application/graphql
+          text: '{"query":"query GetMyProfile {\n  gateway_user_profiles
+            {\n    slug\n    created_at\n    updated_at\n  }\n}","operationName":"GetMyProfile"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}"
+        name: Update My Slug
+        meta:
+          id: req_c445f3a7823544f8a96aa86524cafbbc
+          created: 1777501037103
+          modified: 1777501037103
+          isPrivate: false
+          description: Update user's slug
+          sortKey: -1777501037103
+        method: POST
+        body:
+          mimeType: application/graphql
+          text: '{"query":"mutation UpdateMySlug($slug: String!)
+            {\n  update_gateway_user_profiles(where: {}, _set: {slug: $slug})
+            {\n    affected_rows\n    returning
+            {\n      user_id\n      slug\n      updated_at\n    }\n  }\n}","operationName":"UpdateMySlug","variables":"{\n  \"slug\":
+            \"abdo-new\"\n}"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}"
+        name: Delete My Profile
+        meta:
+          id: req_6f89d44681be4a7095f635529d41ff1f
+          created: 1777501037104
+          modified: 1777501037104
+          isPrivate: false
+          description: Delete user's slug profile
+          sortKey: -1777501037104
+        method: POST
+        body:
+          mimeType: application/graphql
+          text: '{"query":"mutation DeleteMyProfile
+            {\n  delete_gateway_user_profiles(where: {})
+            {\n    affected_rows\n  }\n}","operationName":"DeleteMyProfile"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Gateway
+    meta:
+      id: fld_160b2aeca6e3460b8a64b8483acd031d
+      created: 1777501037130
+      modified: 1777680242854
+      sortKey: -1777677246019
+      description: ""
+  - name: Collections
+    meta:
+      id: fld_a36a8ad34b144a41a4cb1b068d946127
+      created: 1777501292200
+      modified: 1777680244900
+      sortKey: -1777677246000
+      description: Organizational grouping for routes and services (Pro mode)
+  - name: Services
+    meta:
+      id: fld_405a6f67b2cf4ec8b13f4b19dd84abb2
+      created: 1777501292260
+      modified: 1777680244922
+      sortKey: -1777677245994
+      description: ""
+  - name: Service Route
+    meta:
+      id: fld_255da8ad91a94ab8a9e7cfabee104bbb
+      created: 1777597439385
+      modified: 1777680246738
+      sortKey: -1777677245981.5
+      description: ""
+  - name: Gateway Routes
+    meta:
+      id: fld_d30d23f1c5214aecb57ecacc86a19a6a
+      created: 1777677245569
+      modified: 1777680248172
+      sortKey: -1777677245975.25
+      description: ""
+  - name: Aggregate Requests
+    meta:
+      id: fld_e615c7fa22b24451890c884cc27f1b37
+      created: 1777680160217
+      modified: 1777680249850
+      sortKey: -1777677245972.125
+      description: ""
+  - name: Gateway Plugins
+    meta:
+      id: fld_f10ae83bc0aa4a749754fd23e4834955
+      created: 1777680225444
+      modified: 1777680237266
+      sortKey: -1777677245969
+      description: ""
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_899b88e83a44496eacda9a3cdf701af3
+    created: 1771630290299
+    modified: 1778040212110
+  cookies:
+    - id: bad1be62-811a-478e-8e91-52e29f7e101d
+      key: sopo_refresh_token
+      value: 6b9c1b62-20f6-4c89-8220-74878f90ff89
+      domain: 127.0.0.1
+      path: /
+      secure: false
+      httpOnly: true
+      hostOnly: true
+    - id: 364ba267-ca40-4944-9b1c-6c23df7f87e6
+      key: sopo_refresh_token
+      value: bd454d20-d2c7-4585-a4a2-6f63cb8a5cfd
+      domain: sopo-backend-165b270255e8.hosted.ghaymah.systems
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: true
+environments:
+  name: Base Environment
+  meta:
+    id: env_3cb339928a284b05b5108a72e3f9ae3a
+    created: 1764771246191
+    modified: 1778032137477
+    isPrivate: false
+  data:
+    base_url: https://hasura-ef6cbf467fbf.hosted.ghaymah.systems/v1/graphql
+    jwt: "{% response 'body', 'req_948db70135504f0ca8381944585e5f4a',
+      'b64::JC5zZXNzaW9uLmFjY2Vzc1Rva2Vu::46b', 'always', 'no-history' %}"

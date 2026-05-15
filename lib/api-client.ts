@@ -99,9 +99,13 @@ export interface GatewayPlugin {
   phase: string;
   gateway_id?: string;
   route_id?: string;
+  service_id?: string;
+  enabled?: boolean;
   is_enabled?: boolean;
   fail_open?: boolean;
+  sort_order?: number;
   config?: any;
+  plugin_config?: any;
 }
 
 interface FetchOptions extends Omit<RequestInit, 'body'> {
@@ -297,8 +301,12 @@ class APIClient {
 
   async updateProfile(data: Partial<AuthSession["user"]>): Promise<AuthSession["user"]> {
     try {
-      const response = await this.put<any>("/auth/user", data);
-      return response.user || response;
+      // The backend doesn't have a PUT /auth/user endpoint.
+      // Profile display name/locale are managed by Nhost Auth directly.
+      // The slug is managed separately via /api/v1/user-profiles.
+      // Just return the current profile after "updating".
+      const profile = await this.getProfile();
+      return profile;
     } catch (error: any) {
       throw new Error(error.message || "Failed to update profile");
     }
@@ -419,7 +427,12 @@ class APIClient {
   private createCrudClient<T>(basePath: string) {
     return {
       getAll: () => this.get<T[]>(basePath),
-      getById: (id: string) => this.get<T>(`${basePath}/${id}`),
+      getById: async (id: string) => {
+        const allItems = await this.get<T[]>(basePath);
+        const item = allItems.find((item: any) => item.id === id);
+        if (!item) throw new Error(`Item with id ${id} not found`);
+        return item as T;
+      },
       create: (data: Partial<T>) => this.post<T>(basePath, data),
       update: (id: string, data: Partial<T>) => this.patch<T>(`${basePath}/${id}`, data),
       delete: (id: string) => this.delete<void>(`${basePath}/${id}`)
@@ -428,11 +441,109 @@ class APIClient {
 
   public readonly gateways = this.createCrudClient<Gateway>('/api/v1/gateways');
   public readonly collections = this.createCrudClient<GatewayCollection>('/api/v1/collections');
-  public readonly services = this.createCrudClient<Service>('/api/v1/services');
+
+  // Custom client for services to handle mapping health_check_* to hc_*
+  public readonly services = {
+    getAll: async () => {
+      const items = await this.get<any[]>('/api/v1/services');
+      return items.map(this.mapServiceFromServer);
+    },
+    getById: async (id: string) => {
+      const allItems = await this.get<any[]>('/api/v1/services');
+      const item = allItems.find((item: any) => item.id === id);
+      if (!item) throw new Error(`Item with id ${id} not found`);
+      return this.mapServiceFromServer(item);
+    },
+    create: async (data: Partial<Service>) => {
+      return this.post<Service>('/api/v1/services', this.mapServiceToServer(data));
+    },
+    update: async (id: string, data: Partial<Service>) => {
+      return this.patch<Service>(`/api/v1/services/${id}`, this.mapServiceToServer(data));
+    },
+    delete: (id: string) => this.delete<void>(`/api/v1/services/${id}`)
+  };
+
+  private mapServiceToServer(data: any): any {
+    const {
+      health_check_path, health_check_interval, health_check_timeout,
+      health_check_fail_threshold, health_check_pass_threshold,
+      collection_id,
+      ...rest
+    } = data;
+    
+    return {
+      ...rest,
+      ...(collection_id && collection_id !== "" && { collection_id }),
+      ...(health_check_path && health_check_path !== "" && { hc_path: health_check_path }),
+      ...(health_check_interval && health_check_interval !== "" && { hc_interval: health_check_interval }),
+      ...(health_check_timeout && health_check_timeout !== "" && { hc_timeout: health_check_timeout }),
+      ...(health_check_fail_threshold !== undefined && health_check_fail_threshold !== 0 && { hc_fail_threshold: health_check_fail_threshold }),
+      ...(health_check_pass_threshold !== undefined && health_check_pass_threshold !== 0 && { hc_pass_threshold: health_check_pass_threshold }),
+    };
+  }
+
+  private mapServiceFromServer(item: any): Service {
+    return {
+      ...item,
+      health_check_path: item.hc_path,
+      health_check_interval: item.hc_interval,
+      health_check_timeout: item.hc_timeout,
+      health_check_fail_threshold: item.hc_fail_threshold,
+      health_check_pass_threshold: item.hc_pass_threshold,
+    };
+  }
   public readonly serviceTargets = this.createCrudClient<ServiceTarget>('/api/v1/service-targets');
-  public readonly gatewayRoutes = this.createCrudClient<GatewayRoute>('/api/v1/gateway-routes');
+  
+  public readonly gatewayRoutes = {
+    getAll: async () => {
+      const items = await this.get<any[]>('/api/v1/gateway-routes');
+      return items.map(this.mapRouteFromServer);
+    },
+    getById: async (id: string) => {
+      const allItems = await this.get<any[]>('/api/v1/gateway-routes');
+      const item = allItems.find((item: any) => item.id === id);
+      if (!item) throw new Error(`Item with id ${id} not found`);
+      return this.mapRouteFromServer(item);
+    },
+    create: async (data: Partial<GatewayRoute>) => {
+      return this.post<GatewayRoute>('/api/v1/gateway-routes', this.mapRouteToServer(data));
+    },
+    update: async (id: string, data: Partial<GatewayRoute>) => {
+      return this.patch<GatewayRoute>(`/api/v1/gateway-routes/${id}`, this.mapRouteToServer(data));
+    },
+    delete: (id: string) => this.delete<void>(`/api/v1/gateway-routes/${id}`)
+  };
+
+  private mapRouteToServer(data: any): any {
+    const {
+      service_id, collection_id, allow_partial_failure,
+      ...rest
+    } = data;
+    
+    return {
+      ...rest,
+      ...(service_id && service_id !== "" && { service_id }),
+      ...(collection_id && collection_id !== "" && { collection_id }),
+      aggregate_allow_partial_failure: allow_partial_failure
+    };
+  }
+
+  private mapRouteFromServer(item: any): GatewayRoute {
+    return {
+      ...item,
+      allow_partial_failure: item.aggregate_allow_partial_failure
+    };
+  }
   public readonly routeSubRequests = this.createCrudClient<RouteSubRequest>('/api/v1/route-sub-requests');
   public readonly gatewayPlugins = this.createCrudClient<GatewayPlugin>('/api/v1/gateway-plugins');
+  
+  public readonly userProfiles = {
+    getAll: () => this.get<any[]>('/api/v1/user-profiles'),
+    create: (data: { slug: string }) => this.post<any>('/api/v1/user-profiles', data),
+    update: (data: { slug: string }) => this.patch<any>('/api/v1/user-profiles', data),
+    delete: () => this.delete<void>('/api/v1/user-profiles')
+  };
+
 
   // Token management
   private storeAccessToken(token: string): void {

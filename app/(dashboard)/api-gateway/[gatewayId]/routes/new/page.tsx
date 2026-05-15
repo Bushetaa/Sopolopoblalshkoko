@@ -13,18 +13,26 @@ export default function NewRoutePage({ params }: { params: Promise<{ gatewayId: 
   
   const [gateway, setGateway] = useState<Gateway | null>(null);
   const [services, setServices] = useState<Service[]>([]);
+  const [collections, setCollections] = useState<any[]>([]);
+  const [userSlug, setUserSlug] = useState<string>("my-slug");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [fetchedGateway, fetchedServices] = await Promise.all([
+        const [fetchedGateway, fetchedServices, fetchedProfiles, fetchedCollections] = await Promise.all([
           apiClient.gateways.getById(gatewayId),
-          apiClient.services.getAll()
+          apiClient.services.getAll(),
+          apiClient.userProfiles.getAll().catch(() => []),
+          apiClient.collections.getAll().catch(() => [])
         ]);
         
         setGateway(fetchedGateway);
         setServices(fetchedServices.filter(s => s.gateway_id === gatewayId));
+        setCollections(fetchedCollections.filter((c: any) => c.gateway_id === gatewayId));
+        if (fetchedProfiles && fetchedProfiles.length > 0 && fetchedProfiles[0].slug) {
+          setUserSlug(fetchedProfiles[0].slug);
+        }
       } catch (error) {
         console.error("Failed to fetch gateway or services", error);
         router.push(`/api-gateway/${gatewayId}/routes`);
@@ -38,7 +46,7 @@ export default function NewRoutePage({ params }: { params: Promise<{ gatewayId: 
   const handleSubmit = async (data: RouteFormValues) => {
     try {
       await apiClient.gatewayRoutes.create({
-        ...data,
+        ...data as any,
         gateway_id: gatewayId,
       });
       router.push(`/api-gateway/${gatewayId}/routes`);
@@ -77,6 +85,10 @@ export default function NewRoutePage({ params }: { params: Promise<{ gatewayId: 
 
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
         <RouteForm 
+          gatewayMode={(gateway.mode as "single" | "pro") || "single"}
+          gatewayName={gateway.name}
+          userSlug={userSlug}
+          collections={collections}
           services={services}
           onSubmit={handleSubmit}
           onCancel={() => router.push(`/api-gateway/${gatewayId}/routes`)}

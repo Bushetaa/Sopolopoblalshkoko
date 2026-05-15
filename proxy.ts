@@ -23,7 +23,7 @@ const authRoutes = [
   '/reset-password'
 ];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
   // السماح بمسارات الـ API وملفات النظام والصور لضمان عدم حدوث بطء أو مشاكل

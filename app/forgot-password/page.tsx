@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 import Link from "next/link";
 import { ForgotPasswordRedirect } from "@/components/auth/ForgotPasswordRedirect";
@@ -11,7 +12,9 @@ export default function ForgotPasswordPage() {
   return (
     <div className="min-h-screen py-32 bg-background relative overflow-hidden flex items-center justify-center">
       {/* If URL has refreshToken, redirect to /reset-password */}
-      <ForgotPasswordRedirect />
+      <Suspense fallback={null}>
+        <ForgotPasswordRedirect />
+      </Suspense>
 
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/20 blur-[120px] rounded-full pointer-events-none"></div>

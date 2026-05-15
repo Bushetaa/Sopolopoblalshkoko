@@ -64,7 +64,7 @@ export default function SecuritySettingsPage() {
     if (checked) {
       setIsGeneratingMFA(true);
       try {
-        const result = await apiClient.generateMFATotp();
+        const result = await apiClient.generateMFATotp() as any;
         // Assuming result contains qrCode (base64 image or data URL) and secret
         setMfaQrCode(result.imageUrl || result.qrCode);
         setMfaSecret(result.totpSecret || result.secret);
@@ -102,7 +102,7 @@ export default function SecuritySettingsPage() {
     setIsGeneratingPat(true);
     setGeneratedPat(null);
     try {
-      const result = await apiClient.generatePAT(patName);
+      const result = await apiClient.generatePAT(patName) as any;
       setGeneratedPat(result.personalAccessToken || result.token || JSON.stringify(result));
       setPatName("");
       toast({ title: "Success", description: "Personal Access Token generated." });

@@ -49,6 +49,8 @@ export default function GeneralSettingsPage() {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [locale, setLocale] = useState("en");
+  const [slug, setSlug] = useState("");
+  const [hasExistingSlug, setHasExistingSlug] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const [newEmail, setNewEmail] = useState("");
@@ -60,6 +62,14 @@ export default function GeneralSettingsPage() {
       setDisplayName(user.displayName || "");
       setEmail(user.email || "");
       setLocale(user.locale || "en");
+      
+      // Fetch user profile slug
+      apiClient.userProfiles.getAll().then((profiles) => {
+        if (profiles && profiles.length > 0 && profiles[0].slug) {
+          setSlug(profiles[0].slug);
+          setHasExistingSlug(true);
+        }
+      }).catch(err => console.error("Failed to fetch slug", err));
     }
   }, [user]);
 
@@ -119,6 +129,16 @@ export default function GeneralSettingsPage() {
         displayName,
         locale,
       });
+
+      // Update or create slug
+      if (slug.trim()) {
+        if (hasExistingSlug) {
+          await apiClient.userProfiles.update({ slug: slug.trim() });
+        } else {
+          await apiClient.userProfiles.create({ slug: slug.trim() });
+          setHasExistingSlug(true);
+        }
+      }
     } catch (error: any) {
       toast({
         title: "Error",
@@ -194,6 +214,19 @@ export default function GeneralSettingsPage() {
               disabled
               className="bg-gray-950 border-gray-800 opacity-50 cursor-not-allowed"
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="slug">Workspace Slug</Label>
+            <Input
+              id="slug"
+              value={slug}
+              onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'))}
+              className="bg-gray-950 border-gray-800 font-mono"
+              placeholder="my-workspace"
+              disabled={isSaving}
+            />
+            <p className="text-xs text-muted-foreground">This is used as the base path for all your API Gateway URLs.</p>
           </div>
 
           <div className="space-y-2">
