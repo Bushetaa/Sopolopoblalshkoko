@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Server, Globe, Activity, MoreVertical, Edit, Trash, Loader2 } from 'lucide-react';
+import { Server, Globe, Activity, MoreVertical, Edit, Trash, Loader2, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import {
@@ -10,9 +10,11 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
-import { apiClient, Service } from '@/lib/api-client';
+import { apiClient, Service, Gateway } from '@/lib/api-client';
 
 interface EnhancedService extends Service {
   gatewayName: string;
@@ -22,19 +24,22 @@ interface EnhancedService extends Service {
 export default function GlobalServicesPage() {
   const router = useRouter();
   const [services, setServices] = React.useState<EnhancedService[]>([]);
+  const [gateways, setGateways] = React.useState<Gateway[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isDeleting, setIsDeleting] = React.useState<string | null>(null);
 
   const fetchData = async () => {
       try {
-        const [fetchedServices, gateways, targets] = await Promise.all([
+        const [fetchedServices, fetchedGateways, targets] = await Promise.all([
           apiClient.services.getAll(),
           apiClient.gateways.getAll(),
           apiClient.serviceTargets.getAll()
         ]);
 
+        setGateways(fetchedGateways);
+
         const formatted = fetchedServices.map(svc => {
-          const gw = gateways.find(g => g.id === svc.gateway_id);
+          const gw = fetchedGateways.find(g => g.id === svc.gateway_id);
           const tCount = targets.filter(t => t.service_id === svc.id).length;
           return {
             ...svc,
@@ -70,9 +75,33 @@ export default function GlobalServicesPage() {
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
-      <div>
-        <h2 className="text-2xl font-bold font-display text-gray-50">All Services</h2>
-        <p className="text-sm text-gray-400 mt-1">A global view of services across all your gateways.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold font-display text-gray-50">All Services</h2>
+          <p className="text-sm text-gray-400 mt-1">A global view of services across all your gateways.</p>
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg shadow-blue-900/20">
+              <Plus className="w-4 h-4" />
+              <span>Create Service</span>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>Select a Gateway</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {gateways.length === 0 ? (
+              <DropdownMenuItem disabled className="text-gray-500">No gateways available</DropdownMenuItem>
+            ) : (
+              gateways.map(gw => (
+                <DropdownMenuItem key={gw.id} onClick={() => router.push(`/api-gateway/${gw.id}/services/new`)} className="cursor-pointer">
+                  <Globe className="w-4 h-4 mr-2 text-blue-400" />
+                  {gw.name}
+                </DropdownMenuItem>
+              ))
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-sm">

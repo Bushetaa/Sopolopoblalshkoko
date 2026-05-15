@@ -128,6 +128,24 @@ export default function CollectionsPage() {
           <h2 className="text-2xl font-bold font-display text-gray-50">Collections</h2>
           <p className="text-sm text-gray-400 mt-1">Logical groupings of services within your Pro-mode gateways.</p>
         </div>
+        {groupedCollections.length > 0 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg shadow-blue-900/20">
+                <Plus className="w-4 h-4" />
+                <span>Create Collection</span>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              {groupedCollections.map(gw => (
+                <DropdownMenuItem key={gw.gatewayId} onClick={() => handleOpenCreate(gw.gatewayId)} className="cursor-pointer">
+                  <Globe className="w-4 h-4 mr-2 text-blue-400" />
+                  {gw.gatewayName}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
 
       {isLoading ? (
