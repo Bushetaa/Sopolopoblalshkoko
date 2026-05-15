@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { apiClient } from "@/lib/api-client";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const isProcessingRef = useRef(false);
 
   useEffect(() => {
     // 1. Check if token is in URL Query Parameters
@@ -27,20 +29,29 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const token = queryRefreshToken || queryAccessToken || hashRefreshToken || hashAccessToken;
 
     if (token) {
-      // Token found in URL, save it to localStorage
-      localStorage.setItem("sopo_auth_token", token);
-      
-      // Clean up the URL to remove the sensitive tokens
-      if (typeof window !== "undefined") {
-        window.history.replaceState(null, "", window.location.pathname);
-      }
-      
-      setIsAuthenticated(true);
+      if (isProcessingRef.current) return;
+      isProcessingRef.current = true;
+
+      // Token found in URL (e.g. from OAuth redirect), establish session via API
+      apiClient.refreshToken(token).then((newToken) => {
+        if (newToken) {
+          // Clean up the URL to remove the sensitive tokens
+          if (typeof window !== "undefined") {
+            window.history.replaceState(null, "", window.location.pathname);
+          }
+          setIsAuthenticated(true);
+        } else {
+          router.replace("/signin");
+        }
+      }).catch((err) => {
+        console.error("AuthGuard token refresh failed:", err);
+        router.replace("/signin");
+      });
       return;
     }
 
-    // 3. No token in URL, check localStorage
-    const storedToken = localStorage.getItem("sopo_auth_token");
+    // 3. No token in URL, check localStorage for access token
+    const storedToken = localStorage.getItem("sopo_access_token");
     if (storedToken) {
       setIsAuthenticated(true);
     } else {

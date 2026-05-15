@@ -8,12 +8,14 @@ import { cn } from '@/lib/utils';
 import { MENU_SECTIONS } from '@/constants/navigation';
 import { MenuItem } from '@/types/layout';
 import { useLayout } from '@/hooks/useLayout';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Sidebar({ className, onItemClick }: { className?: string, onItemClick?: () => void }) {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set(['Gateway Manager']));
   const { isSidebarCollapsed, toggleSidebarCollapsed } = useLayout();
+  const { logout } = useAuth();
 
   useEffect(() => {
     setMounted(true);
@@ -250,13 +252,13 @@ export default function Sidebar({ className, onItemClick }: { className?: string
             )}
           </div>
           {!collapsed && (
-            <Link
-              href="/"
+            <button
+              onClick={() => logout()}
               className="p-1.5 text-gray-600 hover:text-red-400 rounded-md hover:bg-red-500/10 transition-colors"
               title="Logout"
             >
               <LogOut className="h-4 w-4" />
-            </Link>
+            </button>
           )}
         </div>
       </div>

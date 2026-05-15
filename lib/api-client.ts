@@ -200,13 +200,20 @@ class APIClient {
     }
   }
 
+  private profilePromise: Promise<any> | null = null;
   async getProfile(): Promise<AuthSession["user"]> {
-    try {
-      const response = await this.get<any>("/auth/user");
-      return response.user || response;
-    } catch (error: any) {
-      throw new Error(error.message || "Failed to fetch profile");
-    }
+    if (this.profilePromise) return this.profilePromise;
+    this.profilePromise = (async () => {
+      try {
+        const response = await this.get<any>("/auth/user");
+        return response.user || response;
+      } catch (error: any) {
+        throw new Error(error.message || "Failed to fetch profile");
+      } finally {
+        setTimeout(() => { this.profilePromise = null; }, 1000); // Cache for 1 second
+      }
+    })();
+    return this.profilePromise;
   }
 
   async updateProfile(data: Partial<AuthSession["user"]>): Promise<AuthSession["user"]> {
@@ -291,10 +298,11 @@ class APIClient {
     }
   }
 
-  async refreshToken(): Promise<string | null> {
+  async refreshToken(tokenFromUrl?: string): Promise<string | null> {
     try {
-      // It will use the refresh token from cookies since credentials: "include"
-      const response = await this.post<any>("/auth/token", undefined, { _retry: true });
+      // It will use the refresh token from body if provided, else from cookies since credentials: "include"
+      const body = tokenFromUrl ? { refreshToken: tokenFromUrl } : undefined;
+      const response = await this.post<any>("/auth/token", body, { _retry: true });
       const newToken = response.session?.accessToken;
       if (newToken) {
         this.storeAccessToken(newToken);
@@ -328,6 +336,7 @@ class APIClient {
   private storeAccessToken(token: string): void {
     if (typeof window !== "undefined") {
       localStorage.setItem("sopo_access_token", token);
+      document.cookie = "sopo_is_auth=true; path=/; max-age=2592000; SameSite=Lax";
     }
   }
 
@@ -341,6 +350,7 @@ class APIClient {
   private clearAccessToken(): void {
     if (typeof window !== "undefined") {
       localStorage.removeItem("sopo_access_token");
+      document.cookie = "sopo_is_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
     }
   }
 }
