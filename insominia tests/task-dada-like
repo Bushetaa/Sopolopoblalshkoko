@@ -1,0 +1,24 @@
+# مهام تنفيذ Frontend CRUD
+
+- `[x]` **تحديث الـ API Client**
+  - إضافة واجهات البيانات (Interfaces) للـ Gateways, Services, Targets, Routes, Plugins, Collections.
+  - إضافة دوال الـ CRUD (GET, POST, PATCH, DELETE) في `api-client.ts`.
+- `[x]` **مكونات الـ UI الأساسية**
+  - تجهيز Input, Select, Toggle, Modal.
+  - تصميم Slug Setup Modal.
+- `[ ]` **صفحة Gateways**
+  - إنشاء `app/(dashboard)/api-gateway/page.tsx`
+  - إنشاء `GatewayForm.tsx` (Name, Description, Mode, Active)
+- `[ ]` **صفحة Collections**
+  - إنشاء صفحة المجموعات (Pro Mode Only).
+- `[ ]` **صفحة Services & Targets**
+  - إنشاء صفحة الخدمات.
+  - إنشاء `ServiceForm.tsx` (مع قسم الـ Health Check).
+  - إنشاء `ServiceTargets.tsx` (جدول لإدارة الأهداف).
+- `[ ]` **صفحة Routes & Sub-Requests**
+  - إنشاء صفحة المسارات.
+  - إنشاء `RouteForm.tsx` (Standard vs Aggregate).
+  - إنشاء جدول الـ Aggregate Sub-Requests.
+- `[ ]` **صفحة Plugins**
+  - إنشاء صفحة الإضافات.
+  - إنشاء `PluginForm.tsx` مع الحقول الديناميكية لكل نوع.

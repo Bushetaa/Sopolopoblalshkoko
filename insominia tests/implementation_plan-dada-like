@@ -1,0 +1,75 @@
+# خطة تنفيذ واجهات لوحة التحكم (Frontend CRUD UI)
+
+تهدف هذه الخطة إلى تنفيذ واجهات المستخدم الخاصة بإدارة نظام הـ API Gateway بناءً على المواصفات المذكورة في ملف `frontend_plan(en)2.md`. سنقوم ببناء النماذج (Forms)، الجداول (Tables)، والأزرار المطلوبة لجميع الكيانات (Gateways, Collections, Services, Routes, Plugins) داخل مشروع الـ Frontend.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **التكامل مع الـ API (Integration):** بناءً على ملف `gateway-backend-crud` (Insomnia)، سيتم ربط الواجهات مباشرة مع الـ Endpoints الحقيقية للـ Backend تحت المسار `/api/v1/` لكل من: Gateways, Services, Service Targets, Gateway Routes, Gateway Plugins, Aggregate Requests.
+> سيتم إضافة دوال (Methods) في الـ `api-client.ts` للتعامل مع هذه الـ Endpoints بشكل كامل (GET, POST, PATCH, DELETE).
+
+> [!NOTE]
+> **مكتبات النماذج:** سيتم استخدام `react-hook-form` مع `zod` للـ Validation لضمان تطبيق جميع القواعد (Rules) المذكورة في ملف التخطيط بكفاءة عالية وبدون إعادة تحميل للصفحة.
+
+## Proposed Changes
+
+سيتم تقسيم العمل إلى عدة مهام (Tasks) منطقية يتم تنفيذها بالترتيب:
+
+### Task 1: إعداد المكونات الأساسية وتأسيس الـ Slug
+- **[NEW] `components/ui/`**: التأكد من وجود مكونات UI الأساسية (Input, Select, Toggle/Switch, Button, Modal/Dialog) وتجهيزها للاستخدام في النماذج.
+- **[NEW] `components/slug/SlugSetupModal.tsx`**: 
+  - إنشاء نافذة منبثقة (Modal) تظهر للمستخدم إذا لم يكن لديه مسار (Slug) خاص به.
+  - إضافة حقل إدخال مع تحقق `Regex: ^[a-z0-9][a-z0-9\-]{1,}[a-z0-9]$` ومنع الكلمات المحجوزة.
+  - عرض الـ Live Preview أسفل الحقل `/{slug}/...`.
+
+### Task 2: إدارة الـ Gateways (بوابات الـ API)
+- **[MODIFY] `app/(dashboard)/api-gateway/page.tsx`**: صفحة عرض قائمة الـ Gateways.
+- **[NEW] `components/gateway/GatewayForm.tsx`**: 
+  - نموذج الإضافة/التعديل للـ Gateway.
+  - الحقول: Name, Description, Mode (single/pro), Active.
+  - تطبيق قاعدة الـ Single limit: إخفاء/تعطيل خيار الـ single إذا كان لدى المستخدم واحد بالفعل.
+  - أزرار: Create/Save, Cancel, Delete (مع Confirmation dialog).
+
+### Task 3: إدارة الـ Collections (في وضع الـ Pro)
+- **[MODIFY] `app/(dashboard)/collections/page.tsx`**: صفحة عرض المجموعات (مخفية إذا كان وضع الـ Gateway هو Single).
+- **[NEW] `components/collection/CollectionForm.tsx`**:
+  - نموذج يحتوي على Name, Description, Active.
+  - أزرار التحكم وعمليات الـ CRUD.
+
+### Task 4: إدارة الـ Services (الخدمات) والـ Targets
+- **[NEW] `app/(dashboard)/services/page.tsx`**: صفحة عرض الخدمات.
+- **[NEW] `components/service/ServiceForm.tsx`**:
+  - الحقول الأساسية: Name, Protocol (http/grpc), Load Balancing Policy, Collection (فقط في وضع الـ Pro).
+  - قسم الـ Health Check (قابل للطي/Collapsible).
+- **[NEW] `components/service/ServiceTargets.tsx`**:
+  - جدول لإدارة الـ Service Targets (الروابط والأوزان).
+  - أزرار الحذف والإضافة Inline.
+  - رسوم توضيحية للـ Weights في حالة اختيار `weighted`.
+
+### Task 5: إدارة الـ Routes (المسارات)
+- **[NEW] `app/(dashboard)/routes/page.tsx`**: صفحة عرض المسارات.
+- **[NEW] `components/route/RouteForm.tsx`**:
+  - نموذج معقد يحتوي على مفتاح (Toggle) للتبديل بين وضعي (Standard) و (Aggregate).
+  - **Standard Mode**: حقول اختيار الخدمة، مسار الهدف، WebSocket، وإعدادات إعادة المحاولة (Retries).
+  - **Aggregate Mode**: حقول Merge Strategy، Timeout، و Allow Partial Failure.
+  - عرض الـ URL Preview ديناميكياً بناءً على نوع الـ Gateway.
+- **[NEW] `components/route/AggregateSubRequests.tsx`**:
+  - جدول تفاعلي لإضافة الـ Sub-Requests داخل المسار الـ Aggregate.
+
+### Task 6: إدارة الـ Plugins (الإضافات)
+- **[NEW] `app/(dashboard)/plugins/page.tsx`**: عرض الإضافات المفعلة.
+- **[NEW] `components/plugin/PluginForm.tsx`**:
+  - نموذج ذكي يغير الحقول المعروضة بناءً على نوع الـ Plugin المختار.
+  - دعم الحقول المتقدمة: Dynamic Arrays (لإضافة نصوص متعددة مثل Allowed Origins)، و Toggles، و Selects.
+  - دعم أنواع الـ Plugins: `jwt`, `apikey`, `ratelimit`, `cache`, `cors`, `waf`, `schema_validation`, `request_id`, `logging`.
+
+## Verification Plan
+
+- **التحقق من صحة المدخلات (Validation)**:
+  - إدخال قيم خاطئة (مثل مسارات تبدأ بدون `/` أو كلمات محجوزة في الـ Slug) والتأكد من ظهور رسائل الخطأ.
+- **التحقق من التفاعلية (Interactivity)**:
+  - تبديل نوع الـ Gateway إلى `single` والتأكد من اختفاء قائمة الـ Collection.
+  - تبديل الـ Route إلى `Aggregate` والتأكد من تغيير الحقول المعروضة بشكل صحيح.
+  - تغيير الـ Plugin للتأكد من ظهور إعدادات التكوين (Config) الخاصة به فقط.
+- **التحقق من التصميم (Aesthetics)**:
+  - مراجعة جميع الواجهات لضمان توافقها مع الـ Dark Mode وأنها بمظهر Premium واحترافي كما هو مطلوب في المشروع.

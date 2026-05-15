@@ -2,18 +2,71 @@
 
 import React, { use } from 'react';
 import Link from 'next/link';
-import { Route as RouteIcon, Plus, MoreVertical, GitMerge, Link as LinkIcon } from 'lucide-react';
+import { Route as RouteIcon, Plus, MoreVertical, GitMerge, Link as LinkIcon, Edit, Trash, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-// Mock Routes
-const mockRoutes = [
-  { id: 'rt-1', path: '/api/v1/users', method: 'GET', serviceName: 'users-service', isAggregate: false },
-  { id: 'rt-2', path: '/api/v1/dashboard', method: 'GET', serviceName: 'Multiple Services', isAggregate: true },
-  { id: 'rt-3', path: '/api/v1/payments', method: 'POST', serviceName: 'payments-grpc', isAggregate: false },
-];
+import { apiClient, GatewayRoute } from '@/lib/api-client';
+
+interface EnhancedRoute extends GatewayRoute {
+  serviceName: string;
+}
 
 export default function RoutesPage({ params }: { params: Promise<{ gatewayId: string }> }) {
+  const router = useRouter();
   const { gatewayId } = use(params);
+  const [routes, setRoutes] = React.useState<EnhancedRoute[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [isDeleting, setIsDeleting] = React.useState<string | null>(null);
+
+  const fetchData = async () => {
+    try {
+      const [fetchedRoutes, services] = await Promise.all([
+        apiClient.gatewayRoutes.getAll(),
+        apiClient.services.getAll()
+      ]);
+
+      const gwRoutes = fetchedRoutes.filter(r => r.gateway_id === gatewayId);
+      const formatted = gwRoutes.map(route => {
+        const svc = services.find(s => s.id === route.service_id);
+        return {
+          ...route,
+          serviceName: svc?.name || 'Unknown'
+        };
+      });
+
+      setRoutes(formatted);
+    } catch (error) {
+      console.error('Failed to fetch routes', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
+    if (gatewayId) {
+      fetchData();
+    }
+  }, [gatewayId]);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this route?")) return;
+    setIsDeleting(id);
+    try {
+      await apiClient.gatewayRoutes.delete(id);
+      await fetchData();
+    } catch (error) {
+      console.error("Failed to delete route", error);
+    } finally {
+      setIsDeleting(null);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -43,7 +96,16 @@ export default function RoutesPage({ params }: { params: Promise<{ gatewayId: st
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-800">
-            {mockRoutes.length === 0 ? (
+            {isLoading ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                  <div className="flex flex-col items-center justify-center">
+                    <RouteIcon className="w-12 h-12 text-gray-700 mb-3 animate-pulse" />
+                    <p className="text-base font-medium text-gray-300">Loading Routes...</p>
+                  </div>
+                </td>
+              </tr>
+            ) : routes.length === 0 ? (
               <tr>
                 <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                   <div className="flex flex-col items-center justify-center">
@@ -54,7 +116,7 @@ export default function RoutesPage({ params }: { params: Promise<{ gatewayId: st
                 </td>
               </tr>
             ) : (
-              mockRoutes.map((rt) => (
+              routes.map((rt) => (
                 <tr key={rt.id} className="hover:bg-gray-800/30 transition-colors group">
                   <td className="px-6 py-4">
                     <Link href={`/api-gateway/${gatewayId}/routes/${rt.id}`} className="flex items-center gap-3">
@@ -74,7 +136,7 @@ export default function RoutesPage({ params }: { params: Promise<{ gatewayId: st
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    {rt.isAggregate ? (
+                    {rt.is_aggregate ? (
                       <span className="inline-flex items-center gap-1.5 text-xs text-purple-400 bg-purple-500/10 px-2 py-1 rounded border border-purple-500/20">
                         <GitMerge className="w-3.5 h-3.5" /> Aggregate
                       </span>
@@ -88,9 +150,26 @@ export default function RoutesPage({ params }: { params: Promise<{ gatewayId: st
                     {rt.serviceName}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button className="p-1.5 text-gray-500 hover:text-gray-300 hover:bg-gray-800 rounded transition-colors">
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button disabled={isDeleting === rt.id} className="p-1.5 text-gray-500 hover:text-gray-300 hover:bg-gray-800 rounded transition-colors disabled:opacity-50">
+                          {isDeleting === rt.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreVertical className="w-4 h-4" />}
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-40">
+                        <DropdownMenuItem onClick={() => router.push(`/api-gateway/${gatewayId}/routes/${rt.id}/edit`)} className="cursor-pointer">
+                          <Edit className="w-4 h-4 mr-2" />
+                          Edit Route
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => rt.id && handleDelete(rt.id)}
+                          className="cursor-pointer text-red-500 hover:text-red-400 hover:bg-red-500/10 focus:text-red-400 focus:bg-red-500/10"
+                        >
+                          <Trash className="w-4 h-4 mr-2" />
+                          Delete Route
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </td>
                 </tr>
               ))

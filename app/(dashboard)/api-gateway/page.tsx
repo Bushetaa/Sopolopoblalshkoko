@@ -2,17 +2,51 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Plus, Globe, MoreVertical, Server, Zap } from 'lucide-react';
+import { Plus, Globe, MoreVertical, Server, Zap, Edit, Trash, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-// Mock data for gateways
-const mockGateways = [
-  { id: 'gw-1', name: 'Main E-Commerce', mode: 'pro', active: true, createdAt: '2026-05-01' },
-  { id: 'gw-2', name: 'Internal Tools', mode: 'single', active: true, createdAt: '2026-05-10' },
-  { id: 'gw-3', name: 'Legacy API', mode: 'pro', active: false, createdAt: '2026-04-15' },
-];
+import { apiClient, Gateway } from '@/lib/api-client';
 
 export default function ApiGatewayPage() {
+  const router = useRouter();
+  const [gateways, setGateways] = React.useState<Gateway[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [isDeleting, setIsDeleting] = React.useState<string | null>(null);
+
+  const fetchGateways = async () => {
+      try {
+        const data = await apiClient.gateways.getAll();
+        setGateways(data);
+      } catch (error) {
+        console.error('Failed to fetch gateways', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+  React.useEffect(() => {
+    fetchGateways();
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this gateway?")) return;
+    setIsDeleting(id);
+    try {
+      await apiClient.gateways.delete(id);
+      await fetchGateways();
+    } catch (error) {
+      console.error("Failed to delete gateway", error);
+    } finally {
+      setIsDeleting(null);
+    }
+  };
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       <div className="flex items-center justify-between">
@@ -41,7 +75,16 @@ export default function ApiGatewayPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-800">
-            {mockGateways.length === 0 ? (
+            {isLoading ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                  <div className="flex flex-col items-center justify-center">
+                    <Globe className="w-12 h-12 text-gray-700 mb-3 animate-pulse" />
+                    <p className="text-base font-medium text-gray-300">Loading Gateways...</p>
+                  </div>
+                </td>
+              </tr>
+            ) : gateways.length === 0 ? (
               <tr>
                 <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                   <div className="flex flex-col items-center justify-center">
@@ -52,7 +95,7 @@ export default function ApiGatewayPage() {
                 </td>
               </tr>
             ) : (
-              mockGateways.map((gw) => (
+              gateways.map((gw) => (
                 <tr key={gw.id} className="hover:bg-gray-800/30 transition-colors group">
                   <td className="px-6 py-4">
                     <Link href={`/api-gateway/${gw.id}/services`} className="flex items-center gap-3">
@@ -80,21 +123,38 @@ export default function ApiGatewayPage() {
                   <td className="px-6 py-4">
                     <span className={cn(
                       "inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-md border",
-                      gw.active 
+                      gw.is_active 
                         ? "bg-green-500/10 text-green-400 border-green-500/20" 
                         : "bg-gray-800 text-gray-400 border-gray-700"
                     )}>
-                      <span className={cn("w-1.5 h-1.5 rounded-full", gw.active ? "bg-green-400" : "bg-gray-500")} />
-                      {gw.active ? "Active" : "Inactive"}
+                      <span className={cn("w-1.5 h-1.5 rounded-full", gw.is_active ? "bg-green-400" : "bg-gray-500")} />
+                      {gw.is_active ? "Active" : "Inactive"}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-gray-400">
-                    {gw.createdAt}
+                    {gw.created_at || 'Just now'}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button className="p-1.5 text-gray-500 hover:text-gray-300 hover:bg-gray-800 rounded transition-colors">
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button disabled={isDeleting === gw.id} className="p-1.5 text-gray-500 hover:text-gray-300 hover:bg-gray-800 rounded transition-colors disabled:opacity-50">
+                          {isDeleting === gw.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreVertical className="w-4 h-4" />}
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-40">
+                        <DropdownMenuItem onClick={() => router.push(`/api-gateway/${gw.id}/edit`)} className="cursor-pointer">
+                          <Edit className="w-4 h-4 mr-2" />
+                          Edit Gateway
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => gw.id && handleDelete(gw.id)}
+                          className="cursor-pointer text-red-500 hover:text-red-400 hover:bg-red-500/10 focus:text-red-400 focus:bg-red-500/10"
+                        >
+                          <Trash className="w-4 h-4 mr-2" />
+                          Delete Gateway
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </td>
                 </tr>
               ))

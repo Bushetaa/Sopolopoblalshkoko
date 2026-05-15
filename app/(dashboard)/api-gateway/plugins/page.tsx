@@ -2,18 +2,82 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Plug, Power, MoreVertical } from 'lucide-react';
+import { Plug, Power, MoreVertical, Edit, Trash, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-// Mock: all plugins across all gateways
-const mockPlugins = [
-  { id: 'plg-1', name: 'ratelimit', enabled: true, scope: 'Gateway', gatewayId: 'gw-1', gatewayName: 'Main E-Commerce', phase: 'RateLimiting' },
-  { id: 'plg-2', name: 'cors', enabled: true, scope: 'Gateway', gatewayId: 'gw-1', gatewayName: 'Main E-Commerce', phase: 'PreRouting' },
-  { id: 'plg-3', name: 'jwt', enabled: true, scope: 'Route', gatewayId: 'gw-1', gatewayName: 'Main E-Commerce', phase: 'Authentication' },
-  { id: 'plg-4', name: 'apikey', enabled: false, scope: 'Gateway', gatewayId: 'gw-2', gatewayName: 'Internal Tools', phase: 'Authentication' },
-];
+import { apiClient, GatewayPlugin } from '@/lib/api-client';
+
+interface EnhancedPlugin extends GatewayPlugin {
+  gatewayName: string;
+  scope: string;
+  phase: string;
+}
 
 export default function GlobalPluginsPage() {
+  const router = useRouter();
+  const [plugins, setPlugins] = React.useState<EnhancedPlugin[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [isDeleting, setIsDeleting] = React.useState<string | null>(null);
+
+  const fetchData = async () => {
+      try {
+        const [fetchedPlugins, gateways] = await Promise.all([
+          apiClient.gatewayPlugins.getAll(),
+          apiClient.gateways.getAll()
+        ]);
+
+        const formatted = fetchedPlugins.map(plugin => {
+          const gw = gateways.find(g => g.id === plugin.gateway_id);
+          
+          let scope = 'Gateway';
+          if (plugin.route_id) scope = 'Route';
+          if (plugin.service_id) scope = 'Service';
+
+          // Basic phase mapping based on typical plugin names
+          let phase = 'PreRouting';
+          if (plugin.name.includes('auth') || plugin.name.includes('jwt')) phase = 'Authentication';
+          if (plugin.name.includes('limit')) phase = 'RateLimiting';
+
+          return {
+            ...plugin,
+            gatewayName: gw?.name || 'Unknown',
+            scope,
+            phase
+          };
+        });
+
+        setPlugins(formatted);
+      } catch (error) {
+        console.error('Failed to fetch plugins', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+  React.useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this plugin?")) return;
+    setIsDeleting(id);
+    try {
+      await apiClient.gatewayPlugins.delete(id);
+      await fetchData();
+    } catch (error) {
+      console.error("Failed to delete plugin", error);
+    } finally {
+      setIsDeleting(null);
+    }
+  };
+
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       <div>
@@ -34,7 +98,14 @@ export default function GlobalPluginsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-800">
-            {mockPlugins.length === 0 ? (
+            {isLoading ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                  <Plug className="w-12 h-12 text-gray-700 mx-auto mb-3 animate-pulse" />
+                  <p className="text-base font-medium text-gray-300">Loading Plugins...</p>
+                </td>
+              </tr>
+            ) : plugins.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
                   <Plug className="w-12 h-12 text-gray-700 mx-auto mb-3" />
@@ -42,10 +113,10 @@ export default function GlobalPluginsPage() {
                 </td>
               </tr>
             ) : (
-              mockPlugins.map((plg) => (
+              plugins.map((plg) => (
                 <tr key={plg.id} className="hover:bg-gray-800/30 transition-colors group">
                   <td className="px-6 py-4">
-                    <Link href={`/api-gateway/${plg.gatewayId}/plugins`} className="flex items-center gap-3">
+                    <Link href={`/api-gateway/${plg.gateway_id}/plugins`} className="flex items-center gap-3">
                       <div className={cn("w-8 h-8 rounded flex items-center justify-center", plg.enabled ? "bg-blue-500/10 border border-blue-500/20" : "bg-gray-800 border border-gray-700")}>
                         <Plug className={cn("w-4 h-4", plg.enabled ? "text-blue-400" : "text-gray-500")} />
                       </div>
@@ -66,7 +137,7 @@ export default function GlobalPluginsPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <Link href={`/api-gateway/${plg.gatewayId}/plugins`} className="text-gray-400 hover:text-blue-400 transition-colors text-xs">
+                    <Link href={`/api-gateway/${plg.gateway_id}/plugins`} className="text-gray-400 hover:text-blue-400 transition-colors text-xs">
                       {plg.gatewayName}
                     </Link>
                   </td>
@@ -82,9 +153,26 @@ export default function GlobalPluginsPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button className="p-1.5 text-gray-500 hover:text-gray-300 hover:bg-gray-800 rounded transition-colors">
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button disabled={isDeleting === plg.id} className="p-1.5 text-gray-500 hover:text-gray-300 hover:bg-gray-800 rounded transition-colors disabled:opacity-50">
+                          {isDeleting === plg.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreVertical className="w-4 h-4" />}
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-40">
+                        <DropdownMenuItem onClick={() => router.push(`/api-gateway/${plg.gateway_id}/plugins`)} className="cursor-pointer">
+                          <Edit className="w-4 h-4 mr-2" />
+                          Manage Plugin
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => plg.id && handleDelete(plg.id)}
+                          className="cursor-pointer text-red-500 hover:text-red-400 hover:bg-red-500/10 focus:text-red-400 focus:bg-red-500/10"
+                        >
+                          <Trash className="w-4 h-4 mr-2" />
+                          Delete Plugin
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </td>
                 </tr>
               ))

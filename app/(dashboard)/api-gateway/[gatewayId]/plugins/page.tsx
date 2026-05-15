@@ -5,36 +5,73 @@ import { Plug, Plus, Trash2, Power } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import DynamicPluginConfig from '@/components/forms/DynamicPluginConfig';
 
-// Mock Global Plugins for this Gateway
-const initialPlugins = [
-  { id: 'plg-1', name: 'ratelimit', enabled: true, phase: 'RateLimiting', failOpen: false, config: { capacity: 1000, refillRate: 100, keyType: 'ip', backend: 'redis' } },
-];
+import { apiClient, GatewayPlugin } from '@/lib/api-client';
 
-export default function PluginsPage() {
-  const [plugins, setPlugins] = useState(initialPlugins);
+export default function PluginsPage({ params }: { params: Promise<{ gatewayId: string }> }) {
+  const { gatewayId } = React.use(params);
+  const [plugins, setPlugins] = useState<GatewayPlugin[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const [newPluginName, setNewPluginName] = useState('jwt');
   const [newPluginConfig, setNewPluginConfig] = useState<any>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const fetchPlugins = async () => {
+    try {
+      const data = await apiClient.gatewayPlugins.getAll();
+      setPlugins(data.filter(p => p.gateway_id === gatewayId && !p.route_id && !p.service_id));
+    } catch (error) {
+      console.error("Failed to fetch plugins", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
+    if (gatewayId) {
+      fetchPlugins();
+    }
+  }, [gatewayId]);
   
-  const handleAddPlugin = () => {
-    setPlugins([...plugins, {
-      id: Math.random().toString(),
-      name: newPluginName,
-      enabled: true,
-      phase: 'Authentication',
-      failOpen: false,
-      config: newPluginConfig
-    }]);
-    setIsAdding(false);
-    setNewPluginConfig({});
+  const handleAddPlugin = async () => {
+    setIsSubmitting(true);
+    try {
+      await apiClient.gatewayPlugins.create({
+        name: newPluginName,
+        gateway_id: gatewayId,
+        config: newPluginConfig,
+        enabled: true,
+      });
+      setIsAdding(false);
+      setNewPluginConfig({});
+      await fetchPlugins();
+    } catch (error) {
+      console.error("Failed to create plugin", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleToggleEnable = (id: string) => {
-    setPlugins(plugins.map(p => p.id === id ? { ...p, enabled: !p.enabled } : p));
+  const handleToggleEnable = async (plugin: GatewayPlugin) => {
+    try {
+      await apiClient.gatewayPlugins.update(plugin.id!, {
+        ...plugin,
+        enabled: !plugin.enabled
+      });
+      await fetchPlugins();
+    } catch (error) {
+      console.error("Failed to update plugin", error);
+    }
   };
 
-  const handleRemove = (id: string) => {
-    setPlugins(plugins.filter(p => p.id !== id));
+  const handleRemove = async (id: string) => {
+    if (!confirm("Are you sure you want to remove this plugin?")) return;
+    try {
+      await apiClient.gatewayPlugins.delete(id);
+      await fetchPlugins();
+    } catch (error) {
+      console.error("Failed to delete plugin", error);
+    }
   };
 
   return (
@@ -94,8 +131,8 @@ export default function PluginsPage() {
               <button onClick={() => setIsAdding(false)} className="px-4 py-2 text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded-lg font-medium transition-colors">
                 Cancel
               </button>
-              <button onClick={handleAddPlugin} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
-                Save Plugin
+              <button disabled={isSubmitting} onClick={handleAddPlugin} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50">
+                {isSubmitting ? "Saving..." : "Save Plugin"}
               </button>
             </div>
           </div>
@@ -103,7 +140,12 @@ export default function PluginsPage() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {plugins.length === 0 && !isAdding ? (
+        {isLoading ? (
+          <div className="col-span-full py-12 text-center text-gray-500 bg-gray-900 border border-gray-800 rounded-xl">
+            <Plug className="w-12 h-12 text-gray-700 mx-auto mb-3 animate-pulse" />
+            <p className="text-base font-medium text-gray-300">Loading Plugins...</p>
+          </div>
+        ) : plugins.length === 0 && !isAdding ? (
           <div className="col-span-full py-12 text-center text-gray-500 bg-gray-900 border border-gray-800 rounded-xl">
             <Plug className="w-12 h-12 text-gray-700 mx-auto mb-3" />
             <p className="text-base font-medium text-gray-300">No Global Plugins Configured</p>
@@ -119,11 +161,11 @@ export default function PluginsPage() {
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-100 capitalize">{plugin.name}</h4>
-                    <p className="text-xs text-gray-500 font-mono">{plugin.phase}</p>
+                    <p className="text-xs text-gray-500 font-mono">{(plugin.name.includes('auth') || plugin.name.includes('jwt')) ? 'Authentication' : 'TrafficControl'}</p>
                   </div>
                 </div>
                 <button 
-                  onClick={() => handleToggleEnable(plugin.id)}
+                  onClick={() => handleToggleEnable(plugin)}
                   className={cn("p-1.5 rounded-full transition-colors", plugin.enabled ? "text-green-400 hover:bg-green-400/10" : "text-gray-500 hover:bg-gray-700")}
                   title={plugin.enabled ? "Disable" : "Enable"}
                 >
@@ -138,7 +180,7 @@ export default function PluginsPage() {
               </div>
 
               <div className="flex justify-end pt-4 mt-auto">
-                <button onClick={() => handleRemove(plugin.id)} className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1 p-1.5 hover:bg-red-500/10 rounded transition-colors">
+                <button onClick={() => plugin.id && handleRemove(plugin.id)} className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1 p-1.5 hover:bg-red-500/10 rounded transition-colors">
                   <Trash2 className="w-3.5 h-3.5" /> Remove
                 </button>
               </div>

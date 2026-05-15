@@ -21,8 +21,87 @@ interface AuthSession {
     isAnonymous?: boolean;
     locale?: string;
     phoneNumberVerified?: boolean;
-    [key: string]: any;
   };
+}
+
+export interface Gateway {
+  id?: string;
+  name: string;
+  description?: string;
+  is_active: boolean;
+  mode?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface GatewayCollection {
+  id?: string;
+  name: string;
+  description?: string;
+  is_active: boolean;
+  gateway_id?: string;
+}
+
+export interface Service {
+  id?: string;
+  name: string;
+  gateway_id: string;
+  protocol: string;
+  lb_policy: string;
+  collection_id?: string;
+  health_check_path?: string;
+  health_check_interval?: string;
+  health_check_timeout?: string;
+  health_check_fail_threshold?: number;
+  health_check_pass_threshold?: number;
+}
+
+export interface ServiceTarget {
+  id?: string;
+  service_id: string;
+  url: string;
+  weight?: number;
+}
+
+export interface GatewayRoute {
+  id?: string;
+  gateway_id: string;
+  service_id?: string;
+  path: string;
+  target_path?: string;
+  method: string;
+  protocol?: string;
+  timeout?: string;
+  collection_id?: string;
+  is_aggregate?: boolean;
+  retry_max_attempts?: number;
+  retry_on_status?: string[];
+  aggregate_merge_strategy?: string;
+  aggregate_timeout?: string;
+  allow_partial_failure?: boolean;
+  websocket?: boolean;
+}
+
+export interface RouteSubRequest {
+  id?: string;
+  route_id: string;
+  key_name: string;
+  service_id: string;
+  target_path: string;
+  method?: string;
+  is_required?: boolean;
+  timeout?: string;
+}
+
+export interface GatewayPlugin {
+  id?: string;
+  name: string;
+  phase: string;
+  gateway_id?: string;
+  route_id?: string;
+  is_enabled?: boolean;
+  fail_open?: boolean;
+  config?: any;
 }
 
 interface FetchOptions extends Omit<RequestInit, 'body'> {
@@ -331,6 +410,29 @@ class APIClient {
   async delete<T>(url: string, config?: FetchOptions): Promise<T> {
     return this.fetchWithAuth<T>(url, { ...config, method: "DELETE" });
   }
+
+  async patch<T>(url: string, data?: any, config?: FetchOptions): Promise<T> {
+    return this.fetchWithAuth<T>(url, { ...config, method: "PATCH", body: data });
+  }
+
+  // API Gateway CRUD operations
+  private createCrudClient<T>(basePath: string) {
+    return {
+      getAll: () => this.get<T[]>(basePath),
+      getById: (id: string) => this.get<T>(`${basePath}/${id}`),
+      create: (data: Partial<T>) => this.post<T>(basePath, data),
+      update: (id: string, data: Partial<T>) => this.patch<T>(`${basePath}/${id}`, data),
+      delete: (id: string) => this.delete<void>(`${basePath}/${id}`)
+    };
+  }
+
+  public readonly gateways = this.createCrudClient<Gateway>('/api/v1/gateways');
+  public readonly collections = this.createCrudClient<GatewayCollection>('/api/v1/collections');
+  public readonly services = this.createCrudClient<Service>('/api/v1/services');
+  public readonly serviceTargets = this.createCrudClient<ServiceTarget>('/api/v1/service-targets');
+  public readonly gatewayRoutes = this.createCrudClient<GatewayRoute>('/api/v1/gateway-routes');
+  public readonly routeSubRequests = this.createCrudClient<RouteSubRequest>('/api/v1/route-sub-requests');
+  public readonly gatewayPlugins = this.createCrudClient<GatewayPlugin>('/api/v1/gateway-plugins');
 
   // Token management
   private storeAccessToken(token: string): void {

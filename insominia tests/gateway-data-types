@@ -1,0 +1,1114 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Sopo Backend Full API
+meta:
+  id: wrk_45b19bca5536454f95d20ad54b1d6054
+  created: 1778541142738
+  modified: 1778541142738
+  description: ""
+collection:
+  - name: Security
+    meta:
+      id: fld_39e3b760fc3741e7963ee0f99119a182
+      created: 1777496922068
+      modified: 1777496922068
+      sortKey: -1777496922065
+      description: ""
+  - name: User
+    meta:
+      id: fld_85d4809e696a4707a74df6cf424ed163
+      created: 1777496922068
+      modified: 1777496922068
+      sortKey: -1777496922067
+      description: ""
+  - name: Session
+    meta:
+      id: fld_9531d14176ae46b7bc8a0151ca38a487
+      created: 1777496922068
+      modified: 1777496922068
+      sortKey: -1777496922066
+      description: ""
+  - name: Authentication
+    meta:
+      id: fld_a452bd4dc3374f4aad9fc02c7f3f03e0
+      created: 1777496922068
+      modified: 1777496922068
+      sortKey: -1777496922068
+      description: ""
+  - name: Service Targets
+    meta:
+      id: fld_096ab9054c884c5e9ada810c1d2a2fbb
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922081
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/api/v1/service-targets/stream"
+        name: Stream service-targets
+        meta:
+          id: req_4d07f9e33a9f4ea0aaafc213f52cfe4c
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922083
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/service-targets/1"
+        name: Delete service-targets
+        meta:
+          id: req_4e1f70c4d44c448592c0c7a49b1216e0
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922086
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/service-targets"
+        name: Get All service-targets
+        meta:
+          id: req_8e737cfdb9f24cad93dff363db6b86b5
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922082
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/service-targets/1"
+        name: Update service-targets
+        meta:
+          id: req_db5b48d716a940fe97589ae55658ea8b
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922085
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "url": "https://example.com",
+              "service_id": "00000000-0000-0000-0000-000000000000",
+              "weight": 1
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/service-targets"
+        name: Create service-targets
+        meta:
+          id: req_e47548b3b92848788b284968856d5bad
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922084
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "url": "https://example.com",
+              "service_id": "00000000-0000-0000-0000-000000000000",
+              "weight": 1
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Gateways
+    meta:
+      id: fld_13791b26258e4d998a4e7a6e939076d7
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922069
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/api/v1/gateways"
+        name: Create gateways
+        meta:
+          id: req_2951f959d6fe454dadaca6bc3ee981c7
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922072
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "name": "Second gateway mutation",
+              "description": "Main office gateway 2",
+              "is_active": true
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/gateways/1"
+        name: Delete gateways
+        meta:
+          id: req_303f556462244113a6447aa0dab55825
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922074
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/gateways"
+        name: Get All gateways
+        meta:
+          id: req_821d7de067f844ddb2d895039a70105f
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922070
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/gateways/stream"
+        name: Stream gateways
+        meta:
+          id: req_974cc9d26f49438386184ebe5572c107
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922071
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/gateways/1"
+        name: Update gateways
+        meta:
+          id: req_a0de338647654000a82398640285909c
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922073
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "name": "Second gateway mutation",
+              "description": "Main office gateway 2",
+              "is_active": true
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Gateway Routes
+    meta:
+      id: fld_32bc2714dbf745e4928ed66810208180
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922087
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/api/v1/gateway-routes/1"
+        name: Delete gateway-routes
+        meta:
+          id: req_11db015bb95c456bbf9a7a4dc83ef9d3
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922092
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/gateway-routes"
+        name: Get All gateway-routes
+        meta:
+          id: req_6a514bcde7ec4bcabee6d315b7440479
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922088
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/gateway-routes"
+        name: Create gateway-routes
+        meta:
+          id: req_795c4dfd525844ea8b6f6cf26f605d18
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922090
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "gateway_id": "00000000-0000-0000-0000-000000000000",
+              "service_id": "00000000-0000-0000-0000-000000000000",
+              "path": "/api/v1",
+              "target_path": "/api/v1",
+              "method": "GET",
+              "retry_max_attempts": 0,
+              "aggregate_merge_strategy": "merge",
+              "aggregate_timeout": "30s"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/gateway-routes/stream"
+        name: Stream gateway-routes
+        meta:
+          id: req_cc4506fa8877471a966d7cf7fe133f19
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922089
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/gateway-routes/1"
+        name: Update gateway-routes
+        meta:
+          id: req_f1b742fae3be4b6db6d9d739db3b9cd3
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922091
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "gateway_id": "00000000-0000-0000-0000-000000000000",
+              "service_id": "00000000-0000-0000-0000-000000000000",
+              "path": "/api/v1",
+              "target_path": "/api/v1",
+              "method": "GET",
+              "retry_max_attempts": 0,
+              "aggregate_merge_strategy": "merge",
+              "aggregate_timeout": "30s"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: User Profiles
+    meta:
+      id: fld_76efe333de12424dbbbe012ab37c76c6
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922105
+      description: ""
+  - name: Services
+    meta:
+      id: fld_cc1c6b9c3b7f48aabbaa4bab5ed573b8
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922075
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/api/v1/services/1"
+        name: Update services
+        meta:
+          id: req_49b27ef8bf664c52beae0238f8b73f7e
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922079
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "name": "Redis service2",
+              "gateway_id": "00000000-0000-0000-0000-000000000000",
+              "protocol": "http",
+              "lb_policy": "weighted"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/services"
+        name: Get All services
+        meta:
+          id: req_7d3218717c4e4e01b08e7eab30ce417c
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922076
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/services/stream"
+        name: Stream services
+        meta:
+          id: req_8401ead96a2840139078e18df09d6929
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922077
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/services"
+        name: Create services
+        meta:
+          id: req_8901cfe34f494680ba2b191c1447daa1
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922078
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "name": "Redis service2",
+              "gateway_id": "00000000-0000-0000-0000-000000000000",
+              "protocol": "http",
+              "lb_policy": "weighted"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/services/1"
+        name: Delete services
+        meta:
+          id: req_a3296cebcc5d46adbaababd412a7ef33
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922080
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Gateway Plugins
+    meta:
+      id: fld_d05e441b0ad340f8a12b0c743f6a1bc6
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922099
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/api/v1/gateway-plugins"
+        name: Create gateway-plugins
+        meta:
+          id: req_1d9ad707637e4124b85f4d5e1c085b9c
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922102
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "name": "apikey",
+              "phase": "access",
+              "gateway_id": "00000000-0000-0000-0000-000000000000",
+              "route_id": "00000000-0000-0000-0000-000000000000"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/gateway-plugins/1"
+        name: Delete gateway-plugins
+        meta:
+          id: req_2590bd7722cd466ea392e02ada60d03b
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922104
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/gateway-plugins"
+        name: Get All gateway-plugins
+        meta:
+          id: req_43d49e7ca7e94ecbbd8fa0a3b21ce3cc
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922100
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/gateway-plugins/1"
+        name: Update gateway-plugins
+        meta:
+          id: req_66a1b35bc66044a6bb2d134c3d5051c7
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922103
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "name": "apikey",
+              "phase": "access",
+              "gateway_id": "00000000-0000-0000-0000-000000000000",
+              "route_id": "00000000-0000-0000-0000-000000000000"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/gateway-plugins/stream"
+        name: Stream gateway-plugins
+        meta:
+          id: req_b9c8ae6cc09b40f395257a489c4f6ffe
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922101
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Collections
+    meta:
+      id: fld_f18e42c108154d1698c729bf00cdd3fa
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922111
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/api/v1/collections/1"
+        name: Delete collections
+        meta:
+          id: req_5fe9e24bd01c402682139e6ff0d9d31e
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922116
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/collections/stream"
+        name: Stream collections
+        meta:
+          id: req_6535d5cdf87f400687c3ff76b9535763
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922113
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/collections"
+        name: Get All collections
+        meta:
+          id: req_6d9f3239de5e4a07b36d839ea25ba6ff
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922112
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/collections"
+        name: Create collections
+        meta:
+          id: req_a935857516b543d08b10c430184c298c
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922114
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/collections/1"
+        name: Update collections
+        meta:
+          id: req_bb0074dd33434ed4a73744f9883063bc
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922115
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Aggregate Requests
+    meta:
+      id: fld_f35fef4db7a044af963db36226d1726d
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922093
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/api/v1/aggregate-requests/stream"
+        name: Stream aggregate-requests
+        meta:
+          id: req_0c6dff9252824eb384c09c575e6179c6
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922095
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/aggregate-requests/1"
+        name: Update aggregate-requests
+        meta:
+          id: req_1f01e028e831413bae0a70fc6c71d3df
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922097
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "route_id": "00000000-0000-0000-0000-000000000000",
+              "service_id": "00000000-0000-0000-0000-000000000000",
+              "key_name": "users",
+              "target_path": "/users/:id",
+              "method": "GET",
+              "timeout": "30"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/aggregate-requests/1"
+        name: Delete aggregate-requests
+        meta:
+          id: req_2fef67f74d924a9c9edd1d526235de45
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922098
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/aggregate-requests"
+        name: Get All aggregate-requests
+        meta:
+          id: req_5ee0ad9297f947d68fff8469e70f5dad
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922094
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/aggregate-requests"
+        name: Create aggregate-requests
+        meta:
+          id: req_ff9e0c3980f94cffa5f7f3f9125cb9d9
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922096
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "route_id": "00000000-0000-0000-0000-000000000000",
+              "service_id": "00000000-0000-0000-0000-000000000000",
+              "key_name": "users",
+              "target_path": "/users/:id",
+              "method": "GET",
+              "timeout": "30"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_a1be27f1b2581dcd5f1c4c6790f4bcd2478679cd
+    created: 1778541142955
+    modified: 1778541142955
+environments:
+  name: Base Environment
+  meta:
+    id: env_37bd2e279d3344f79dbc4261c0ab50c3
+    created: 1777496922068
+    modified: 1777496922068
+    isPrivate: false
+  data:
+    base_url: https://sopo-backend-165b270255e8.hosted.ghaymah.systems
+    jwt: "{% response 'body', 'req_login', 'b64::JC5zZXNzaW9uLmFjY2Vzc1Rva2Vu::46b',
+      'always', 'no-history' %}"
+  color: "#5b42d6"

@@ -2,18 +2,72 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Route as RouteIcon, GitMerge, Link as LinkIcon, MoreVertical } from 'lucide-react';
+import { Route as RouteIcon, GitMerge, Link as LinkIcon, MoreVertical, Edit, Trash, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-// Mock: all routes across all gateways
-const mockRoutes = [
-  { id: 'rt-1', path: '/api/v1/users', method: 'GET', serviceName: 'users-service', isAggregate: false, gatewayId: 'gw-1', gatewayName: 'Main E-Commerce' },
-  { id: 'rt-2', path: '/api/v1/dashboard', method: 'GET', serviceName: 'Multiple Services', isAggregate: true, gatewayId: 'gw-1', gatewayName: 'Main E-Commerce' },
-  { id: 'rt-3', path: '/api/v1/payments', method: 'POST', serviceName: 'payments-grpc', isAggregate: false, gatewayId: 'gw-1', gatewayName: 'Main E-Commerce' },
-  { id: 'rt-4', path: '/internal/health', method: 'GET', serviceName: 'auth-service', isAggregate: false, gatewayId: 'gw-2', gatewayName: 'Internal Tools' },
-];
+import { apiClient, GatewayRoute } from '@/lib/api-client';
+
+interface EnhancedRoute extends GatewayRoute {
+  gatewayName: string;
+  serviceName: string;
+}
 
 export default function GlobalRoutesPage() {
+  const router = useRouter();
+  const [routes, setRoutes] = React.useState<EnhancedRoute[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [isDeleting, setIsDeleting] = React.useState<string | null>(null);
+
+  const fetchData = async () => {
+      try {
+        const [fetchedRoutes, gateways, services] = await Promise.all([
+          apiClient.gatewayRoutes.getAll(),
+          apiClient.gateways.getAll(),
+          apiClient.services.getAll()
+        ]);
+
+        const formatted = fetchedRoutes.map(route => {
+          const gw = gateways.find(g => g.id === route.gateway_id);
+          const svc = services.find(s => s.id === route.service_id);
+          return {
+            ...route,
+            gatewayName: gw?.name || 'Unknown',
+            serviceName: svc?.name || 'Unknown'
+          };
+        });
+
+        setRoutes(formatted);
+      } catch (error) {
+        console.error('Failed to fetch routes', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+  React.useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this route?")) return;
+    setIsDeleting(id);
+    try {
+      await apiClient.gatewayRoutes.delete(id);
+      await fetchData();
+    } catch (error) {
+      console.error("Failed to delete route", error);
+    } finally {
+      setIsDeleting(null);
+    }
+  };
+
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       <div>
@@ -34,7 +88,14 @@ export default function GlobalRoutesPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-800">
-            {mockRoutes.length === 0 ? (
+            {isLoading ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                  <RouteIcon className="w-12 h-12 text-gray-700 mx-auto mb-3 animate-pulse" />
+                  <p className="text-base font-medium text-gray-300">Loading Routes...</p>
+                </td>
+              </tr>
+            ) : routes.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
                   <RouteIcon className="w-12 h-12 text-gray-700 mx-auto mb-3" />
@@ -42,10 +103,10 @@ export default function GlobalRoutesPage() {
                 </td>
               </tr>
             ) : (
-              mockRoutes.map((rt) => (
+              routes.map((rt) => (
                 <tr key={rt.id} className="hover:bg-gray-800/30 transition-colors group">
                   <td className="px-6 py-4">
-                    <Link href={`/api-gateway/${rt.gatewayId}/routes/${rt.id}`} className="font-mono text-gray-100 group-hover:text-blue-400 transition-colors">
+                    <Link href={`/api-gateway/${rt.gateway_id}/routes/${rt.id}`} className="font-mono text-gray-100 group-hover:text-blue-400 transition-colors">
                       {rt.path}
                     </Link>
                   </td>
@@ -60,7 +121,7 @@ export default function GlobalRoutesPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    {rt.isAggregate ? (
+                    {rt.is_aggregate ? (
                       <span className="inline-flex items-center gap-1.5 text-xs text-purple-400 bg-purple-500/10 px-2 py-1 rounded border border-purple-500/20">
                         <GitMerge className="w-3.5 h-3.5" /> Aggregate
                       </span>
@@ -72,14 +133,31 @@ export default function GlobalRoutesPage() {
                   </td>
                   <td className="px-6 py-4 text-gray-400">{rt.serviceName}</td>
                   <td className="px-6 py-4">
-                    <Link href={`/api-gateway/${rt.gatewayId}/routes`} className="text-gray-400 hover:text-blue-400 transition-colors text-xs">
+                    <Link href={`/api-gateway/${rt.gateway_id}/routes`} className="text-gray-400 hover:text-blue-400 transition-colors text-xs">
                       {rt.gatewayName}
                     </Link>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button className="p-1.5 text-gray-500 hover:text-gray-300 hover:bg-gray-800 rounded transition-colors">
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button disabled={isDeleting === rt.id} className="p-1.5 text-gray-500 hover:text-gray-300 hover:bg-gray-800 rounded transition-colors disabled:opacity-50">
+                          {isDeleting === rt.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreVertical className="w-4 h-4" />}
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-40">
+                        <DropdownMenuItem onClick={() => router.push(`/api-gateway/${rt.gateway_id}/routes/${rt.id}/edit`)} className="cursor-pointer">
+                          <Edit className="w-4 h-4 mr-2" />
+                          Edit Route
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => rt.id && handleDelete(rt.id)}
+                          className="cursor-pointer text-red-500 hover:text-red-400 hover:bg-red-500/10 focus:text-red-400 focus:bg-red-500/10"
+                        >
+                          <Trash className="w-4 h-4 mr-2" />
+                          Delete Route
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </td>
                 </tr>
               ))
