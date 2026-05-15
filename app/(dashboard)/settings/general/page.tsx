@@ -51,6 +51,10 @@ export default function GeneralSettingsPage() {
   const [locale, setLocale] = useState("en");
   const [isSaving, setIsSaving] = useState(false);
 
+  const [newEmail, setNewEmail] = useState("");
+  const [isChangingEmail, setIsChangingEmail] = useState(false);
+  const [isResendingVerification, setIsResendingVerification] = useState(false);
+
   useEffect(() => {
     if (user) {
       setDisplayName(user.displayName || "");
@@ -58,6 +62,46 @@ export default function GeneralSettingsPage() {
       setLocale(user.locale || "en");
     }
   }, [user]);
+
+  const handleResendVerification = async () => {
+    setIsResendingVerification(true);
+    try {
+      await apiClient.sendVerificationEmail();
+      toast({
+        title: "Email Sent",
+        description: "A new verification email has been sent to your inbox.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to resend verification email",
+        variant: "destructive",
+      });
+    } finally {
+      setIsResendingVerification(false);
+    }
+  };
+
+  const handleChangeEmail = async () => {
+    if (!newEmail || newEmail === user?.email) return;
+    setIsChangingEmail(true);
+    try {
+      await apiClient.changeEmail(newEmail);
+      toast({
+        title: "Email Change Requested",
+        description: "Please check your new email inbox to verify the change.",
+      });
+      setNewEmail("");
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to change email",
+        variant: "destructive",
+      });
+    } finally {
+      setIsChangingEmail(false);
+    }
+  };
 
   const handleSave = async () => {
     if (!displayName.trim()) {
@@ -142,7 +186,7 @@ export default function GeneralSettingsPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="email">Current Email Address</Label>
             <Input
               id="email"
               type="email"
@@ -150,9 +194,28 @@ export default function GeneralSettingsPage() {
               disabled
               className="bg-gray-950 border-gray-800 opacity-50 cursor-not-allowed"
             />
-            <p className="text-xs text-muted-foreground">
-              Email cannot be changed from this page. Contact support if you need to change it.
-            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="newEmail">Change Email Address</Label>
+            <div className="flex gap-2">
+              <Input
+                id="newEmail"
+                type="email"
+                placeholder="Enter new email address"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                disabled={isChangingEmail}
+                className="bg-gray-950 border-gray-800"
+              />
+              <Button 
+                variant="secondary" 
+                onClick={handleChangeEmail} 
+                disabled={isChangingEmail || !newEmail || newEmail === email}
+              >
+                {isChangingEmail ? <Loader2 className="h-4 w-4 animate-spin" /> : "Update"}
+              </Button>
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -203,13 +266,27 @@ export default function GeneralSettingsPage() {
         <CardContent className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm">Email Verified</span>
-            <span className={`px-2 py-1 rounded text-xs font-medium ${
-              user.emailVerified 
-                ? "bg-green-500/20 text-green-400" 
-                : "bg-yellow-500/20 text-yellow-400"
-            }`}>
-              {user.emailVerified ? "Verified" : "Pending"}
-            </span>
+            <div className="flex items-center gap-2">
+              {!user.emailVerified && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleResendVerification}
+                  disabled={isResendingVerification}
+                  className="h-7 text-xs border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/10"
+                >
+                  {isResendingVerification ? <Loader2 className="h-3 w-3 animate-spin mr-1" /> : null}
+                  Resend Email
+                </Button>
+              )}
+              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                user.emailVerified 
+                  ? "bg-green-500/20 text-green-400" 
+                  : "bg-yellow-500/20 text-yellow-400"
+              }`}>
+                {user.emailVerified ? "Verified" : "Pending"}
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center justify-between">

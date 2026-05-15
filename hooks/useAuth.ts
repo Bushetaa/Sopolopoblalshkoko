@@ -13,10 +13,16 @@ interface User {
   emailVerified: boolean;
   roles: string[];
   defaultRole: string;
-  metadata?: Record<string, any>;
+  metadata?: {
+    firstName?: string;
+    lastName?: string;
+    [key: string]: any;
+  };
   locale?: string;
   createdAt?: string;
-  activeMfaType?: string;
+  activeMfaType?: string | null;
+  isAnonymous?: boolean;
+  phoneNumberVerified?: boolean;
 }
 
 export function useAuth() {
@@ -152,6 +158,78 @@ export function useAuth() {
     []
   );
 
+  const resetPassword = useCallback(
+    async (email: string) => {
+      setIsAuthenticating(true);
+      try {
+        await apiClient.resetPassword(email);
+        toast({
+          title: "Email Sent",
+          description: "If an account exists, a password reset link has been sent.",
+        });
+      } catch (error: any) {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to request password reset",
+          variant: "destructive",
+        });
+        throw error;
+      } finally {
+        setIsAuthenticating(false);
+      }
+    },
+    []
+  );
+
+  const signInOTP = useCallback(
+    async (email: string) => {
+      setIsAuthenticating(true);
+      try {
+        await apiClient.signInOTP(email);
+        toast({
+          title: "OTP Sent",
+          description: "Check your email for the one-time passcode.",
+        });
+      } catch (error: any) {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to send OTP",
+          variant: "destructive",
+        });
+        throw error;
+      } finally {
+        setIsAuthenticating(false);
+      }
+    },
+    []
+  );
+
+  const verifyOTP = useCallback(
+    async (email: string, otp: string) => {
+      setIsAuthenticating(true);
+      try {
+        const session = await apiClient.verifyOTP(email, otp);
+        setUser(session.user);
+        toast({
+          title: "Success",
+          description: "Welcome back!",
+        });
+        router.push("/dashboard");
+        return session;
+      } catch (error: any) {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to verify OTP",
+          variant: "destructive",
+        });
+        throw error;
+      } finally {
+        setIsAuthenticating(false);
+      }
+    },
+    [router]
+  );
+
   return {
     user,
     isLoading,
@@ -161,6 +239,9 @@ export function useAuth() {
     logout,
     updateProfile,
     changePassword,
+    resetPassword,
+    signInOTP,
+    verifyOTP,
     isAuthenticated: !!user,
   };
 }

@@ -51,18 +51,23 @@ export default function SecuritySettingsPage() {
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [isMFAEnabled, setIsMFAEnabled] = useState(false);
   const [isGeneratingMFA, setIsGeneratingMFA] = useState(false);
+  const [mfaSecret, setMfaSecret] = useState<string | null>(null);
+  const [mfaQrCode, setMfaQrCode] = useState<string | null>(null);
+  const [mfaCode, setMfaCode] = useState("");
+  const [isVerifyingMfa, setIsVerifyingMfa] = useState(false);
+
+  const [patName, setPatName] = useState("");
+  const [isGeneratingPat, setIsGeneratingPat] = useState(false);
+  const [generatedPat, setGeneratedPat] = useState<string | null>(null);
 
   const handleToggle2FA = async (checked: boolean) => {
     if (checked) {
       setIsGeneratingMFA(true);
       try {
         const result = await apiClient.generateMFATotp();
-        toast({
-          title: "MFA Setup",
-          description: "Scan the QR code with your authenticator app",
-        });
-        // TODO: Show QR code in a modal
-        setIsMFAEnabled(true);
+        // Assuming result contains qrCode (base64 image or data URL) and secret
+        setMfaQrCode(result.imageUrl || result.qrCode);
+        setMfaSecret(result.totpSecret || result.secret);
       } catch (error: any) {
         toast({
           title: "Error",
@@ -72,6 +77,39 @@ export default function SecuritySettingsPage() {
       } finally {
         setIsGeneratingMFA(false);
       }
+    }
+  };
+
+  const handleVerifyMFA = async () => {
+    if (!mfaCode) return;
+    setIsVerifyingMfa(true);
+    try {
+      await apiClient.verifyMFA(mfaCode);
+      setIsMFAEnabled(true);
+      setMfaQrCode(null);
+      setMfaSecret(null);
+      setMfaCode("");
+      toast({ title: "Success", description: "Two-Factor Authentication enabled successfully." });
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message || "Failed to verify MFA code.", variant: "destructive" });
+    } finally {
+      setIsVerifyingMfa(false);
+    }
+  };
+
+  const handleGeneratePAT = async () => {
+    if (!patName) return;
+    setIsGeneratingPat(true);
+    setGeneratedPat(null);
+    try {
+      const result = await apiClient.generatePAT(patName);
+      setGeneratedPat(result.personalAccessToken || result.token || JSON.stringify(result));
+      setPatName("");
+      toast({ title: "Success", description: "Personal Access Token generated." });
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message || "Failed to generate PAT.", variant: "destructive" });
+    } finally {
+      setIsGeneratingPat(false);
     }
   };
 
@@ -264,12 +302,94 @@ export default function SecuritySettingsPage() {
             />
           </div>
 
+          {mfaQrCode && !user?.activeMfaType && (
+            <div className="p-4 border border-gray-800 rounded-lg bg-gray-950/50 space-y-4 animate-in fade-in duration-300">
+              <div className="space-y-2">
+                <p className="font-medium text-sm">1. Scan QR Code</p>
+                <div className="bg-white p-2 w-fit rounded-lg inline-block">
+                  <img src={mfaQrCode} alt="MFA QR Code" className="w-32 h-32" />
+                </div>
+                {mfaSecret && <p className="text-xs text-muted-foreground break-all">Secret: {mfaSecret}</p>}
+              </div>
+              <div className="space-y-2">
+                <p className="font-medium text-sm">2. Enter Code</p>
+                <div className="flex gap-2">
+                  <Input 
+                    placeholder="6-digit code" 
+                    value={mfaCode} 
+                    onChange={(e) => setMfaCode(e.target.value)}
+                    className="bg-gray-900 border-gray-800"
+                  />
+                  <Button onClick={handleVerifyMFA} disabled={isVerifyingMfa || !mfaCode}>
+                    {isVerifyingMfa ? <Loader2 className="h-4 w-4 animate-spin" /> : "Verify & Enable"}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {user?.activeMfaType && (
             <div className="bg-green-500/10 border border-green-500/30 rounded p-3 flex items-start gap-2">
               <ShieldCheck className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
               <div className="text-sm">
                 <p className="font-medium text-green-400">2FA is active</p>
                 <p className="text-green-400/80 text-xs">Your account is protected</p>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Personal Access Tokens (PAT) */}
+      <Card className="border-gray-800 bg-gray-900/50 backdrop-blur-sm">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Key className="h-5 w-5 text-purple-400" />
+            Personal Access Tokens
+          </CardTitle>
+          <CardDescription>
+            Generate tokens for API access. Keep them secure, they act like passwords.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="patName">Token Name</Label>
+            <div className="flex gap-2">
+              <Input
+                id="patName"
+                placeholder="e.g. My CI Pipeline"
+                value={patName}
+                onChange={(e) => setPatName(e.target.value)}
+                disabled={isGeneratingPat}
+                className="bg-gray-950 border-gray-800"
+              />
+              <Button 
+                variant="secondary" 
+                onClick={handleGeneratePAT} 
+                disabled={isGeneratingPat || !patName}
+                className="bg-purple-600 hover:bg-purple-700 text-white"
+              >
+                {isGeneratingPat ? <Loader2 className="h-4 w-4 animate-spin" /> : "Generate"}
+              </Button>
+            </div>
+          </div>
+          
+          {generatedPat && (
+            <div className="p-4 border border-purple-500/30 rounded-lg bg-purple-500/10 space-y-2 animate-in fade-in duration-300">
+              <p className="text-sm font-medium text-purple-400">Your New Token</p>
+              <p className="text-xs text-muted-foreground">Please copy this token now. You won't be able to see it again.</p>
+              <div className="bg-gray-950 border border-gray-800 p-2 rounded flex items-center justify-between gap-2">
+                <code className="text-xs text-purple-300 truncate font-mono">{generatedPat}</code>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  onClick={() => {
+                    navigator.clipboard.writeText(generatedPat);
+                    toast({ title: "Copied", description: "Token copied to clipboard." });
+                  }}
+                >
+                  Copy
+                </Button>
               </div>
             </div>
           )}

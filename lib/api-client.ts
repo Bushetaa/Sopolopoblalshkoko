@@ -1,7 +1,5 @@
 "use client";
 
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-
 interface AuthSession {
   accessToken: string;
   accessTokenExpiresIn: number;
@@ -13,77 +11,125 @@ interface AuthSession {
     emailVerified: boolean;
     roles: string[];
     defaultRole: string;
-    metadata?: Record<string, any>;
+    metadata?: {
+      firstName?: string;
+      lastName?: string;
+      [key: string]: any;
+    };
+    createdAt?: string;
+    activeMfaType?: string | null;
+    isAnonymous?: boolean;
+    locale?: string;
+    phoneNumberVerified?: boolean;
     [key: string]: any;
   };
 }
 
+interface FetchOptions extends Omit<RequestInit, 'body'> {
+  body?: any;
+  _retry?: boolean;
+}
+
 class APIClient {
-  private client: AxiosInstance;
   private baseURL: string;
 
-  constructor(baseURL: string = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001") {
+  constructor(baseURL: string = process.env.NEXT_PUBLIC_BACKEND_URL || "") {
     this.baseURL = baseURL;
+  }
+
+  private async fetchWithAuth<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
+    const url = `${this.baseURL}${endpoint}`;
     
-    this.client = axios.create({
-      baseURL: this.baseURL,
-      withCredentials: true, // Enable sending cookies with requests
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
+    // Default headers
+    const headers = new Headers(options.headers as HeadersInit);
+    if (!headers.has("Content-Type") && !(options.body instanceof FormData)) {
+      headers.set("Content-Type", "application/json");
+    }
+    headers.set("Accept", "application/json");
 
-    // Add interceptor to include access token in Authorization header
-    this.client.interceptors.request.use((config) => {
-      const token = this.getStoredAccessToken();
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return config;
-    });
+    // Add access token
+    const token = this.getStoredAccessToken();
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
 
-    // Response interceptor for handling token refresh
-    this.client.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        const originalRequest = error.config;
+    // Format body if it's an object and not FormData
+    let body = options.body;
+    if (body && typeof body === 'object' && !(body instanceof FormData)) {
+      body = JSON.stringify(body);
+    }
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
-          originalRequest._retry = true;
-          try {
-            // Try to refresh token
-            const newToken = await this.refreshToken();
-            if (newToken) {
-              originalRequest.headers.Authorization = `Bearer ${newToken}`;
-              return this.client(originalRequest);
-            }
-          } catch (refreshError) {
-            // Redirect to login if refresh fails
-            if (typeof window !== "undefined") {
-              window.location.href = "/signin";
-            }
+    const config: RequestInit = {
+      ...options,
+      headers,
+      body,
+      credentials: "include", // Send cookies (refresh token)
+    };
+
+    try {
+      let response = await fetch(url, config);
+
+      // Handle 401 Unauthorized - Token Refresh
+      const isAuthEndpoint = url.includes('/auth/signin') || url.includes('/auth/signup') || url.includes('/auth/token');
+      if (response.status === 401 && !options._retry && !isAuthEndpoint) {
+        options._retry = true;
+        try {
+          const newToken = await this.refreshToken();
+          if (newToken) {
+            // Retry the original request with the new token
+            headers.set("Authorization", `Bearer ${newToken}`);
+            config.headers = headers;
+            // Since we're retrying, we might need to recreate the Request or just fetch again with same config
+            response = await fetch(url, config);
+          } else {
+            this.redirectToLogin();
+            throw new Error("Session expired");
           }
+        } catch (refreshError) {
+          this.redirectToLogin();
+          throw refreshError;
         }
-
-        return Promise.reject(error);
       }
-    );
+
+      const isJson = response.headers.get("content-type")?.includes("application/json");
+      let data = null;
+      
+      if (response.status !== 204) {
+        data = isJson ? await response.json() : await response.text();
+      }
+
+      if (!response.ok) {
+        throw new Error(data?.message || data?.error?.message || `Request failed with status ${response.status}`);
+      }
+
+      return data as T;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  private redirectToLogin() {
+    this.clearAccessToken();
+    if (typeof window !== "undefined") {
+      window.location.href = "/signin";
+    }
   }
 
   // Auth Methods
   async login(email: string, password: string): Promise<AuthSession> {
     try {
-      const response = await this.client.post("/auth/signin/email-password", {
+      const response = await this.post<any>("/auth/signin/email-password", {
         email,
         password,
       });
 
-      const session: AuthSession = response.data.session;
-      this.storeAccessToken(session.accessToken);
+      const session: AuthSession = response.session || response;
+      if (session && session.accessToken) {
+         this.storeAccessToken(session.accessToken);
+      }
       return session;
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Failed to sign in");
+      throw new Error(error.message || "Failed to sign in");
     }
   }
 
@@ -94,7 +140,7 @@ class APIClient {
     lastName: string
   ): Promise<{ email: string }> {
     try {
-      const response = await this.client.post("/auth/signup/email-password", {
+      const response = await this.post<any>("/auth/signup/email-password", {
         email,
         password,
         options: {
@@ -109,40 +155,66 @@ class APIClient {
         },
       });
 
-      return { email: response.data.email || email };
+      return { email: response.email || email };
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Failed to sign up");
+      throw new Error(error.message || "Failed to sign up");
+    }
+  }
+
+  async resetPassword(email: string): Promise<void> {
+    try {
+      await this.post("/auth/user/password/reset", { email });
+    } catch (error: any) {
+      throw new Error(error.message || "Failed to request password reset");
+    }
+  }
+
+  async signInOTP(email: string): Promise<void> {
+    try {
+      await this.post("/auth/signin/otp/email", { email });
+    } catch (error: any) {
+      throw new Error(error.message || "Failed to send OTP");
+    }
+  }
+
+  async verifyOTP(email: string, otp: string): Promise<AuthSession> {
+    try {
+      const response = await this.post<any>("/auth/signin/otp/email/verify", { email, otp });
+      const session: AuthSession = response.session || response;
+      if (session && session.accessToken) {
+         this.storeAccessToken(session.accessToken);
+      }
+      return session;
+    } catch (error: any) {
+      throw new Error(error.message || "Failed to verify OTP");
     }
   }
 
   async logout(): Promise<void> {
     try {
-      await this.client.post("/auth/signout");
+      await this.post("/auth/signout");
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
-      this.clearAccessToken();
-      if (typeof window !== "undefined") {
-        window.location.href = "/signin";
-      }
+      this.redirectToLogin();
     }
   }
 
   async getProfile(): Promise<AuthSession["user"]> {
     try {
-      const response = await this.client.get("/auth/user");
-      return response.data.user || response.data;
+      const response = await this.get<any>("/auth/user");
+      return response.user || response;
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Failed to fetch profile");
+      throw new Error(error.message || "Failed to fetch profile");
     }
   }
 
   async updateProfile(data: Partial<AuthSession["user"]>): Promise<AuthSession["user"]> {
     try {
-      const response = await this.client.put("/auth/user", data);
-      return response.data.user || response.data;
+      const response = await this.put<any>("/auth/user", data);
+      return response.user || response;
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Failed to update profile");
+      throw new Error(error.message || "Failed to update profile");
     }
   }
 
@@ -151,69 +223,69 @@ class APIClient {
     newPassword: string
   ): Promise<void> {
     try {
-      await this.client.post("/auth/user/password", {
+      await this.post("/auth/user/password", {
         oldPassword: currentPassword,
         newPassword,
       });
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Failed to change password");
+      throw new Error(error.message || "Failed to change password");
     }
   }
 
   async changeEmail(newEmail: string): Promise<void> {
     try {
-      await this.client.post("/auth/user/email/change", {
+      await this.post("/auth/user/email/change", {
         newEmail,
       });
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Failed to change email");
+      throw new Error(error.message || "Failed to change email");
     }
   }
 
   async sendVerificationEmail(): Promise<void> {
     try {
-      await this.client.post("/auth/user/email/send-verification-email");
+      await this.post("/auth/user/email/send-verification-email");
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Failed to send verification email");
+      throw new Error(error.message || "Failed to send verification email");
     }
   }
 
   async generateMFATotp(): Promise<{ secret: string; qrCode: string }> {
     try {
-      const response = await this.client.get("/auth/mfa/totp/generate");
-      return response.data;
+      const response = await this.get<any>("/auth/mfa/totp/generate");
+      return response;
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Failed to generate MFA");
+      throw new Error(error.message || "Failed to generate MFA");
     }
   }
 
   async verifyMFA(code: string): Promise<void> {
     try {
-      await this.client.post("/auth/user/mfa", {
+      await this.post("/auth/user/mfa", {
         code,
       });
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Failed to verify MFA");
+      throw new Error(error.message || "Failed to verify MFA");
     }
   }
 
   async generatePAT(displayName: string): Promise<{ token: string }> {
     try {
-      const response = await this.client.post("/auth/pat", {
+      const response = await this.post<any>("/auth/pat", {
         displayName,
       });
-      return response.data;
+      return response;
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Failed to generate PAT");
+      throw new Error(error.message || "Failed to generate PAT");
     }
   }
 
   async verifyToken(token: string): Promise<{ valid: boolean }> {
     try {
-      const response = await this.client.post("/auth/token/verify", {
+      const response = await this.post<any>("/auth/token/verify", {
         token,
       });
-      return response.data;
+      return response;
     } catch (error: any) {
       return { valid: false };
     }
@@ -221,8 +293,9 @@ class APIClient {
 
   async refreshToken(): Promise<string | null> {
     try {
-      const response = await this.client.post("/auth/token");
-      const newToken = response.data.session?.accessToken;
+      // It will use the refresh token from cookies since credentials: "include"
+      const response = await this.post<any>("/auth/token", undefined, { _retry: true });
+      const newToken = response.session?.accessToken;
       if (newToken) {
         this.storeAccessToken(newToken);
         return newToken;
@@ -235,24 +308,20 @@ class APIClient {
   }
 
   // Generic request methods
-  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.client.get<T>(url, config);
-    return response.data;
+  async get<T>(url: string, config?: FetchOptions): Promise<T> {
+    return this.fetchWithAuth<T>(url, { ...config, method: "GET" });
   }
 
-  async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.client.post<T>(url, data, config);
-    return response.data;
+  async post<T>(url: string, data?: any, config?: FetchOptions): Promise<T> {
+    return this.fetchWithAuth<T>(url, { ...config, method: "POST", body: data });
   }
 
-  async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.client.put<T>(url, data, config);
-    return response.data;
+  async put<T>(url: string, data?: any, config?: FetchOptions): Promise<T> {
+    return this.fetchWithAuth<T>(url, { ...config, method: "PUT", body: data });
   }
 
-  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.client.delete<T>(url, config);
-    return response.data;
+  async delete<T>(url: string, config?: FetchOptions): Promise<T> {
+    return this.fetchWithAuth<T>(url, { ...config, method: "DELETE" });
   }
 
   // Token management

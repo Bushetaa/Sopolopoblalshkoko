@@ -1,13 +1,15 @@
 "use client";
 
 import React from 'react';
-import { Search, Bell, User, Menu, ChevronRight } from 'lucide-react';
+import { Search, Bell, User as UserIcon, Menu, ChevronRight } from 'lucide-react';
 import { useLayout } from '@/hooks/useLayout';
 import { useBreadcrumbs } from '@/hooks/useBreadcrumbs';
+import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 
 export default function Header() {
   const { toggleMobileSidebar } = useLayout();
+  const { user } = useAuth();
   const breadcrumbs = useBreadcrumbs();
   const lastBreadcrumb = breadcrumbs[breadcrumbs.length - 1];
 
@@ -79,16 +81,20 @@ export default function Header() {
 
         <div className="flex items-center gap-3 pl-2 md:pl-4 border-l border-gray-800 ml-2">
           <div className="flex flex-col items-end hidden sm:flex">
-            <span className="text-sm font-medium text-gray-200">Sopo Team</span>
-            <span className="text-[10px] text-gray-500">Admin</span>
+            <span className="text-sm font-medium text-gray-200">{user?.displayName || 'Guest User'}</span>
+            <span className="text-[10px] text-gray-500 uppercase">{user?.defaultRole || 'Guest'}</span>
           </div>
-          <button className="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center text-gray-400 hover:text-white transition-colors border border-gray-800 overflow-hidden">
-            <img 
-              src="/assets/sopo_logo_1771857176169.png" 
-              alt="Sopo Team" 
-              className="w-6 h-6 object-contain" 
-            />
-          </button>
+          <Link href="/settings/general" className="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center text-gray-400 hover:text-white transition-colors border border-gray-800 overflow-hidden">
+            {user?.avatarUrl ? (
+              <img 
+                src={user.avatarUrl} 
+                alt={user.displayName} 
+                className="w-full h-full object-cover" 
+              />
+            ) : (
+              <UserIcon className="w-4 h-4" />
+            )}
+          </Link>
         </div>
       </div>
     </header>

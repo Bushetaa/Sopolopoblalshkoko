@@ -1,0 +1,224 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Sopo User Services
+meta:
+  id: wrk_6a000047943041a0baba7bde16bf170f
+  created: 1777497029963
+  modified: 1777497029963
+  description: ""
+collection:
+  - name: User
+    meta:
+      id: fld_0a5a1e01d0be45f0a4b2d76cfb980829
+      created: 1777496922068
+      modified: 1777498843154
+      sortKey: -1777496922067
+      description: ""
+  - name: Security
+    meta:
+      id: fld_2f5d4449d8c84cfab49f1281fdb58f6d
+      created: 1777496922068
+      modified: 1777496922068
+      sortKey: -1777496922065
+      description: ""
+  - name: Authentication
+    meta:
+      id: fld_3fcbef790e61415ea2bb2ccfe1ca8c42
+      created: 1777496922068
+      modified: 1777496922068
+      sortKey: -1777496922068
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/auth/signin/passwordless/email"
+        name: Signin Passwordless (Email)
+        meta:
+          id: req_14e300d697ce4fed96e4a44dae5f8cdf
+          created: 1777496922068
+          modified: 1777499524165
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922066
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "email": "abdotony9999@gmail.com"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/auth/signin/otp/email/verify"
+        name: Verify OTP (Email)
+        meta:
+          id: req_48ac5ddd087e4656aa73277b4f05c051
+          created: 1777496922068
+          modified: 1777601364990
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922064
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "email": "abdotony9999@gmail.com",
+              "otp": "155788"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/auth/signin/email-password"
+        name: Login (Email/Password)
+        meta:
+          id: req_8cb6d1c0c4b641f088ae3cddbb3ead99
+          created: 1777496922068
+          modified: 1777601619898
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922067
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "email": "abdotony9999@gmail.com",
+              "password": "newpassword123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/auth/signin/otp/email"
+        name: Signin OTP (Email)
+        meta:
+          id: req_b25cb230bc3f47c2a22a7151cb5f0964
+          created: 1777496922068
+          modified: 1777497228587
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922065
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "email": "abdotony9999@gmail.com"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/auth/signup/email-password"
+        name: Signup (Email/Password)
+        meta:
+          id: req_ba3d9da2cc8546869580e6a99be4b55c
+          created: 1777496922068
+          modified: 1777499364590
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922068
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "email": "abdotony9999@gmail.com",
+              "password": "Str0ngPassw#ord-94|%",
+              "options": {
+                "allowedRoles": [
+                  "me",
+                  "user"
+                ],
+                "defaultRole": "user",
+                "displayName": "Abdo Tony",
+                "locale": "en",
+                "metadata": {
+                  "firstName": "Abdelrahman",
+                  "lastName": "Tony"
+                }
+              }
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Session
+    meta:
+      id: fld_a49ab83217d3421c9855ae7060308c4b
+      created: 1777496922068
+      modified: 1777496922068
+      sortKey: -1777496922066
+      description: ""
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_8d74f7dfa62e3b8357ee1b6e884ffe9f073f32f6
+    created: 1777497030029
+    modified: 1778681528703
+  cookies:
+    - id: 80190229-3022-44e3-a361-be4c40d36e46
+      key: sopo_refresh_token
+      value: 02577b55-887c-473d-95bd-142435cd471a
+      domain: sopo-backend-165b270255e8.hosted.ghaymah.systems
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: true
+    - id: e963e3c6-5a4d-4981-a585-30e88ed65999
+      key: sopo_refresh_token
+      value: 974dd2fa-e233-473f-b874-fce2321fe571
+      domain: sopo-backend-ebbe5030f148.hosted.ghaymah.systems
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: true
+environments:
+  name: Base Environment
+  meta:
+    id: env_2a498a314a0d4ba08e12511513a96737
+    created: 1777496922068
+    modified: 1778681515124
+    isPrivate: false
+  data:
+    base_url: https://sopo-backend-ebbe5030f148.hosted.ghaymah.systems
+    jwt: "{% response 'body', 'req_8cb6d1c0c4b641f088ae3cddbb3ead99',
+      'b64::JC5zZXNzaW9uLmFjY2Vzc1Rva2Vu::46b', 'always', 'no-history' %}"
+  color: "#5b42d6"
