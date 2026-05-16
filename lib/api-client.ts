@@ -299,16 +299,30 @@ class APIClient {
     return this.profilePromise;
   }
 
-  async updateProfile(data: Partial<AuthSession["user"]>): Promise<AuthSession["user"]> {
+  async updateProfile(changes: Partial<AuthSession["user"]>): Promise<AuthSession["user"]> {
     try {
-      // The backend doesn't have a PUT /auth/user endpoint.
-      // Profile display name/locale are managed by Nhost Auth directly.
-      // The slug is managed separately via /api/v1/user-profiles.
-      // Just return the current profile after "updating".
-      const profile = await this.getProfile();
-      return profile;
+      // Get current profile first to preserve fields like email and roles
+      const currentProfile = await this.getProfile();
+      
+      const response = await this.patch<any>("/auth/user/profile", { changes });
+      const updatedUser = response?.updateUsers?.returning?.[0];
+      
+      if (updatedUser) {
+         this.profilePromise = null;
+         return { ...currentProfile, ...updatedUser };
+      }
+      return currentProfile;
     } catch (error: any) {
       throw new Error(error.message || "Failed to update profile");
+    }
+  }
+
+  async getUserProviders(): Promise<any[]> {
+    try {
+      const response = await this.get<any>("/auth/user/providers");
+      return response?.authUserProviders || [];
+    } catch (error: any) {
+      throw new Error(error.message || "Failed to fetch connected providers");
     }
   }
 
