@@ -55,8 +55,30 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     if (storedToken) {
       setIsAuthenticated(true);
     } else {
-      // No token anywhere, redirect to signin
-      router.replace("/signin");
+      // 4. Check if we have the auth cookie but missing localStorage
+      const hasAuthCookie = typeof document !== "undefined" && document.cookie.includes("sopo_is_auth=true");
+      
+      if (hasAuthCookie) {
+        if (isProcessingRef.current) return;
+        isProcessingRef.current = true;
+        
+        // Try to refresh token silently
+        apiClient.refreshToken().then((newToken) => {
+          if (newToken) {
+            setIsAuthenticated(true);
+          } else {
+            // Clean up invalid cookie and redirect
+            document.cookie = "sopo_is_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
+            router.replace("/signin");
+          }
+        }).catch(() => {
+          document.cookie = "sopo_is_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
+          router.replace("/signin");
+        });
+      } else {
+        // No token anywhere, redirect to signin
+        router.replace("/signin");
+      }
     }
   }, [router, searchParams]);
 

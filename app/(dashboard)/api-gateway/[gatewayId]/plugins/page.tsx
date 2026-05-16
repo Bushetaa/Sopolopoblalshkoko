@@ -13,6 +13,7 @@ export default function PluginsPage({ params }: { params: Promise<{ gatewayId: s
   const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const [newPluginName, setNewPluginName] = useState('jwt');
+  const [newPluginPhase, setNewPluginPhase] = useState('auth');
   const [newPluginConfig, setNewPluginConfig] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -38,12 +39,14 @@ export default function PluginsPage({ params }: { params: Promise<{ gatewayId: s
     try {
       await apiClient.gatewayPlugins.create({
         name: newPluginName,
+        phase: newPluginPhase,
         gateway_id: gatewayId,
         config: newPluginConfig,
         enabled: true,
       });
       setIsAdding(false);
       setNewPluginConfig({});
+      setNewPluginPhase('auth');
       await fetchPlugins();
     } catch (error) {
       console.error("Failed to create plugin", error);
@@ -109,6 +112,10 @@ export default function PluginsPage({ params }: { params: Promise<{ gatewayId: s
                   onChange={(e) => {
                     setNewPluginName(e.target.value);
                     setNewPluginConfig({});
+                    // Auto-set a reasonable phase based on the plugin type
+                    if (['jwt', 'apikey'].includes(e.target.value)) setNewPluginPhase('auth');
+                    if (['ratelimit', 'cors', 'waf'].includes(e.target.value)) setNewPluginPhase('pre_request');
+                    if (['cache'].includes(e.target.value)) setNewPluginPhase('response');
                   }} 
                   className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100 outline-none"
                 >
@@ -118,6 +125,22 @@ export default function PluginsPage({ params }: { params: Promise<{ gatewayId: s
                   <option value="cache">Caching</option>
                   <option value="cors">CORS</option>
                   <option value="waf">WAF</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Phase</label>
+                <select 
+                  value={newPluginPhase} 
+                  onChange={(e) => setNewPluginPhase(e.target.value)} 
+                  className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100 outline-none"
+                >
+                  <option value="auth">Auth</option>
+                  <option value="pre_request">Pre-Request</option>
+                  <option value="request">Request</option>
+                  <option value="response">Response</option>
+                  <option value="post_response">Post-Response</option>
+                  <option value="logging">Logging</option>
                 </select>
               </div>
             </div>
