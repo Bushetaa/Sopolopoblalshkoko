@@ -469,31 +469,41 @@ class APIClient {
       return this.mapServiceFromServer(item);
     },
     create: async (data: Partial<Service>) => {
-      return this.post<Service>('/api/v1/services', this.mapServiceToServer(data));
+      const mappedData = this.mapServiceToServer(data);
+      // Explicitly add back for creation
+      if (data.collection_id && data.collection_id !== "none") {
+        mappedData.collection_id = data.collection_id;
+      }
+      if (data.gateway_id) {
+        mappedData.gateway_id = data.gateway_id;
+      }
+      return this.post<Service>('/api/v1/services', mappedData);
     },
     update: async (id: string, data: Partial<Service>) => {
-      return this.patch<Service>(`/api/v1/services/${id}`, this.mapServiceToServer(data));
+      const mappedData = this.mapServiceToServer(data);
+      // mappedData is already cleaned by mapServiceToServer
+      return this.patch<Service>(`/api/v1/services/${id}`, mappedData);
     },
     delete: (id: string) => this.delete<void>(`/api/v1/services/${id}`)
   };
 
   private mapServiceToServer(data: any): any {
-    const {
-      health_check_path, health_check_interval, health_check_timeout,
-      health_check_fail_threshold, health_check_pass_threshold,
-      collection_id,
-      ...rest
-    } = data;
+    const mapped: any = {};
     
-    return {
-      ...rest,
-      ...(collection_id && collection_id !== "" && { collection_id }),
-      ...(health_check_path && health_check_path !== "" && { hc_path: health_check_path }),
-      ...(health_check_interval && health_check_interval !== "" && { hc_interval: health_check_interval }),
-      ...(health_check_timeout && health_check_timeout !== "" && { hc_timeout: health_check_timeout }),
-      ...(health_check_fail_threshold !== undefined && health_check_fail_threshold !== 0 && { hc_fail_threshold: health_check_fail_threshold }),
-      ...(health_check_pass_threshold !== undefined && health_check_pass_threshold !== 0 && { hc_pass_threshold: health_check_pass_threshold }),
-    };
+    // Whitelist allowed fields for service update/create
+    if (data.name) mapped.name = data.name;
+    if (data.protocol) mapped.protocol = data.protocol;
+    if (data.lb_policy) mapped.lb_policy = data.lb_policy;
+    
+    // Health check mappings
+    if (data.health_check_path) mapped.hc_path = data.health_check_path;
+    if (data.health_check_interval) mapped.hc_interval = data.health_check_interval;
+    if (data.health_check_timeout) mapped.hc_timeout = data.health_check_timeout;
+    if (data.health_check_fail_threshold !== undefined) mapped.hc_fail_threshold = data.health_check_fail_threshold;
+    if (data.health_check_pass_threshold !== undefined) mapped.hc_pass_threshold = data.health_check_pass_threshold;
+
+    console.log("Mapped Service Data:", mapped);
+    return mapped;
   }
 
   private mapServiceFromServer(item: any): Service {
@@ -520,26 +530,44 @@ class APIClient {
       return this.mapRouteFromServer(item);
     },
     create: async (data: Partial<GatewayRoute>) => {
-      return this.post<GatewayRoute>('/api/v1/gateway-routes', this.mapRouteToServer(data));
+      const mappedData = this.mapRouteToServer(data);
+      // Explicitly add back for creation
+      if (data.gateway_id) mappedData.gateway_id = data.gateway_id;
+      if (data.service_id) mappedData.service_id = data.service_id;
+      if (data.collection_id && data.collection_id !== "none") {
+        mappedData.collection_id = data.collection_id;
+      }
+      return this.post<GatewayRoute>('/api/v1/gateway-routes', mappedData);
     },
     update: async (id: string, data: Partial<GatewayRoute>) => {
-      return this.patch<GatewayRoute>(`/api/v1/gateway-routes/${id}`, this.mapRouteToServer(data));
+      const mappedData = this.mapRouteToServer(data);
+      // mappedData is already cleaned by mapRouteToServer
+      return this.patch<GatewayRoute>(`/api/v1/gateway-routes/${id}`, mappedData);
     },
     delete: (id: string) => this.delete<void>(`/api/v1/gateway-routes/${id}`)
   };
 
   private mapRouteToServer(data: any): any {
-    const {
-      service_id, collection_id, allow_partial_failure,
-      ...rest
-    } = data;
+    const mapped: any = {};
     
-    return {
-      ...rest,
-      ...(service_id && service_id !== "" && { service_id }),
-      ...(collection_id && collection_id !== "" && { collection_id }),
-      aggregate_allow_partial_failure: allow_partial_failure
-    };
+    // Whitelist allowed fields for route update/create
+    if (data.path) mapped.path = data.path;
+    if (data.target_path) mapped.target_path = data.target_path;
+    if (data.method) mapped.method = data.method;
+    if (data.protocol) mapped.protocol = data.protocol;
+    if (data.timeout) mapped.timeout = data.timeout;
+    if (data.is_aggregate !== undefined) mapped.is_aggregate = data.is_aggregate;
+    if (data.retry_max_attempts !== undefined) mapped.retry_max_attempts = data.retry_max_attempts;
+    if (data.retry_on_status) mapped.retry_on_status = data.retry_on_status;
+    if (data.aggregate_merge_strategy) mapped.aggregate_merge_strategy = data.aggregate_merge_strategy;
+    if (data.aggregate_timeout) mapped.aggregate_timeout = data.aggregate_timeout;
+    if (data.allow_partial_failure !== undefined) {
+      mapped.aggregate_allow_partial_failure = data.allow_partial_failure;
+    }
+    if (data.websocket !== undefined) mapped.websocket = data.websocket;
+
+    console.log("Mapped Route Data:", mapped);
+    return mapped;
   }
 
   private mapRouteFromServer(item: any): GatewayRoute {
