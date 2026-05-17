@@ -37,11 +37,12 @@ export default function NewServicePage({ params }: { params: Promise<{ gatewayId
 
   const handleSubmit = async (data: ServiceFormValues) => {
     try {
-      await apiClient.services.create({
+      const created = await apiClient.services.create({
         ...data,
         gateway_id: gatewayId,
       });
-      router.push(`/api-gateway/${gatewayId}/services`);
+      // Redirect to edit page to add targets
+      router.push(`/api-gateway/${gatewayId}/services/${created.id}/edit`);
     } catch (error) {
       console.error("Failed to create service", error);
     }

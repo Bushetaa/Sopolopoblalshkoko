@@ -4,7 +4,7 @@ import {
   FolderOpen, Link2, FileText,
   Activity, Gauge, FileBarChart,
   SlidersHorizontal, Shield, Plug, Users2,
-  Server, Route, ScrollText
+  Server, Route, ScrollText, Target
 } from 'lucide-react';
 import { MenuSection } from '@/types/layout';
 
@@ -24,6 +24,7 @@ export const MENU_SECTIONS: MenuSection[] = [
         subItems: [
           { name: "Gateways", path: "/api-gateway", icon: Globe },
           { name: "Services", path: "/api-gateway/services", icon: Server },
+          { name: "Service Targets", path: "/api-gateway/service-targets", icon: Target },
           { name: "Routes",   path: "/api-gateway/routes", icon: Route },
           { name: "Plugins",  path: "/api-gateway/plugins", icon: Plug }
         ]

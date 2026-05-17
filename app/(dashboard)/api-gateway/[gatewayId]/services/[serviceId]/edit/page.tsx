@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Server } from 'lucide-react';
 import { ServiceForm, ServiceFormValues } from '@/components/services/ServiceForm';
+import { ServiceTargets } from '@/components/services/ServiceTargets';
 import { apiClient, Gateway, GatewayCollection, Service } from '@/lib/api-client';
 
 export default function EditServicePage({ params }: { params: Promise<{ gatewayId: string, serviceId: string }> }) {
@@ -107,6 +108,10 @@ export default function EditServicePage({ params }: { params: Promise<{ gatewayI
           onCancel={() => router.push(`/api-gateway/${gatewayId}/services`)}
           onDelete={handleDelete}
         />
+      </div>
+
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
+        <ServiceTargets serviceId={serviceId} lbPolicy={service.lb_policy} />
       </div>
     </div>
   );

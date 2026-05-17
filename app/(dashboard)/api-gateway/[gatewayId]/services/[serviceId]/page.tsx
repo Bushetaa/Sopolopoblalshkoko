@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Server, Plus, Trash2, Activity, Settings2, ShieldAlert } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ServiceTargets } from '@/components/services/ServiceTargets';
 
 export default function ServiceDetailsPage({ params }: { params: Promise<{ gatewayId: string; serviceId: string }> }) {
   const router = useRouter();
@@ -17,11 +18,6 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ gatew
   const [collection, setCollection] = useState('');
   const [showHealthCheck, setShowHealthCheck] = useState(false);
   
-  // Service Targets
-  const [targets, setTargets] = useState<{ id: string; url: string; weight: number }[]>(
-    isNew ? [{ id: '1', url: '', weight: 1 }] : [{ id: '1', url: 'http://localhost:8081', weight: 1 }]
-  );
-
   const [isLoading, setIsLoading] = useState(false);
 
   // Health Check State
@@ -32,19 +28,6 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ gatew
   const [hcPass, setHcPass] = useState(0);
 
   const isProMode = true;
-
-  const handleAddTarget = () => {
-    setTargets([...targets, { id: Math.random().toString(), url: '', weight: 1 }]);
-  };
-
-  const handleRemoveTarget = (id: string) => {
-    if (targets.length <= 1) return; // Min 1 target
-    setTargets(targets.filter(t => t.id !== id));
-  };
-
-  const updateTarget = (id: string, field: 'url' | 'weight', value: string | number) => {
-    setTargets(targets.map(t => t.id === id ? { ...t, [field]: value } : t));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -191,63 +174,12 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ gatew
           </div>
         </div>
 
-        {/* Service Targets */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm space-y-6">
-          <div className="flex items-center justify-between border-b border-gray-800 pb-3 mb-4">
-            <h3 className="text-lg font-bold text-gray-100">Service Targets</h3>
-            <button 
-              type="button" 
-              onClick={handleAddTarget}
-              className="flex items-center gap-1.5 text-sm bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 px-3 py-1.5 rounded-lg transition-colors border border-blue-500/20"
-            >
-              <Plus className="w-4 h-4" /> Add Target
-            </button>
-          </div>
+        {/* Service Targets Component */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
+          <ServiceTargets serviceId={serviceId} lbPolicy={lbPolicy} />
+        </div>
 
-          <div className="space-y-3">
-            {targets.map((target, idx) => (
-              <div key={target.id} className="flex gap-4 items-start bg-gray-950 p-4 rounded-lg border border-gray-800 group">
-                <div className="flex-1">
-                  <label className="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Target URL</label>
-                  <input
-                    type="url"
-                    value={target.url}
-                    onChange={(e) => updateTarget(target.id, 'url', e.target.value)}
-                    className="w-full px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-100 outline-none focus:border-blue-500/50"
-                    placeholder="http://localhost:8081"
-                    required
-                  />
-                </div>
-                <div className="w-24">
-                  <label className="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Weight</label>
-                  <input
-                    type="number"
-                    min={1}
-                    value={target.weight}
-                    onChange={(e) => updateTarget(target.id, 'weight', parseInt(e.target.value) || 1)}
-                    className="w-full px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-100 outline-none focus:border-blue-500/50 text-center"
-                    required
-                  />
-                </div>
-                <div className="pt-6">
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveTarget(target.id)}
-                    className={cn(
-                      "p-2 rounded-lg transition-colors border",
-                      targets.length > 1 
-                        ? "bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20"
-                        : "bg-gray-800 text-gray-600 border-gray-700 cursor-not-allowed"
-                    )}
-                    disabled={targets.length <= 1}
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-          {lbPolicy === 'weighted' && (
+        {lbPolicy === 'weighted' && (
             <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 mt-4 flex items-start gap-3">
               <ShieldAlert className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
               <p className="text-sm text-yellow-200">
