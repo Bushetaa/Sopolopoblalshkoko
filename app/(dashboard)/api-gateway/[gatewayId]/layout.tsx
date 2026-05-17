@@ -4,12 +4,14 @@ import React, { use } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, Settings, FolderOpen, Server, Route as RouteIcon, Plug } from 'lucide-react';
+import { ArrowLeft, Settings, FolderOpen, Server, Route as RouteIcon, Plug, Target } from 'lucide-react';
+import { apiClient } from '@/lib/api-client';
 
 const TABS = [
   { name: 'Settings', path: '', icon: Settings },
   { name: 'Collections', path: '/collections', icon: FolderOpen },
   { name: 'Services', path: '/services', icon: Server },
+  { name: 'Service Targets', path: '/service-targets', icon: Target },
   { name: 'Routes', path: '/routes', icon: RouteIcon },
   { name: 'Plugins', path: '/plugins', icon: Plug },
 ];
@@ -24,10 +26,27 @@ export default function GatewayLayout({
   const pathname = usePathname();
   const { gatewayId } = use(params);
   
+  const [gateway, setGateway] = React.useState<{ name: string; is_active: boolean; mode: string } | null>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const fetchGateway = async () => {
+      try {
+        const data = await apiClient.gateways.getById(gatewayId);
+        setGateway(data);
+      } catch (error) {
+        console.error("Failed to fetch gateway", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (gatewayId) fetchGateway();
+  }, [gatewayId]);
+
   const basePath = `/api-gateway/${gatewayId}`;
 
-  // Mock checking if gateway is Pro to show/hide Collections tab
-  const isProMode = true;
+  // Use actual gateway mode
+  const isProMode = gateway?.mode === 'pro';
 
   const visibleTabs = TABS.filter(tab => {
     if (tab.name === 'Collections' && !isProMode) return false;
@@ -47,14 +66,27 @@ export default function GatewayLayout({
           </Link>
           <div>
             <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-bold font-display text-gray-50">Main E-Commerce</h2>
-              <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-md border bg-green-500/10 text-green-400 border-green-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                Active
-              </span>
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded-full">
-                PRO
-              </span>
+              {isLoading ? (
+                <div className="h-8 w-48 bg-gray-800 animate-pulse rounded" />
+              ) : (
+                <>
+                  <h2 className="text-2xl font-bold font-display text-gray-50">{gateway?.name || 'Gateway'}</h2>
+                  <span className={cn(
+                    "inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-md border",
+                    gateway?.is_active 
+                      ? "bg-green-500/10 text-green-400 border-green-500/20" 
+                      : "bg-gray-500/10 text-gray-400 border-gray-500/20"
+                  )}>
+                    <span className={cn("w-1.5 h-1.5 rounded-full", gateway?.is_active ? "bg-green-400" : "bg-gray-400")} />
+                    {gateway?.is_active ? "Active" : "Inactive"}
+                  </span>
+                  {gateway?.mode === 'pro' && (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded-full">
+                      PRO
+                    </span>
+                  )}
+                </>
+              )}
             </div>
             <p className="text-sm text-gray-400 mt-1 font-mono">Gateway ID: {gatewayId}</p>
           </div>

@@ -46,7 +46,8 @@ export function Navbar() {
     "/workspaces", 
     "/analytics", 
     "/rate-limiting", 
-    "/settings"
+    "/settings",
+    "/collections"
   ];
   const isDashboard = dashboardRoutes.some(route => pathname?.startsWith(route));
 
