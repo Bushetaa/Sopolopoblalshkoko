@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { apiClient, GatewayRoute, Gateway } from '@/lib/api-client';
+import CreateRouteModal from '@/components/api-gateway/modals/CreateRouteModal';
 
 interface EnhancedRoute extends GatewayRoute {
   gatewayName: string;
@@ -27,6 +28,8 @@ export default function GlobalRoutesPage() {
   const [gateways, setGateways] = React.useState<Gateway[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isDeleting, setIsDeleting] = React.useState<string | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
+  const [selectedGatewayId, setSelectedGatewayId] = React.useState<string>('');
 
   const fetchData = async () => {
       try {
@@ -94,7 +97,10 @@ export default function GlobalRoutesPage() {
               <DropdownMenuItem disabled className="text-gray-500">No gateways available</DropdownMenuItem>
             ) : (
               gateways.map(gw => (
-                <DropdownMenuItem key={gw.id} onClick={() => router.push(`/api-gateway/${gw.id}/routes/new`)} className="cursor-pointer">
+                <DropdownMenuItem key={gw.id} onClick={() => {
+                  setSelectedGatewayId(gw.id!);
+                  setIsCreateModalOpen(true);
+                }} className="cursor-pointer">
                   <Globe className="w-4 h-4 mr-2 text-blue-400" />
                   {gw.name}
                 </DropdownMenuItem>
@@ -194,6 +200,15 @@ export default function GlobalRoutesPage() {
           </tbody>
         </table>
       </div>
+
+      {selectedGatewayId && (
+        <CreateRouteModal 
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          onSuccess={fetchData}
+          gatewayId={selectedGatewayId}
+        />
+      )}
     </div>
   );
 }

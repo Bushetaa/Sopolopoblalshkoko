@@ -13,12 +13,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { apiClient, Gateway } from '@/lib/api-client';
+import WizardModal from '@/components/api-gateway/WizardModal';
+import CreateGatewayModal from '@/components/api-gateway/modals/CreateGatewayModal';
 
 export default function ApiGatewayPage() {
   const router = useRouter();
   const [gateways, setGateways] = React.useState<Gateway[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isDeleting, setIsDeleting] = React.useState<string | null>(null);
+  const [isWizardOpen, setIsWizardOpen] = React.useState(false);
+  const [isManualCreateOpen, setIsManualCreateOpen] = React.useState(false);
 
   const fetchGateways = async () => {
       try {
@@ -54,13 +58,22 @@ export default function ApiGatewayPage() {
           <h2 className="text-2xl font-bold font-display text-gray-50">API Gateways</h2>
           <p className="text-sm text-gray-400 mt-1">Manage your entry points, routing, and traffic policies.</p>
         </div>
-        <Link 
-          href="/api-gateway/new"
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg shadow-blue-900/20"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Create Gateway</span>
-        </Link>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => setIsManualCreateOpen(true)}
+            className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-100 px-4 py-2 rounded-lg font-medium transition-colors border border-gray-700"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Manual Create</span>
+          </button>
+          <button 
+            onClick={() => setIsWizardOpen(true)}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg shadow-blue-900/20"
+          >
+            <Zap className="w-4 h-4 text-yellow-300" />
+            <span>Create with Wizard</span>
+          </button>
+        </div>
       </div>
 
       <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-sm">
@@ -162,6 +175,18 @@ export default function ApiGatewayPage() {
           </tbody>
         </table>
       </div>
+
+      <WizardModal 
+        isOpen={isWizardOpen} 
+        onClose={() => setIsWizardOpen(false)} 
+        onSuccess={fetchGateways} 
+      />
+
+      <CreateGatewayModal 
+        isOpen={isManualCreateOpen}
+        onClose={() => setIsManualCreateOpen(false)}
+        onSuccess={fetchGateways}
+      />
     </div>
   );
 }

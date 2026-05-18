@@ -1,15 +1,8 @@
-import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Navbar } from "@/components/layout/Navbar";
 import { ConditionalFooter } from "@/components/layout/ConditionalFooter";
 import { Suspense } from "react";
-
-const montserrat = Montserrat({ 
-  subsets: ["latin"], 
-  weight: ["400", "500", "600", "700", "800"], // Added weights including 700
-  variable: "--font-montserrat"
-});
 
 export const metadata = {
   title: {
@@ -81,7 +74,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${montserrat.variable} font-sans antialiased`} suppressHydrationWarning>
+      <body className="font-sans antialiased" suppressHydrationWarning>
         <Providers>
           <Suspense fallback={null}>
             <Navbar />

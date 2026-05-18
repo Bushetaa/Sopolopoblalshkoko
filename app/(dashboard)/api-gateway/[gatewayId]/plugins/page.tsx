@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Plug, Plus, Trash2, Power } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import DynamicPluginConfig from '@/components/forms/DynamicPluginConfig';
+import CreatePluginModal from '@/components/api-gateway/modals/CreatePluginModal';
 
 import { apiClient, GatewayPlugin } from '@/lib/api-client';
 
@@ -12,10 +12,6 @@ export default function PluginsPage({ params }: { params: Promise<{ gatewayId: s
   const [plugins, setPlugins] = useState<GatewayPlugin[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
-  const [newPluginName, setNewPluginName] = useState('jwt');
-  const [newPluginPhase, setNewPluginPhase] = useState('auth');
-  const [newPluginConfig, setNewPluginConfig] = useState<any>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchPlugins = async () => {
     try {
@@ -34,27 +30,6 @@ export default function PluginsPage({ params }: { params: Promise<{ gatewayId: s
     }
   }, [gatewayId]);
   
-  const handleAddPlugin = async () => {
-    setIsSubmitting(true);
-    try {
-      await apiClient.gatewayPlugins.create({
-        name: newPluginName,
-        phase: newPluginPhase,
-        gateway_id: gatewayId,
-        config: newPluginConfig,
-        enabled: true,
-      });
-      setIsAdding(false);
-      setNewPluginConfig({});
-      setNewPluginPhase('auth');
-      await fetchPlugins();
-    } catch (error) {
-      console.error("Failed to create plugin", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   const handleToggleEnable = async (plugin: GatewayPlugin) => {
     try {
       await apiClient.gatewayPlugins.update(plugin.id!, {
@@ -94,73 +69,6 @@ export default function PluginsPage({ params }: { params: Promise<{ gatewayId: s
           </button>
         )}
       </div>
-
-      {isAdding && (
-        <div className="bg-gray-900 border border-blue-500/30 rounded-xl p-6 shadow-sm mb-6 animate-in fade-in slide-in-from-top-4">
-          <div className="flex items-center justify-between border-b border-gray-800 pb-4 mb-4">
-            <h4 className="font-bold text-gray-100 flex items-center gap-2">
-              <Plug className="w-5 h-5 text-blue-400" />
-              Configure New Plugin
-            </h4>
-          </div>
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Plugin Name</label>
-                <select 
-                  value={newPluginName} 
-                  onChange={(e) => {
-                    setNewPluginName(e.target.value);
-                    setNewPluginConfig({});
-                    // Auto-set a reasonable phase based on the plugin type
-                    if (['jwt', 'apikey'].includes(e.target.value)) setNewPluginPhase('auth');
-                    if (['ratelimit', 'cors', 'waf'].includes(e.target.value)) setNewPluginPhase('pre_request');
-                    if (['cache'].includes(e.target.value)) setNewPluginPhase('response');
-                  }} 
-                  className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100 outline-none"
-                >
-                  <option value="jwt">JWT Auth</option>
-                  <option value="apikey">API Key</option>
-                  <option value="ratelimit">Rate Limiting</option>
-                  <option value="cache">Caching</option>
-                  <option value="cors">CORS</option>
-                  <option value="waf">WAF</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Phase</label>
-                <select 
-                  value={newPluginPhase} 
-                  onChange={(e) => setNewPluginPhase(e.target.value)} 
-                  className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100 outline-none"
-                >
-                  <option value="auth">Auth</option>
-                  <option value="pre_request">Pre-Request</option>
-                  <option value="request">Request</option>
-                  <option value="response">Response</option>
-                  <option value="post_response">Post-Response</option>
-                  <option value="logging">Logging</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="bg-gray-950 rounded-lg p-5 border border-gray-800">
-              <h5 className="text-sm font-medium text-gray-400 mb-4 uppercase tracking-wider">Plugin Configuration</h5>
-              <DynamicPluginConfig pluginName={newPluginName} config={newPluginConfig} onChange={setNewPluginConfig} />
-            </div>
-
-            <div className="flex justify-end gap-3 pt-2">
-              <button onClick={() => setIsAdding(false)} className="px-4 py-2 text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded-lg font-medium transition-colors">
-                Cancel
-              </button>
-              <button disabled={isSubmitting} onClick={handleAddPlugin} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50">
-                {isSubmitting ? "Saving..." : "Save Plugin"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading ? (
@@ -211,6 +119,13 @@ export default function PluginsPage({ params }: { params: Promise<{ gatewayId: s
           ))
         )}
       </div>
+
+      <CreatePluginModal 
+        isOpen={isAdding}
+        onClose={() => setIsAdding(false)}
+        onSuccess={fetchPlugins}
+        gatewayId={gatewayId}
+      />
     </div>
   );
 }

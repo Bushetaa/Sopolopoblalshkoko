@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { apiClient, GatewayPlugin, Gateway } from '@/lib/api-client';
+import CreatePluginModal from '@/components/api-gateway/modals/CreatePluginModal';
 
 interface EnhancedPlugin extends GatewayPlugin {
   gatewayName: string;
@@ -28,6 +29,8 @@ export default function GlobalPluginsPage() {
   const [gateways, setGateways] = React.useState<Gateway[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isDeleting, setIsDeleting] = React.useState<string | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
+  const [selectedGatewayId, setSelectedGatewayId] = React.useState<string>('');
 
   const fetchData = async () => {
       try {
@@ -104,7 +107,10 @@ export default function GlobalPluginsPage() {
               <DropdownMenuItem disabled className="text-gray-500">No gateways available</DropdownMenuItem>
             ) : (
               gateways.map(gw => (
-                <DropdownMenuItem key={gw.id} onClick={() => router.push(`/api-gateway/${gw.id}/plugins`)} className="cursor-pointer">
+                <DropdownMenuItem key={gw.id} onClick={() => {
+                  setSelectedGatewayId(gw.id!);
+                  setIsCreateModalOpen(true);
+                }} className="cursor-pointer">
                   <Globe className="w-4 h-4 mr-2 text-blue-400" />
                   {gw.name}
                 </DropdownMenuItem>
@@ -209,6 +215,15 @@ export default function GlobalPluginsPage() {
           </tbody>
         </table>
       </div>
+
+      {selectedGatewayId && (
+        <CreatePluginModal 
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          onSuccess={fetchData}
+          gatewayId={selectedGatewayId}
+        />
+      )}
     </div>
   );
 }

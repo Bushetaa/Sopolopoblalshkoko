@@ -2,6 +2,7 @@
 
 interface AuthSession {
   accessToken: string;
+  refreshToken?: string;
   accessTokenExpiresIn: number;
   user: {
     id: string;
@@ -108,6 +109,33 @@ export interface GatewayPlugin {
   plugin_config?: any;
 }
 
+export interface RequestLog {
+  timestamp: string;
+  request_id: string;
+  gateway_id: string;
+  slug: string;
+  method: string;
+  path: string;
+  status_code: number;
+  latency_ms: number;
+  client_ip: string;
+  upstream_name: string;
+  mode: string;
+  user_agent: string;
+  content_length: number;
+}
+
+export interface HourlyMetric {
+  timestamp_hour: string;
+  gateway_id: string;
+  slug: string;
+  total_requests: number;
+  total_errors: number;
+  sum_latency_ms: number;
+  min_latency_ms: number;
+  max_latency_ms: number;
+}
+
 interface FetchOptions extends Omit<RequestInit, 'body'> {
   body?: any;
   _retry?: boolean;
@@ -208,7 +236,7 @@ class APIClient {
 
       const session: AuthSession = response.session || response;
       if (session && session.accessToken) {
-         this.storeAccessToken(session.accessToken);
+         this.storeAccessToken(session.accessToken, session.refreshToken);
       }
       return session;
     } catch (error: any) {
@@ -265,7 +293,7 @@ class APIClient {
       const response = await this.post<any>("/auth/signin/otp/email/verify", { email, otp });
       const session: AuthSession = response.session || response;
       if (session && session.accessToken) {
-         this.storeAccessToken(session.accessToken);
+         this.storeAccessToken(session.accessToken, session.refreshToken);
       }
       return session;
     } catch (error: any) {
@@ -387,17 +415,43 @@ class APIClient {
 
   async refreshToken(tokenFromUrl?: string): Promise<string | null> {
     try {
-      // It will use the refresh token from body if provided, else from cookies since credentials: "include"
-      const body = tokenFromUrl ? { refreshToken: tokenFromUrl } : undefined;
-      const response = await this.post<any>("/auth/token", body, { _retry: true });
-      const newToken = response.session?.accessToken;
+      let rToken = tokenFromUrl;
+      if (!rToken && typeof window !== "undefined") {
+        rToken = localStorage.getItem("sopo_refresh_token") || undefined;
+      }
+      
+      // If we don't have a refresh token, we can't refresh
+      if (!rToken) {
+        this.clearAccessToken();
+        return null;
+      }
+
+      const url = `${this.baseURL}/auth/token`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({ refreshToken: rToken })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to refresh token");
+      }
+
+      const data = await response.json();
+      const session = data.session || data;
+      const newToken = session?.accessToken;
+      
       if (newToken) {
-        this.storeAccessToken(newToken);
+        this.storeAccessToken(newToken, session?.refreshToken);
         return newToken;
       }
       return null;
     } catch (error) {
-      console.error("Failed to refresh token:", error);
+      // Silently fail and clear token to prevent console spam
+      this.clearAccessToken();
       return null;
     }
   }
@@ -544,11 +598,18 @@ class APIClient {
     delete: () => this.delete<void>('/api/v1/user-profiles')
   };
 
-
+  public readonly logs = {
+    getRequests: () => this.get<RequestLog[]>('/api/v1/logs/requests'),
+    getHourlyMetrics: () => this.get<HourlyMetric[]>('/api/v1/logs/hourly-metrics'),
+    getHourlyMetricsMV: () => this.get<HourlyMetric[]>('/api/v1/logs/hourly-metrics-mv'),
+  };
   // Token management
-  private storeAccessToken(token: string): void {
+  private storeAccessToken(token: string, refreshToken?: string): void {
     if (typeof window !== "undefined") {
       localStorage.setItem("sopo_access_token", token);
+      if (refreshToken) {
+        localStorage.setItem("sopo_refresh_token", refreshToken);
+      }
       document.cookie = "sopo_is_auth=true; path=/; max-age=2592000; SameSite=Lax";
     }
   }
@@ -563,6 +624,7 @@ class APIClient {
   private clearAccessToken(): void {
     if (typeof window !== "undefined") {
       localStorage.removeItem("sopo_access_token");
+      localStorage.removeItem("sopo_refresh_token");
       document.cookie = "sopo_is_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
     }
   }

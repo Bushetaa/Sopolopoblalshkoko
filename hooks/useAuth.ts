@@ -35,13 +35,27 @@ export function useAuth() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const token = localStorage.getItem("sopo_access_token");
+        let token = localStorage.getItem("sopo_access_token");
+        
+        // Handle OAuth callback URL containing refreshToken
+        if (typeof window !== "undefined") {
+          const urlParams = new URLSearchParams(window.location.search);
+          const urlRefreshToken = urlParams.get('refreshToken');
+          
+          if (urlRefreshToken) {
+            token = await apiClient.refreshToken(urlRefreshToken);
+            // Clean up the URL to hide the token
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+        }
+
         if (token) {
           const profile = await apiClient.getProfile();
           setUser(profile);
         }
       } catch (error) {
         localStorage.removeItem("sopo_access_token");
+        localStorage.removeItem("sopo_refresh_token");
       } finally {
         setIsLoading(false);
       }
@@ -49,6 +63,25 @@ export function useAuth() {
 
     checkAuth();
   }, []);
+
+  // Setup auto-refresh every 5 minutes (300000 ms) while user is logged in
+  useEffect(() => {
+    let refreshInterval: NodeJS.Timeout;
+    
+    if (user) {
+      refreshInterval = setInterval(async () => {
+        try {
+          await apiClient.refreshToken();
+        } catch (err) {
+          console.error("Auto refresh failed:", err);
+        }
+      }, 300000);
+    }
+
+    return () => {
+      if (refreshInterval) clearInterval(refreshInterval);
+    };
+  }, [user]);
 
   const login = useCallback(
     async (email: string, password: string) => {

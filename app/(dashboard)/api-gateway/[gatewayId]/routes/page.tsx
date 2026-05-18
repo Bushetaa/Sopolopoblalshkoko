@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { apiClient, GatewayRoute } from '@/lib/api-client';
+import CreateRouteModal from '@/components/api-gateway/modals/CreateRouteModal';
 
 interface EnhancedRoute extends GatewayRoute {
   serviceName: string;
@@ -24,6 +25,7 @@ export default function RoutesPage({ params }: { params: Promise<{ gatewayId: st
   const [routes, setRoutes] = React.useState<EnhancedRoute[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isDeleting, setIsDeleting] = React.useState<string | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
 
   const fetchData = async () => {
     try {
@@ -75,13 +77,13 @@ export default function RoutesPage({ params }: { params: Promise<{ gatewayId: st
           <h3 className="text-xl font-bold font-display text-gray-50">Routes</h3>
           <p className="text-sm text-gray-400 mt-1">Map paths to your upstream services.</p>
         </div>
-        <Link 
-          href={`/api-gateway/${gatewayId}/routes/new`}
+        <button 
+          onClick={() => setIsCreateModalOpen(true)}
           className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg shadow-blue-900/20"
         >
           <Plus className="w-4 h-4" />
           <span>Add Route</span>
-        </Link>
+        </button>
       </div>
 
       <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-sm">
@@ -177,6 +179,13 @@ export default function RoutesPage({ params }: { params: Promise<{ gatewayId: st
           </tbody>
         </table>
       </div>
+      
+      <CreateRouteModal 
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={fetchData}
+        gatewayId={gatewayId}
+      />
     </div>
   );
 }

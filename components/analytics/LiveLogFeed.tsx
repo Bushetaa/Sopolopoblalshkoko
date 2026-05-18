@@ -10,7 +10,7 @@ export default function LiveLogFeed() {
   const { filteredLogs, isPaused, togglePause, levelFilter, setLevelFilter } = useLiveLogs();
 
   return (
-    <div className="bg-gray-950 border border-gray-800 rounded-2xl overflow-hidden flex flex-col h-[600px] shadow-2xl">
+    <div className="bg-gray-950 border border-gray-800 rounded-2xl overflow-hidden flex flex-col h-full shadow-2xl min-h-[600px]">
       {/* Toolbar */}
       <div className="bg-gray-900/50 px-6 py-4 border-b border-gray-800 flex items-center justify-between">
         <div className="flex items-center gap-4">
