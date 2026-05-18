@@ -1,13 +1,14 @@
 "use client";
 
 import React from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAnalyticsData } from '@/hooks/useAnalyticsData';
 import MetricCard from '@/components/dashboard/MetricCard';
 import TrafficChart from '@/components/dashboard/TrafficChart';
 import LiveLogFeed from '@/components/analytics/LiveLogFeed';
 import { subDays } from 'date-fns';
+import Link from 'next/link';
 
 export default function DashboardPage() {
   const [filters] = React.useState({
@@ -27,11 +28,14 @@ export default function DashboardPage() {
         </div>
         <div className="flex items-center justify-between">
           <h2 className="text-3xl font-bold text-gray-50 tracking-tight">System Overview</h2>
-          <button className="group relative flex items-center gap-2.5 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-2xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] active:scale-95 overflow-hidden border border-blue-400/20 hover:border-blue-400/50">
+          <Link 
+            href="/api-gateway/new"
+            className="group relative flex items-center gap-2.5 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-2xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] active:scale-95 overflow-hidden border border-blue-400/20 hover:border-blue-400/50"
+          >
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-            <Plus className="h-5 w-5 transition-transform group-hover:rotate-90 duration-500" />
-            <span>Create New API</span>
-          </button>
+            <Globe className="h-5 w-5 transition-transform group-hover:rotate-12 duration-500 text-blue-200" />
+            <span>Deploy New Gateway</span>
+          </Link>
         </div>
       </div>
 

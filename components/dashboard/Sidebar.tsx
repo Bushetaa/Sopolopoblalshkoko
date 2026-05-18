@@ -15,7 +15,7 @@ export default function Sidebar({ className, onItemClick }: { className?: string
   const [mounted, setMounted] = useState(false);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set(['Gateway Manager']));
   const { isSidebarCollapsed, toggleSidebarCollapsed } = useLayout();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   useEffect(() => {
     setMounted(true);
@@ -42,9 +42,30 @@ export default function Sidebar({ className, onItemClick }: { className?: string
     return isCurrentPath || pathname.startsWith(item.path + '/');
   };
 
-  const isSubItemActive = (path: string): boolean => {
+  const isSubItemActive = (path: string, item?: MenuItem): boolean => {
     if (!mounted) return false;
-    return pathname === path || pathname.startsWith(path + '/');
+    
+    // Exact match
+    if (pathname === path) return true;
+    
+    // Sub-path match (e.g., /services/123 should highlight /services)
+    if (pathname.startsWith(path + '/')) {
+      // If we are checking "/api-gateway" but the path is actually something more specific like "/api-gateway/services"
+      // we need to make sure this is the "best" match.
+      const section = MENU_SECTIONS.find(s => s.items.some(i => i.name === 'Gateway Manager'));
+      const gatewayManager = section?.items.find(i => i.name === 'Gateway Manager');
+      
+      if (gatewayManager?.subItems) {
+        const betterMatch = gatewayManager.subItems.some(sub => 
+          sub.path !== path && 
+          pathname.startsWith(sub.path) && 
+          sub.path.length > path.length
+        );
+        return !betterMatch;
+      }
+      return true;
+    }
+    return false;
   };
 
   const handleItemClick = (item: MenuItem) => {
@@ -180,7 +201,7 @@ export default function Sidebar({ className, onItemClick }: { className?: string
                         >
                           {item.subItems.map((sub) => {
                             const SubIcon = sub.icon;
-                            const subActive = isSubItemActive(sub.path);
+                            const subActive = isSubItemActive(sub.path, item);
                             return (
                               <Link
                                 key={sub.name + sub.path}
@@ -237,17 +258,27 @@ export default function Sidebar({ className, onItemClick }: { className?: string
           collapsed ? "justify-center p-2" : "justify-between px-3 py-2"
         )}>
           <div className={cn("flex items-center", collapsed ? "" : "gap-3")}>
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gray-700 to-gray-800 border border-gray-700 flex items-center justify-center overflow-hidden shrink-0">
-              <img
-                src="/assets/sopo_logo_1771857176169.png"
-                alt="Sopo Team"
-                className="w-5 h-5 object-contain"
-              />
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600/20 to-blue-500/20 border border-blue-500/20 flex items-center justify-center overflow-hidden shrink-0">
+              {user?.avatarUrl ? (
+                <img
+                  src={user.avatarUrl}
+                  alt={user.displayName}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-xs font-bold text-blue-400 uppercase">
+                  {user?.displayName?.charAt(0) || 'S'}
+                </span>
+              )}
             </div>
             {!collapsed && (
               <div className="flex flex-col min-w-0">
-                <span className="text-[13px] font-medium text-gray-200 truncate">Sopo Team</span>
-                <span className="text-[10px] text-gray-500">Admin</span>
+                <span className="text-[13px] font-bold text-gray-100 truncate leading-none mb-1">
+                  {user?.displayName || 'Sopo User'}
+                </span>
+                <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">
+                  {user?.defaultRole || 'Member'}
+                </span>
               </div>
             )}
           </div>

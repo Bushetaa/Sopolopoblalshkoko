@@ -1,0 +1,252 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Sopo Backend Full API
+meta:
+  id: wrk_30f56d2a3707453088538d6c0af394a6
+  created: 1778377078852
+  modified: 1778377078852
+  description: ""
+collection:
+  - name: Session
+    meta:
+      id: fld_40be1123e20247cd96b44e306d12aa51
+      created: 1777496922068
+      modified: 1777496922068
+      sortKey: -1777496922066
+      description: ""
+  - name: User
+    meta:
+      id: fld_833e63fc8e4c49759b6d064206b521fb
+      created: 1777496922068
+      modified: 1777496922068
+      sortKey: -1777496922067
+      description: ""
+  - name: Security
+    meta:
+      id: fld_a103f168a1a74b7e9c9e508d22f1a9e1
+      created: 1777496922068
+      modified: 1777496922068
+      sortKey: -1777496922065
+      description: ""
+  - name: Authentication
+    meta:
+      id: fld_b1a2399f77564e9fbf5a1b7edb89ce66
+      created: 1777496922068
+      modified: 1777496922068
+      sortKey: -1777496922068
+      description: ""
+  - name: Service Targets
+    meta:
+      id: fld_1f66dd5b15dc4d4a93c97265e399c57a
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922081
+      description: ""
+  - name: User Profiles
+    meta:
+      id: fld_233c286b050a4a11a2fd26e9c912df84
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922105
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/api/v1/user-profiles/stream"
+        name: Stream user-profiles
+        meta:
+          id: req_600745f608ba48c987cb250f07f52e15
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922107
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/user-profiles/1"
+        name: Update user-profiles
+        meta:
+          id: req_69fe1e668f074d438b79ad9ae54b80ec
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922109
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/user-profiles/1"
+        name: Delete user-profiles
+        meta:
+          id: req_6c720ba3d2d9415fb7597165b759936f
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922110
+        method: DELETE
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/user-profiles"
+        name: Get All user-profiles
+        meta:
+          id: req_a597dbf2513242ca8c226ab8c4e5cca2
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922106
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/user-profiles"
+        name: Create user-profiles
+        meta:
+          id: req_d1694574dd3841aa92855cb27f4eb979
+          created: 1778295624125
+          modified: 1778295624125
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922108
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.jwt }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Gateway Routes
+    meta:
+      id: fld_3d8347a89d024025b79ec4931f7d82eb
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922087
+      description: ""
+  - name: Gateways
+    meta:
+      id: fld_6c4f662e248445f6add6edba9d0b1e57
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922069
+      description: ""
+  - name: Services
+    meta:
+      id: fld_74992e0ee04548e1b1c75c692cb67748
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922075
+      description: ""
+  - name: Gateway Plugins
+    meta:
+      id: fld_8dc7599f30824e41a59f141415d359d0
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922099
+      description: ""
+  - name: Aggregate Requests
+    meta:
+      id: fld_dfb9d984200743a7921be115d9a4515d
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922093
+      description: ""
+  - name: Collections
+    meta:
+      id: fld_f193c04785734fa99f91229fa4e7b8df
+      created: 1778295624125
+      modified: 1778295624125
+      sortKey: -1777496922111
+      description: ""
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_f01d55c7a0e1bba0a13447ccae1c2af0447e37a0
+    created: 1778377079017
+    modified: 1778877577661
+  cookies:
+    - id: 5f6f389c-419f-4c87-852f-450c1dfe89d5
+      key: sopo_refresh_token
+      value: e8d1d7de-f1a3-4044-98d4-be971f221bd4
+      domain: sopo-backend-165b270255e8.hosted.ghaymah.systems
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: true
+    - id: 6063a3e6-cf46-4300-910d-2050449f21e6
+      key: sopo_refresh_token
+      value: 3f2a2aed-133f-416a-9acc-ed23b2bac0e7
+      domain: sopo-backend-ebbe5030f148.hosted.ghaymah.systems
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: true
+environments:
+  name: Base Environment
+  meta:
+    id: env_39f6f9746a734159866d9e0460b15e5b
+    created: 1777496922068
+    modified: 1778536601915
+    isPrivate: false
+  data:
+    base_url: https://sopo-backend-ebbe5030f148.hosted.ghaymah.systems
+    jwt: "{% response 'body', 'req_0ea0750ee2bc4b9e90c21051e04c4659',
+      'b64::JC5zZXNzaW9uLmFjY2Vzc1Rva2Vu::46b', 'always', 'no-history' %}"
+  color: "#5b42d6"

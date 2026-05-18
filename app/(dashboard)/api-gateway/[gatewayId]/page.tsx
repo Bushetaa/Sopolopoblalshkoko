@@ -1,22 +1,60 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { Server, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { apiClient } from '@/lib/api-client';
 
-export default function GatewaySettingsPage() {
-  const [name, setName] = useState('Main E-Commerce');
-  const [description, setDescription] = useState('Handles all traffic for the main storefront.');
+export default function GatewaySettingsPage({ params }: { params: Promise<{ gatewayId: string }> }) {
+  const { gatewayId } = use(params);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [mode, setMode] = useState<'single' | 'pro'>('pro');
   const [isActive, setIsActive] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    const fetchGateway = async () => {
+      try {
+        const data = await apiClient.gateways.getById(gatewayId);
+        setName(data.name);
+        setDescription(data.description || '');
+        setMode((data.mode as 'single' | 'pro') || 'pro');
+        setIsActive(data.is_active);
+      } catch (error) {
+        console.error("Failed to fetch gateway settings", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (gatewayId) fetchGateway();
+  }, [gatewayId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    await new Promise(r => setTimeout(r, 1000));
-    setIsLoading(false);
+    setIsSaving(true);
+    try {
+      await apiClient.gateways.update(gatewayId, {
+        name,
+        description,
+        mode,
+        is_active: isActive
+      });
+    } catch (error) {
+      console.error("Failed to update gateway", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex h-[40vh] items-center justify-center">
+        <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl">
@@ -116,10 +154,10 @@ export default function GatewaySettingsPage() {
           </button>
           <button
             type="submit"
-            disabled={isLoading || !name}
+            disabled={isSaving || !name}
             className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center min-w-[140px]"
           >
-            {isLoading ? (
+            {isSaving ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
             ) : (
               "Save Changes"
