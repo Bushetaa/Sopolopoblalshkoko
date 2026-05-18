@@ -206,9 +206,12 @@ class APIClient {
         password,
       });
 
+      // Hasura Auth may return the session nested under 'session' or at the top level
       const session: AuthSession = response.session || response;
-      if (session && session.accessToken) {
-         this.storeAccessToken(session.accessToken);
+      const accessToken = session.accessToken || response.accessToken;
+      if (accessToken) {
+         this.storeAccessToken(accessToken);
+         session.accessToken = accessToken;
       }
       return session;
     } catch (error: any) {
@@ -264,8 +267,10 @@ class APIClient {
     try {
       const response = await this.post<any>("/auth/signin/otp/email/verify", { email, otp });
       const session: AuthSession = response.session || response;
-      if (session && session.accessToken) {
-         this.storeAccessToken(session.accessToken);
+      const accessToken = session.accessToken || response.accessToken;
+      if (accessToken) {
+         this.storeAccessToken(accessToken);
+         session.accessToken = accessToken;
       }
       return session;
     } catch (error: any) {
@@ -404,7 +409,9 @@ class APIClient {
       // It will use the refresh token from body if provided, else from cookies since credentials: "include"
       const body = tokenFromUrl ? { refreshToken: tokenFromUrl } : undefined;
       const response = await this.post<any>("/auth/token", body, { _retry: true });
-      const newToken = response.session?.accessToken;
+      // Hasura Auth /auth/token returns { accessToken, accessTokenExpiresIn, refreshToken }
+      // at the top level, NOT nested under 'session'
+      const newToken = response.accessToken || response.session?.accessToken;
       if (newToken) {
         this.storeAccessToken(newToken);
         return newToken;

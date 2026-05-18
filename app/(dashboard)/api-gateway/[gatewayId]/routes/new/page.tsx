@@ -66,36 +66,25 @@ export default function NewRoutePage({ params }: { params: Promise<{ gatewayId: 
   if (!gateway) return null;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {/* Premium Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-gray-900/60 to-blue-900/10 border border-gray-800/60 rounded-3xl p-8 backdrop-blur-md">
-        <div className="absolute top-[-20%] right-[-10%] opacity-10 blur-3xl">
-          <RouteIcon className="w-96 h-96 text-blue-500" />
-        </div>
-        
-        <div className="flex items-center gap-6 relative z-10">
-          <Link 
-            href={`/api-gateway/${gatewayId}/routes`}
-            className="p-3 bg-gray-950/50 border border-gray-800 rounded-2xl text-gray-400 hover:text-blue-400 hover:border-blue-500/30 transition-all duration-300 group"
-          >
-            <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
-          </Link>
-          <div>
-            <div className="flex items-center gap-2 text-blue-400 font-bold text-xs uppercase tracking-[0.2em] mb-2">
-              <div className="w-6 h-[2px] bg-blue-500" />
-              Traffic Orchestration
-            </div>
-            <h2 className="text-3xl font-extrabold font-display text-gray-50 tracking-tight flex items-center gap-3">
-              <RouteIcon className="w-8 h-8 text-blue-500" />
-              Add Route
-            </h2>
-            <p className="text-gray-400 mt-1 text-sm font-medium tracking-tight">Configure a new route for <span className="text-blue-400 font-bold">{gateway.name}</span></p>
-          </div>
+    <div className="max-w-3xl mx-auto space-y-5 pb-8 animate-in fade-in duration-500">
+      {/* Compact Header */}
+      <div className="flex items-center gap-4">
+        <Link 
+          href={`/api-gateway/${gatewayId}/routes`}
+          className="p-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 hover:text-blue-400 hover:border-blue-500/30 transition-all"
+        >
+          <ArrowLeft className="w-4 h-4" />
+        </Link>
+        <div>
+          <h2 className="text-xl font-bold font-display text-gray-50 tracking-tight flex items-center gap-2">
+            <RouteIcon className="w-5 h-5 text-blue-500" />
+            Add Route
+          </h2>
+          <p className="text-sm text-gray-400 mt-0.5">Configure a new route for <span className="text-blue-400 font-semibold">{gateway.name}</span></p>
         </div>
       </div>
 
-      <div className="bg-gray-950/40 border border-gray-800/60 rounded-[2.5rem] p-8 backdrop-blur-sm shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[100px] -z-10" />
+      <div className="bg-gray-950/40 border border-gray-800/60 rounded-xl p-6">
         <RouteForm 
           gatewayMode={(gateway.mode as "single" | "pro") || "single"}
           gatewayName={gateway.name}
