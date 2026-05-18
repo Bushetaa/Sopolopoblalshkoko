@@ -71,7 +71,7 @@ export default function CreateRouteModal({ isOpen, onClose, onSuccess, gatewayId
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between bg-gray-900/50 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-purple-500 flex items-center justify-center shadow-lg shadow-purple-500/20">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
               <RouteIcon className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -88,7 +88,7 @@ export default function CreateRouteModal({ isOpen, onClose, onSuccess, gatewayId
         <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-gray-800">
           {isLoading ? (
             <div className="flex h-40 items-center justify-center">
-              <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : (
             <RouteForm 

@@ -137,46 +137,22 @@ export default function CollectionsPage() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {/* Premium Integrated Header - Matches Global Theme */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-gray-900/60 to-indigo-900/10 border border-gray-800/60 rounded-3xl p-8 backdrop-blur-md">
-        <div className="absolute top-[-20%] right-[-10%] opacity-10 blur-3xl">
-          <FolderOpen className="w-96 h-96 text-indigo-500" />
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold font-display text-gray-50">Collections</h2>
+          <p className="text-sm text-gray-400 mt-1">Logical groupings of services within your Pro-mode gateways.</p>
         </div>
-        
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative z-10">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-[0.2em]">
-              <div className="w-6 h-[2px] bg-indigo-500" />
-              Service Architecture
-            </div>
-            <h2 className="text-4xl font-extrabold font-display text-gray-50 tracking-tight leading-tight">
-              Collections
-            </h2>
-            <p className="text-gray-400 max-w-2xl text-sm leading-relaxed font-medium">
-              Logical groupings of services within your Pro-mode gateways. Organize complex service meshes into manageable, domain-driven collections to streamline your infrastructure management.
-            </p>
-            
-            <div className="flex flex-wrap gap-3 pt-2">
-              <div className="flex items-center gap-2 bg-gray-950/50 border border-gray-800 px-3 py-1.5 rounded-xl shadow-sm">
-                <Globe className="w-3.5 h-3.5 text-indigo-400" />
-                <span className="text-[10px] font-bold text-gray-300 uppercase tracking-wider">Enterprise Mesh Control</span>
-              </div>
-            </div>
-          </div>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="group relative h-12 px-6 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.2)] hover:shadow-[0_0_30px_rgba(79,70,229,0.4)] active:scale-95 overflow-hidden border border-indigo-400/20">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-                <Plus className="w-5 h-5 mr-2 transition-transform group-hover:rotate-90 duration-500" />
+              <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg shadow-blue-900/20">
+                <Plus className="w-4 h-4" />
                 <span>Create Collection</span>
-              </Button>
+              </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-64 p-2 bg-gray-900 border-gray-800 text-gray-100 rounded-2xl shadow-2xl backdrop-blur-xl">
-              <DropdownMenuLabel className="px-3 py-2 text-xs font-black text-gray-500 uppercase tracking-widest">Target Infrastructure</DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-gray-800/50" />
+            <DropdownMenuContent align="end" className="w-56">
               {gateways.length === 0 ? (
-                <div className="px-3 py-4 text-center text-sm text-gray-500 font-medium">No Pro-mode gateways found</div>
+                <div className="px-3 py-2 text-sm text-gray-500">No Pro-mode gateways</div>
               ) : (
                 gateways.map(gw => (
                   <DropdownMenuItem key={gw.id} onClick={() => handleOpenCreate(gw.id!)} className="flex items-center gap-3 p-3 cursor-pointer rounded-xl hover:bg-indigo-500/10 hover:text-indigo-400 transition-all group/item">
@@ -191,7 +167,6 @@ export default function CollectionsPage() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </div>
 
       {/* Control Center Toolbar */}
       <div className="flex flex-col lg:flex-row items-center gap-4 bg-gray-950/50 p-4 rounded-2xl border border-gray-800/40">
@@ -313,7 +288,7 @@ export default function CollectionsPage() {
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-56 p-1 bg-gray-900 border-gray-800 text-gray-100 rounded-xl shadow-2xl backdrop-blur-xl">
-                          <DropdownMenuItem onClick={() => handleOpenEdit(col.gateway_id, col)} className="flex items-center gap-2 p-2.5 cursor-pointer rounded-lg hover:bg-blue-500/10 hover:text-blue-400 transition-all">
+                          <DropdownMenuItem onClick={() => handleOpenEdit(col.gateway_id!, col)} className="flex items-center gap-2 p-2.5 cursor-pointer rounded-lg hover:bg-blue-500/10 hover:text-blue-400 transition-all">
                             <Edit className="w-4 h-4" />
                             <span className="font-medium text-sm">Modify Collection</span>
                           </DropdownMenuItem>
@@ -339,6 +314,12 @@ export default function CollectionsPage() {
       {/* Dialog for Create/Edit */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="bg-gray-900 border-gray-800 text-gray-100 max-w-md rounded-3xl p-6 overflow-hidden shadow-2xl shadow-indigo-500/10">
+          <DialogHeader>
+            <DialogTitle>{dialogMode === 'create' ? 'Create Collection' : 'Edit Collection'}</DialogTitle>
+            <DialogDescription className="text-gray-400">
+              {dialogMode === 'create' ? 'Add a new collection to organize your services.' : 'Modify the collection details.'}
+            </DialogDescription>
+          </DialogHeader>
           <div className="space-y-6">
             <CollectionForm
               initialValues={selectedCollection ? {
