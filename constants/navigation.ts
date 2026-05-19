@@ -26,7 +26,8 @@ export const MENU_SECTIONS: MenuSection[] = [
           { name: "Services", path: "/api-gateway/services", icon: Server },
           { name: "Service Targets", path: "/api-gateway/service-targets", icon: Target },
           { name: "Routes",   path: "/api-gateway/routes", icon: Route },
-          { name: "Plugins",  path: "/api-gateway/plugins", icon: Plug }
+          { name: "Plugins",  path: "/api-gateway/plugins", icon: Plug },
+          { name: "Developer Hub", path: "/api-gateway/developer-hub", icon: Code2 }
         ]
       },
       {
@@ -45,11 +46,6 @@ export const MENU_SECTIONS: MenuSection[] = [
         icon: BarChart3,
         badge: "Live",
         badgeVariant: "label"
-      },
-      {
-        name: "Rate Limiting",
-        path: "/rate-limiting",
-        icon: Zap
       },
       {
         name: "Logs",

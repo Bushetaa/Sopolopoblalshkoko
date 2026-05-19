@@ -47,19 +47,19 @@ export default function RequestDistributionChart({ data, isLoading }: RequestDis
   }
 
   return (
-    <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-6 hover:border-gray-700 transition-all duration-300 relative overflow-hidden group/pie">
-      <h3 className="text-lg font-bold text-gray-50 tracking-tight mb-1">Distribution</h3>
-      <p className="text-xs text-gray-500 font-medium mb-6">Traffic by protocol type</p>
+    <div className="bg-gray-900/40 border border-gray-800/60 rounded-2xl p-5 hover:border-gray-700 transition-all duration-300 relative overflow-hidden group/pie h-full flex flex-col shadow-2xl">
+      <h3 className="text-lg font-black text-gray-50 tracking-tight mb-0.5">Distribution</h3>
+      <p className="text-[10px] text-gray-500 font-bold tracking-wide mb-4">Traffic by protocol</p>
 
-      <div className="h-[220px] w-full relative">
+      <div className="flex-1 min-h-[180px] w-full relative">
         <ResponsiveContainer width="100%" height="100%">
           <ReChartsPie>
             <Tooltip content={<PieTooltip />} />
             <Pie
               data={data}
-              innerRadius={65}
-              outerRadius={90}
-              paddingAngle={5}
+              innerRadius={55}
+              outerRadius={75}
+              paddingAngle={4}
               dataKey="value"
               animationBegin={0}
               animationDuration={1500}
@@ -73,8 +73,8 @@ export default function RequestDistributionChart({ data, isLoading }: RequestDis
                 content={({ viewBox: { cx, cy } }: any) => (
                   <g>
                     <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central">
-                      <tspan x={cx} dy="-0.5em" className="fill-gray-50 text-2xl font-black tracking-tight">{formattedTotal}</tspan>
-                      <tspan x={cx} dy="1.5em" className="fill-gray-500 text-[10px] font-bold uppercase tracking-widest">Total</tspan>
+                      <tspan x={cx} dy="-0.4em" className="fill-gray-50 text-xl font-black tracking-tight">{formattedTotal}</tspan>
+                      <tspan x={cx} dy="1.4em" className="fill-gray-500 text-[8px] font-black uppercase tracking-widest">Total</tspan>
                     </text>
                   </g>
                 )}
@@ -84,13 +84,13 @@ export default function RequestDistributionChart({ data, isLoading }: RequestDis
         </ResponsiveContainer>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mt-6">
+      <div className="grid grid-cols-2 gap-2 mt-4">
         {data.map((item) => (
-          <div key={item.name} className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-800/30 transition-colors">
-            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
+          <div key={item.name} className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-800/30 transition-colors border border-transparent hover:border-white/5">
+            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.color }} />
             <div className="flex flex-col">
-              <span className="text-[11px] font-bold text-gray-300 uppercase tracking-tighter">{item.name}</span>
-              <span className="text-[10px] font-medium text-gray-500">{item.percentage}%</span>
+              <span className="text-[10px] font-black text-gray-300 uppercase tracking-tighter leading-none mb-0.5">{item.name}</span>
+              <span className="text-[9px] font-bold text-gray-500">{item.percentage}%</span>
             </div>
           </div>
         ))}

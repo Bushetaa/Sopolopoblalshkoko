@@ -62,9 +62,9 @@ export function Navbar() {
         
         <Link href="/" className="flex items-center gap-3 group relative z-[101]">
           <img 
-            src="/assets/sopo_logo_1771857176169.png" 
+            src="/assets/sopo_logo.gif" 
             alt="Sopo Logo" 
-            className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:drop-shadow-[0_0_8px_rgba(0,183,255,0.5)] transition-all" 
+            className="w-16 h-16 md:w-20 md:h-20 object-contain group-hover:drop-shadow-[0_0_8px_rgba(0,183,255,0.5)] transition-all" 
           />
           <span className="font-display font-bold text-lg md:text-xl tracking-wider text-foreground uppercase">SOPO</span>
         </Link>

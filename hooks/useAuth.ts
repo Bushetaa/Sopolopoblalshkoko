@@ -36,12 +36,12 @@ export function useAuth() {
     const checkAuth = async () => {
       try {
         let token = localStorage.getItem("sopo_access_token");
-        
+
         // Handle OAuth callback URL containing refreshToken
         if (typeof window !== "undefined") {
           const urlParams = new URLSearchParams(window.location.search);
           const urlRefreshToken = urlParams.get('refreshToken');
-          
+
           if (urlRefreshToken) {
             token = await apiClient.refreshToken(urlRefreshToken);
             // Clean up the URL to hide the token
@@ -64,24 +64,10 @@ export function useAuth() {
     checkAuth();
   }, []);
 
-  // Setup auto-refresh every 5 minutes (300000 ms) while user is logged in
-  useEffect(() => {
-    let refreshInterval: NodeJS.Timeout;
-    
-    if (user) {
-      refreshInterval = setInterval(async () => {
-        try {
-          await apiClient.refreshToken();
-        } catch (err) {
-          console.error("Auto refresh failed:", err);
-        }
-      }, 300000);
-    }
+  // Note: Auto-refresh interval removed.
+  // Token refreshing is now handled exclusively by the APIClient interceptor
+  // which catches 401s and deduplicates refresh requests to avoid race conditions.
 
-    return () => {
-      if (refreshInterval) clearInterval(refreshInterval);
-    };
-  }, [user]);
 
   const login = useCallback(
     async (email: string, password: string) => {

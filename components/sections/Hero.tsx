@@ -100,84 +100,84 @@ const Globe = () => {
 
   return (
     <div className="relative w-full h-full flex items-center justify-center overflow-visible">
-       <svg ref={svgRef} viewBox="0 0 600 400" className="w-full h-full max-w-4xl overflow-visible" aria-hidden="true">
-          <defs>
-            <filter id="glow-visualizer">
-               <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
-               <feMerge>
-                   <feMergeNode in="coloredBlur"/>
-                   <feMergeNode in="SourceGraphic"/>
-               </feMerge>
-            </filter>
-            <linearGradient id="line-gradient-in" x1="0" y1="0" x2="1" y2="0">
-               <stop offset="0" stopColor="#00E8FF" stopOpacity="0" />
-               <stop offset="1" stopColor="#00E8FF" stopOpacity="0.3" />
-            </linearGradient>
-            <linearGradient id="line-gradient-out" x1="0" y1="0" x2="1" y2="0">
-               <stop offset="0" stopColor="#00FF85" stopOpacity="0.3" />
-               <stop offset="1" stopColor="#00FF85" stopOpacity="0" />
-            </linearGradient>
-          </defs>
+      <svg ref={svgRef} viewBox="0 0 600 400" className="w-full h-full max-w-4xl overflow-visible" aria-hidden="true">
+        <defs>
+          <filter id="glow-visualizer">
+            <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <linearGradient id="line-gradient-in" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#00E8FF" stopOpacity="0" />
+            <stop offset="1" stopColor="#00E8FF" stopOpacity="0.3" />
+          </linearGradient>
+          <linearGradient id="line-gradient-out" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#00FF85" stopOpacity="0.3" />
+            <stop offset="1" stopColor="#00FF85" stopOpacity="0" />
+          </linearGradient>
+        </defs>
 
-          {/* Flow Lines */}
-          {flowLines.map(line => (
-             <path 
-                key={line.id} 
-                d={line.d} 
-                stroke={line.id.startsWith('in') ? "url(#line-gradient-in)" : "url(#line-gradient-out)"}
-                strokeWidth="1" 
-                fill="none" 
-             />
-          ))}
+        {/* Flow Lines */}
+        {flowLines.map(line => (
+          <path
+            key={line.id}
+            d={line.d}
+            stroke={line.id.startsWith('in') ? "url(#line-gradient-in)" : "url(#line-gradient-out)"}
+            strokeWidth="1"
+            fill="none"
+          />
+        ))}
 
-          {/* Core (Simplified Gateway) */}
-          <g transform={`translate(${center.x}, ${center.y})`}>
-             <motion.circle 
-               r="40" 
-               fill="none" 
-               stroke="#00E8FF" 
-               strokeWidth="1" 
-               strokeOpacity="0.25"
-               animate={reduceMotion ? undefined : { opacity: [0.2, 0.35, 0.2] }}
-               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-             />
-             <motion.circle 
-               r="12" 
-               fill="url(#hub)" 
-               animate={reduceMotion ? undefined : { scale: [0.95, 1.05, 0.95], opacity: [0.6, 0.9, 0.6] }} 
-               transition={{ duration: 2, repeat: Infinity }}
-             />
-          </g>
+        {/* Core (Simplified Gateway) */}
+        <g transform={`translate(${center.x}, ${center.y})`}>
+          <motion.circle
+            r="40"
+            fill="none"
+            stroke="#00E8FF"
+            strokeWidth="1"
+            strokeOpacity="0.25"
+            animate={reduceMotion ? undefined : { opacity: [0.2, 0.35, 0.2] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.circle
+            r="12"
+            fill="url(#hub)"
+            animate={reduceMotion ? undefined : { scale: [0.95, 1.05, 0.95], opacity: [0.6, 0.9, 0.6] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+        </g>
 
-          {/* Particles (Simplified) */}
-          {projectedPoints.map(p => {
-             const isCore = p.progress > 0.45 && p.progress < 0.55;
-             const x1 = p.x - Math.cos(p.angle) * p.scale * 8;
-             const y1 = p.y - Math.sin(p.angle) * p.scale * 8;
-             
-             // Ensure values are finite numbers
-             if (!Number.isFinite(x1) || !Number.isFinite(y1) || !Number.isFinite(p.x) || !Number.isFinite(p.y)) {
-                return null;
-             }
+        {/* Particles (Simplified) */}
+        {projectedPoints.map(p => {
+          const isCore = p.progress > 0.45 && p.progress < 0.55;
+          const x1 = p.x - Math.cos(p.angle) * p.scale * 8;
+          const y1 = p.y - Math.sin(p.angle) * p.scale * 8;
 
-             return (
-               <g key={p.id}>
-                 <motion.circle 
-                   cx={p.x} 
-                   cy={p.y} 
-                   r={p.scale * (isCore ? 1.8 : 1)} 
-                   fill={p.color} 
-                   opacity={p.opacity} 
-                   filter={isCore ? "url(#glow-visualizer)" : undefined}
-                   animate={!reduceMotion && isCore ? { scale: [1, 1.2, 1] } : undefined}
-                   transition={{ duration: 1.2, repeat: Infinity }}
-                 />
-               </g>
-             );
-          })}
-          
-       </svg>
-      
+          // Ensure values are finite numbers
+          if (!Number.isFinite(x1) || !Number.isFinite(y1) || !Number.isFinite(p.x) || !Number.isFinite(p.y)) {
+            return null;
+          }
+
+          return (
+            <g key={p.id}>
+              <motion.circle
+                cx={p.x}
+                cy={p.y}
+                r={p.scale * (isCore ? 1.8 : 1)}
+                fill={p.color}
+                opacity={p.opacity}
+                filter={isCore ? "url(#glow-visualizer)" : undefined}
+                animate={!reduceMotion && isCore ? { scale: [1, 1.2, 1] } : undefined}
+                transition={{ duration: 1.2, repeat: Infinity }}
+              />
+            </g>
+          );
+        })}
+
+      </svg>
+
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-16 h-16 flex items-center justify-center">
         <div className="relative w-full h-full">
           <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full" />
@@ -193,14 +193,14 @@ export function Hero() {
     <section className="relative w-full min-h-[85vh] md:min-h-[90vh] flex items-center justify-center overflow-hidden bg-background pt-20 md:pt-24 pb-12 md:pb-20">
       {/* Background Grid Pattern - matching the landing page */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_2px_2px,hsl(var(--foreground)/0.05)_1px,transparent_0)] bg-[size:30px_30px] md:size-[40px_40px] opacity-50"></div>
-      
+
       {/* Decorative Glows */}
       <div className="absolute top-1/4 left-1/4 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-primary/10 blur-[80px] md:blur-[150px] rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2"></div>
       <div className="absolute bottom-1/4 right-1/4 w-[250px] md:w-[500px] h-[250px] md:h-[500px] bg-primary/5 blur-[60px] md:blur-[120px] rounded-full pointer-events-none translate-x-1/2 translate-y-1/2"></div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col items-center justify-center text-center">
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -223,7 +223,7 @@ export function Hero() {
             <Globe />
           </div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.8, duration: 0.8 }}

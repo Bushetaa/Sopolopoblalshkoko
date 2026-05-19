@@ -413,46 +413,58 @@ class APIClient {
     }
   }
 
+  private refreshPromise: Promise<string | null> | null = null;
+
   async refreshToken(tokenFromUrl?: string): Promise<string | null> {
-    try {
-      let rToken = tokenFromUrl;
-      if (!rToken && typeof window !== "undefined") {
-        rToken = localStorage.getItem("sopo_refresh_token") || undefined;
-      }
-      
-      // If we don't have a refresh token, we can't refresh
-      if (!rToken) {
+    if (this.refreshPromise) {
+      return this.refreshPromise;
+    }
+
+    this.refreshPromise = (async () => {
+      try {
+        let rToken = tokenFromUrl;
+        if (!rToken && typeof window !== "undefined") {
+          rToken = localStorage.getItem("sopo_refresh_token") || undefined;
+        }
+        
+        if (!rToken) {
+          this.clearAccessToken();
+          return null;
+        }
+
+        const url = `${this.baseURL}/auth/token`;
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({ refreshToken: rToken })
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to refresh token");
+        }
+
+        const data = await response.json();
+        const session = data.session || data;
+        const newToken = session?.accessToken;
+        
+        if (newToken) {
+          this.storeAccessToken(newToken, session?.refreshToken);
+          return newToken;
+        }
+        return null;
+      } catch (error) {
         this.clearAccessToken();
         return null;
       }
+    })();
 
-      const url = `${this.baseURL}/auth/token`;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({ refreshToken: rToken })
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to refresh token");
-      }
-
-      const data = await response.json();
-      const session = data.session || data;
-      const newToken = session?.accessToken;
-      
-      if (newToken) {
-        this.storeAccessToken(newToken, session?.refreshToken);
-        return newToken;
-      }
-      return null;
-    } catch (error) {
-      // Silently fail and clear token to prevent console spam
-      this.clearAccessToken();
-      return null;
+    try {
+      return await this.refreshPromise;
+    } finally {
+      this.refreshPromise = null;
     }
   }
 
@@ -599,9 +611,28 @@ class APIClient {
   };
 
   public readonly logs = {
-    getRequests: () => this.get<RequestLog[]>('/api/v1/logs/requests'),
-    getHourlyMetrics: () => this.get<HourlyMetric[]>('/api/v1/logs/hourly-metrics'),
-    getHourlyMetricsMV: () => this.get<HourlyMetric[]>('/api/v1/logs/hourly-metrics-mv'),
+    getRequests: (params?: { from?: string; to?: string; limit?: number }) => {
+      const query = new URLSearchParams();
+      if (params?.from) query.set('from', params.from);
+      if (params?.to) query.set('to', params.to);
+      if (params?.limit) query.set('limit', params.limit.toString());
+      const queryString = query.toString();
+      return this.get<RequestLog[]>(`/api/v1/logs/requests${queryString ? `?${queryString}` : ''}`);
+    },
+    getHourlyMetrics: (params?: { from?: string; to?: string }) => {
+      const query = new URLSearchParams();
+      if (params?.from) query.set('from', params.from);
+      if (params?.to) query.set('to', params.to);
+      const queryString = query.toString();
+      return this.get<HourlyMetric[]>(`/api/v1/logs/hourly-metrics${queryString ? `?${queryString}` : ''}`);
+    },
+    getHourlyMetricsMV: (params?: { from?: string; to?: string }) => {
+      const query = new URLSearchParams();
+      if (params?.from) query.set('from', params.from);
+      if (params?.to) query.set('to', params.to);
+      const queryString = query.toString();
+      return this.get<HourlyMetric[]>(`/api/v1/logs/hourly-metrics-mv${queryString ? `?${queryString}` : ''}`);
+    },
   };
   // Token management
   private storeAccessToken(token: string, refreshToken?: string): void {

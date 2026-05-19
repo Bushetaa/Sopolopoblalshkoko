@@ -14,6 +14,8 @@ import {
 
 import { apiClient, GatewayRoute } from '@/lib/api-client';
 import CreateRouteModal from '@/components/api-gateway/modals/CreateRouteModal';
+import CodeSnippetsModal from '@/components/api-gateway/modals/CodeSnippetsModal';
+import { Code2 } from 'lucide-react';
 
 interface EnhancedRoute extends GatewayRoute {
   serviceName: string;
@@ -26,13 +28,21 @@ export default function RoutesPage({ params }: { params: Promise<{ gatewayId: st
   const [isLoading, setIsLoading] = React.useState(true);
   const [isDeleting, setIsDeleting] = React.useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
+  const [userSlug, setUserSlug] = React.useState<string>('');
+  const [snippetsModalOpen, setSnippetsModalOpen] = React.useState(false);
+  const [selectedSnippetRoute, setSelectedSnippetRoute] = React.useState<{ method: string, url: string } | null>(null);
 
   const fetchData = async () => {
     try {
-      const [fetchedRoutes, services] = await Promise.all([
+      const [fetchedRoutes, services, profiles] = await Promise.all([
         apiClient.gatewayRoutes.getAll(),
-        apiClient.services.getAll()
+        apiClient.services.getAll(),
+        apiClient.userProfiles.getAll().catch(() => [])
       ]);
+
+      if (profiles && profiles.length > 0) {
+        setUserSlug(profiles[0].slug);
+      }
 
       const gwRoutes = fetchedRoutes.filter(r => r.gateway_id === gatewayId);
       const formatted = gwRoutes.map(route => {
@@ -158,7 +168,18 @@ export default function RoutesPage({ params }: { params: Promise<{ gatewayId: st
                           {isDeleting === rt.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreVertical className="w-4 h-4" />}
                         </button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-40">
+                      <DropdownMenuContent align="end" className="w-44">
+                        <DropdownMenuItem onClick={() => {
+                          const baseUrl = process.env.NEXT_PUBLIC_GATEWAY_URL || 'http://localhost:5000';
+                          const path = rt.path.startsWith('/') ? rt.path : `/${rt.path}`;
+                          const slugStr = userSlug ? `/${userSlug}` : '';
+                          const fullUrl = `${baseUrl}${slugStr}${path}`;
+                          setSelectedSnippetRoute({ method: rt.method, url: fullUrl });
+                          setSnippetsModalOpen(true);
+                        }} className="cursor-pointer text-blue-400 hover:text-blue-300">
+                          <Code2 className="w-4 h-4 mr-2" />
+                          Integration Code
+                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => router.push(`/api-gateway/${gatewayId}/routes/${rt.id}/edit`)} className="cursor-pointer">
                           <Edit className="w-4 h-4 mr-2" />
                           Edit Route
@@ -186,6 +207,15 @@ export default function RoutesPage({ params }: { params: Promise<{ gatewayId: st
         onSuccess={fetchData}
         gatewayId={gatewayId}
       />
+
+      {selectedSnippetRoute && (
+        <CodeSnippetsModal
+          isOpen={snippetsModalOpen}
+          onClose={() => setSnippetsModalOpen(false)}
+          method={selectedSnippetRoute.method}
+          url={selectedSnippetRoute.url}
+        />
+      )}
     </div>
   );
 }

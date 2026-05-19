@@ -21,7 +21,8 @@ export function ConditionalFooter() {
     "/analytics", 
     "/rate-limiting", 
     "/settings",
-    "/collections"
+    "/collections",
+    "/logs"
   ];
   const isDashboard = dashboardRoutes.some(route => pathname?.startsWith(route));
   const hideFooterRoutes = ["/signin", "/signup", "/auth/v-auth-721", "/docs"];

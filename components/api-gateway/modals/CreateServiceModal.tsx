@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { X, Server } from 'lucide-react';
+import { Server } from 'lucide-react';
 import { ServiceForm, ServiceFormValues } from '@/components/services/ServiceForm';
 import { apiClient, Gateway, GatewayCollection } from '@/lib/api-client';
 import { toast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface CreateServiceModalProps {
   isOpen: boolean;
@@ -40,8 +41,6 @@ export default function CreateServiceModal({ isOpen, onClose, onSuccess, gateway
     fetchData();
   }, [isOpen, gatewayId]);
 
-  if (!isOpen) return null;
-
   const handleSubmit = async (data: ServiceFormValues) => {
     try {
       await apiClient.services.create({
@@ -57,26 +56,18 @@ export default function CreateServiceModal({ isOpen, onClose, onSuccess, gateway
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-950/80 backdrop-blur-sm p-4">
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between bg-gray-900/50 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-              <Server className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-gray-50">Create Upstream Service</h2>
-              <p className="text-xs text-gray-400">Configure a new backend service for {gateway?.name || "your gateway"}</p>
-            </div>
-          </div>
-          <button onClick={onClose} className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800 transition-colors">
-            <X className="w-5 h-5" />
-          </button>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="bg-gray-900 border-gray-800 text-gray-100 max-w-3xl rounded-2xl p-0 overflow-hidden shadow-2xl">
+        <div className="p-5 border-b border-gray-800">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center"><Server className="w-4 h-4 text-white" /></div>
+              Create Upstream Service
+            </DialogTitle>
+            <DialogDescription className="text-gray-400 text-sm mt-1">Configure a new backend service for {gateway?.name || "your gateway"}.</DialogDescription>
+          </DialogHeader>
         </div>
-
-        {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-gray-800">
+        <div className="p-5 overflow-y-auto max-h-[70vh]">
           {isLoading ? (
             <div className="flex h-40 items-center justify-center">
               <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -90,7 +81,7 @@ export default function CreateServiceModal({ isOpen, onClose, onSuccess, gateway
             />
           )}
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

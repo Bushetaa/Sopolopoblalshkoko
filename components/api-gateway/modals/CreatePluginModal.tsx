@@ -15,7 +15,7 @@ interface CreatePluginModalProps {
 
 export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayId }: CreatePluginModalProps) {
   const [newPluginName, setNewPluginName] = useState('jwt');
-  const [newPluginPhase, setNewPluginPhase] = useState('auth');
+  const [newPluginPhase, setNewPluginPhase] = useState('Authentication');
   const [newPluginConfig, setNewPluginConfig] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,7 +35,7 @@ export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayI
       
       // Reset state for next time
       setNewPluginName('jwt');
-      setNewPluginPhase('auth');
+      setNewPluginPhase('Authentication');
       setNewPluginConfig({});
       
       onSuccess();
@@ -77,9 +77,10 @@ export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayI
                   setNewPluginName(e.target.value);
                   setNewPluginConfig({});
                   // Auto-set a reasonable phase based on the plugin type
-                  if (['jwt', 'apikey'].includes(e.target.value)) setNewPluginPhase('auth');
-                  if (['ratelimit', 'cors', 'waf'].includes(e.target.value)) setNewPluginPhase('pre_request');
-                  if (['cache'].includes(e.target.value)) setNewPluginPhase('response');
+                  if (['jwt', 'apikey'].includes(e.target.value)) setNewPluginPhase('Authentication');
+                  if (['ratelimit'].includes(e.target.value)) setNewPluginPhase('RateLimiting');
+                  if (['cors', 'waf'].includes(e.target.value)) setNewPluginPhase('PreRouting');
+                  if (['cache'].includes(e.target.value)) setNewPluginPhase('ResponseTransform');
                 }} 
                 className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100 outline-none focus:border-blue-500"
               >
@@ -99,13 +100,15 @@ export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayI
                 onChange={(e) => setNewPluginPhase(e.target.value)} 
                 className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100 outline-none focus:border-blue-500"
               >
-                <option value="auth">Auth</option>
-                <option value="pre_request">Pre-Request</option>
-                <option value="request">Request</option>
-                <option value="response">Response</option>
-                <option value="post_response">Post-Response</option>
-                <option value="logging">Logging</option>
+                <option value="PreRouting">Pre-Routing</option>
+                <option value="Authentication">Authentication</option>
+                <option value="RateLimiting">Rate Limiting</option>
+                <option value="RequestTransform">Request Transform</option>
+                <option value="UpstreamForward">Upstream Forward</option>
+                <option value="ResponseTransform">Response Transform</option>
+                <option value="Logging">Logging</option>
               </select>
+
             </div>
           </div>
 

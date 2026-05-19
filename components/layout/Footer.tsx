@@ -10,7 +10,7 @@ export function Footer() {
           
           <div className="col-span-1 md:col-span-1">
             <Link href="/" className="flex items-center gap-3 mb-6">
-              <img src="/assets/sopo_logo_1771857176169.png" alt="Sopo Logo" className="w-10 h-10 object-contain" />
+              <img src="/assets/sopo_logo.gif" alt="Sopo Logo" className="w-16 h-16 object-contain" />
               <span className="font-display font-bold text-xl tracking-wider text-foreground uppercase">SOPO</span>
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed mb-6">
