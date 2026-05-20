@@ -19,24 +19,27 @@ export default function DashboardPage() {
   const { kpiCards, trafficData, isLoading } = useAnalyticsData(filters);
 
   return (
-    <div className="space-y-8">
-      {/* Header Section */}
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2 text-xs text-blue-400 font-medium uppercase tracking-wider">
-          <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-          Live Platform Status
+    <div className="space-y-10 pb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* High-density Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <div className="flex items-center gap-3 text-blue-400 font-black text-[10px] uppercase tracking-[0.3em] mb-2">
+            <div className="w-8 h-[2px] bg-blue-500" />
+            Control Center
+          </div>
+          <h2 className="text-3xl font-black font-display text-white tracking-tight">System Overview</h2>
+          <p className="text-[13px] text-[#64748B] mt-1.5 font-medium leading-relaxed">Real-time intelligence and operational metrics for your infrastructure.</p>
         </div>
-        <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold text-gray-50 tracking-tight">System Overview</h2>
-          <Link 
-            href="/api-gateway/new"
-            className="group relative flex items-center gap-2.5 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-2xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] active:scale-95 overflow-hidden border border-blue-400/20 hover:border-blue-400/50"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-            <Globe className="h-5 w-5 transition-transform group-hover:rotate-12 duration-500 text-blue-200" />
-            <span>Deploy New Gateway</span>
-          </Link>
-        </div>
+        <Link 
+          href="/api-gateway/new"
+          className="group relative flex items-center gap-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 shadow-lg shadow-blue-500/25 active:scale-95 overflow-hidden border border-white/10"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
+          <div className="w-5 h-5 rounded bg-white/10 flex items-center justify-center">
+            <Globe className="h-3.5 w-3.5 text-white transition-transform group-hover:rotate-12 duration-500" />
+          </div>
+          <span>Deploy New Gateway</span>
+        </Link>
       </div>
 
       {/* Metrics Grid */}

@@ -64,106 +64,155 @@ export default function GlobalServiceTargetsPage() {
   const filtered = targets.filter(t => t.url.toLowerCase().includes(searchQuery.toLowerCase()) || t.serviceName.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
-    <div className="space-y-4 max-w-7xl mx-auto pb-6 animate-in fade-in duration-500">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-8 max-w-7xl mx-auto pb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-center gap-6">
           <div>
-            <h2 className="text-2xl font-bold font-display text-gray-50 tracking-tight">Service Targets</h2>
-            <p className="text-sm text-gray-400 mt-0.5">Manage upstream destinations and load distribution weights.</p>
+            <div className="flex items-center gap-3 text-blue-400 font-black text-[10px] uppercase tracking-[0.3em] mb-2">
+              <div className="w-8 h-[2px] bg-blue-500" />
+              Infrastructure Detail
+            </div>
+            <h2 className="text-3xl font-black font-display text-white tracking-tight">Service Targets</h2>
+            <p className="text-[13px] text-[#64748B] mt-1.5 font-medium leading-relaxed">Manage upstream destinations and load distribution weights.</p>
           </div>
-          <div className="hidden md:flex items-center gap-4 ml-2 pl-6 border-l border-gray-800">
+          <div className="hidden md:flex items-center gap-4 ml-2 pl-6 border-l border-white/5">
             <div className="text-center">
-              <p className="text-lg font-bold text-gray-100">{targets.length}</p>
-              <p className="text-[10px] text-gray-500 font-bold uppercase">Targets</p>
+              <p className="text-lg font-black text-white">{targets.length}</p>
+              <p className="text-[9px] text-[#64748B] font-black uppercase tracking-widest">Targets</p>
             </div>
             <div className="text-center">
-              <p className="text-lg font-bold text-gray-100">{new Set(targets.map(t => t.service_id)).size}</p>
-              <p className="text-[10px] text-gray-500 font-bold uppercase">Services</p>
+              <p className="text-lg font-black text-white">{new Set(targets.map(t => t.service_id)).size}</p>
+              <p className="text-[9px] text-[#64748B] font-black uppercase tracking-widest">Services</p>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-              <p className="text-xs font-semibold text-gray-400">Healthy</p>
+            <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Healthy</p>
             </div>
           </div>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)} 
-          className="flex items-center gap-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95 group"
+          className="flex items-center gap-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-500/25 active:scale-95 group"
         >
-          <div className="w-5 h-5 rounded-lg bg-white/10 flex items-center justify-center">
-            <Plus className="w-3.5 h-3.5 text-white stroke-[3px]" />
+          <div className="w-4 h-4 rounded bg-white/10 flex items-center justify-center">
+            <Plus className="w-3 h-3 text-white stroke-[3px]" />
           </div>
-          <span className="text-sm">Create Target</span>
+          Create Target
         </button>
       </div>
 
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-          <Input placeholder="Search targets..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-9 h-9 bg-gray-900/50 border-gray-800 focus:ring-blue-500/30 rounded-lg text-sm" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#475569]" />
+          <Input 
+            placeholder="Search targets..." 
+            value={searchQuery} 
+            onChange={(e) => setSearchQuery(e.target.value)} 
+            className="pl-11 h-11 bg-[#0B101B] border-white/5 focus:ring-blue-500/30 rounded-xl text-sm text-white placeholder:text-[#475569]" 
+          />
         </div>
-        <Button variant="outline" size="sm" className="h-9 px-3 border-gray-800 hover:bg-gray-800 text-gray-400 rounded-lg"><Filter className="w-3.5 h-3.5 mr-1.5" />Filter</Button>
+        <Button variant="outline" size="sm" className="h-11 px-5 border-white/5 bg-[#0B101B] hover:bg-white/5 text-[#64748B] hover:text-white rounded-xl transition-all font-black text-[10px] uppercase tracking-widest">
+          <Filter className="w-3.5 h-3.5 mr-2" />
+          Filter
+        </Button>
       </div>
 
-      <div className="bg-gray-900/20 border border-gray-800/60 rounded-xl overflow-hidden">
+      <div className="bg-[#0B101B] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl relative">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[100px] -z-10" />
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="bg-gray-950/40 border-b border-gray-800 text-[10px] font-bold text-gray-500 uppercase tracking-wider">
-                <th className="px-5 py-3">Destination</th>
-                <th className="px-5 py-3">Service</th>
-                <th className="px-5 py-3">Weight</th>
-                <th className="px-5 py-3">Status</th>
-                <th className="px-5 py-3 text-right">Actions</th>
+          <table className="w-full text-left text-sm">
+            <thead className="bg-[#050810]/80 border-b border-white/5 text-[#64748B] uppercase tracking-[0.2em] text-[9px] font-black">
+              <tr>
+                <th className="px-7 py-5">Destination</th>
+                <th className="px-7 py-5">Service</th>
+                <th className="px-7 py-5">Weight</th>
+                <th className="px-7 py-5">Status</th>
+                <th className="px-7 py-5 text-right">Operations</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800/40">
-              {isLoading ? Array.from({ length: 3 }).map((_, i) => (
-                <tr key={i} className="animate-pulse"><td colSpan={5} className="px-5 py-4"><div className="flex items-center gap-3"><div className="w-8 h-8 rounded-lg bg-gray-800" /><div className="h-4 w-44 bg-gray-800 rounded" /></div></td></tr>
-              )) : filtered.length === 0 ? (
-                <tr><td colSpan={5} className="px-5 py-12 text-center">
-                  <Target className="w-10 h-10 text-gray-700 mb-3 mx-auto" />
-                  <h3 className="text-base font-bold text-gray-200">No targets found</h3>
-                  <p className="text-gray-500 text-sm mt-1">{searchQuery ? `No matches for "${searchQuery}"` : "Create your first upstream target."}</p>
-                </td></tr>
-              ) : filtered.map((target) => (
-                <tr key={target.id} className="group hover:bg-blue-500/[0.03] transition-colors duration-200">
-                  <td className="px-5 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-gray-800/50 border border-gray-700/50 flex items-center justify-center group-hover:bg-blue-500/10 group-hover:border-blue-500/20 transition-all">
-                        <Target className="w-4 h-4 text-gray-400 group-hover:text-blue-400 transition-colors" />
+            <tbody className="divide-y divide-white/5">
+              {isLoading ? (
+                <tr>
+                  <td colSpan={5} className="px-7 py-20 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="w-16 h-16 rounded-2xl bg-blue-500/5 border border-blue-500/10 flex items-center justify-center mb-4 animate-pulse">
+                        <Target className="w-8 h-8 text-blue-500/40" />
                       </div>
-                      <span className="font-mono text-sm font-semibold text-gray-100 flex items-center gap-1">
-                        {target.url}
-                        <ArrowUpRight className="w-3 h-3 text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </span>
+                      <p className="text-[11px] font-black text-white uppercase tracking-widest">Synchronizing Infrastructure...</p>
                     </div>
                   </td>
-                  <td className="px-5 py-3">
-                    <Link href={target.gatewayId ? `/api-gateway/${target.gatewayId}/services/${target.service_id}` : '#'} className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-gray-800/40 text-gray-300 hover:text-blue-400 hover:bg-blue-500/10 transition-all border border-transparent hover:border-blue-500/20">
-                      <Server className="w-3 h-3" /><span className="text-xs font-semibold">{target.serviceName}</span>
+                </tr>
+              ) : filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-7 py-20 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center mb-4">
+                        <Target className="w-8 h-8 text-[#1E293B]" />
+                      </div>
+                      <p className="text-[11px] font-black text-white uppercase tracking-widest">No Active Targets</p>
+                      <p className="text-[10px] text-[#64748B] mt-2 font-medium uppercase tracking-wider">Start by creating a new upstream destination.</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : filtered.map((target) => (
+                <tr key={target.id} className="hover:bg-white/[0.02] transition-all group">
+                  <td className="px-7 py-5">
+                    <div className="flex items-center gap-4">
+                      <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.1)] group-hover:border-blue-500/40 transition-all">
+                        <Target className="w-4.5 h-4.5 text-blue-400 stroke-[2.5px]" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-black text-white tracking-tight group-hover:text-blue-400 transition-colors flex items-center gap-1.5">
+                          {target.url}
+                          <ArrowUpRight className="w-3 h-3 text-[#475569] opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </span>
+                        <span className="text-[9px] text-[#475569] font-black uppercase tracking-widest mt-0.5">Upstream Destination</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-7 py-5">
+                    <Link 
+                      href={target.gatewayId ? `/api-gateway/${target.gatewayId}/services/${target.service_id}` : '#'} 
+                      className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-white/[0.03] text-[#94A3B8] hover:text-blue-400 hover:bg-blue-500/10 transition-all border border-white/5 hover:border-blue-500/20 shadow-sm"
+                    >
+                      <Server className="w-3 h-3" />
+                      <span className="text-[9px] font-black uppercase tracking-widest">{target.serviceName}</span>
                     </Link>
                   </td>
-                  <td className="px-5 py-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-16 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-500 rounded-full" style={{ width: `${Math.min((target.weight || 1) * 10, 100)}%` }} />
+                  <td className="px-7 py-5">
+                    <div className="flex items-center gap-3">
+                      <div className="w-20 h-1.5 bg-[#0F172A] rounded-full overflow-hidden border border-white/5 shadow-inner">
+                        <div className="h-full bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{ width: `${Math.min((target.weight || 1) * 10, 100)}%` }} />
                       </div>
-                      <span className="text-xs font-mono font-bold text-gray-400">{target.weight || 1}</span>
+                      <span className="text-[10px] font-mono font-black text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">{target.weight || 1}</span>
                     </div>
                   </td>
-                  <td className="px-5 py-3">
-                    <Badge variant="outline" className="bg-green-500/5 text-green-400 border-green-500/20 text-[10px] px-2 py-0">
-                      <CheckCircle2 className="w-3 h-3 mr-1" /> Healthy
-                    </Badge>
+                  <td className="px-7 py-5">
+                    <span className="inline-flex items-center gap-2 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border transition-all bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      Healthy
+                    </span>
                   </td>
-                  <td className="px-5 py-3 text-right">
+                  <td className="px-7 py-5 text-right">
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild><button disabled={isDeleting === target.id} className="p-1.5 text-gray-500 hover:text-gray-100 hover:bg-gray-800 rounded-lg transition-colors disabled:opacity-50">{isDeleting === target.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreVertical className="w-4 h-4" />}</button></DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-44 p-1 bg-gray-900 border-gray-800 text-gray-100 rounded-xl shadow-2xl">
-                        <DropdownMenuItem onClick={() => target.gatewayId && router.push(`/api-gateway/${target.gatewayId}/services/${target.service_id}/edit`)} className="flex items-center gap-2 p-2 cursor-pointer rounded-lg hover:bg-blue-500/10 hover:text-blue-400 text-sm"><Edit className="w-3.5 h-3.5" />Edit Service</DropdownMenuItem>
-                        <DropdownMenuSeparator className="bg-gray-800" />
-                        <DropdownMenuItem onClick={() => target.id && handleDelete(target.id)} className="flex items-center gap-2 p-2 cursor-pointer text-red-400 hover:bg-red-500/10 rounded-lg text-sm"><Trash className="w-3.5 h-3.5" />Delete</DropdownMenuItem>
+                      <DropdownMenuTrigger asChild>
+                        <button disabled={isDeleting === target.id} className="w-9 h-9 flex items-center justify-center text-[#64748B] hover:text-white hover:bg-white/5 rounded-xl transition-all active:scale-95 border border-transparent hover:border-white/5">
+                          {isDeleting === target.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreVertical className="w-4 h-4" />}
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48 bg-[#0B101B] border-white/5 rounded-2xl p-2 shadow-2xl backdrop-blur-xl">
+                        <DropdownMenuItem onClick={() => target.gatewayId && router.push(`/api-gateway/${target.gatewayId}/services/${target.service_id}/edit`)} className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4">
+                          <Edit className="w-3.5 h-3.5 mr-3 text-blue-500" />
+                          Modify Configuration
+                        </DropdownMenuItem>
+                        <div className="h-[1px] bg-white/5 my-1" />
+                        <DropdownMenuItem 
+                          onClick={() => target.id && handleDelete(target.id)} 
+                          className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-300 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-red-300 transition-all py-3 px-4"
+                        >
+                          <Trash className="w-3.5 h-3.5 mr-3" />
+                          Terminate Target
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </td>

@@ -23,7 +23,7 @@ export default function ForgotPasswordPage() {
         <div className="flex flex-col items-center gap-4 mb-8">
           <Link href="/signin">
             <div className="p-3 glass-panel rounded-2xl shadow-xl hover:bg-white/10 transition-colors">
-              <img src="/assets/sopo_logo_1771857176169.png" alt="SOPO" className="w-12 h-12" />
+              <img src="/assets/sopo_logo.gif" alt="SOPO" className="w-16 h-16" />
             </div>
           </Link>
         </div>

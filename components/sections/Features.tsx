@@ -758,7 +758,7 @@ function ArchitectureDiagram() {
         >
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-50" />
           <img 
-            src="/assets/sopo_logo_1771857176169.png" 
+            src="/assets/sopo_logo.gif" 
             alt="SOPO Logo" 
             className="w-1/2 h-1/2 object-contain relative z-10" 
           />

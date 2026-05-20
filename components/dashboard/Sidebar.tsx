@@ -90,21 +90,19 @@ export default function Sidebar({ className, onItemClick }: { className?: string
       {/* Logo Section */}
       <div className={cn("h-16 flex items-center border-b border-gray-800/60", collapsed ? "px-3 justify-center" : "px-5")}>
         <Link
-          href="/"
-          className="flex items-center gap-3 group"
+          href="/dashboard"
+          className="flex items-center gap-3 px-2 group"
           onClick={onItemClick}
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-600/20 group-hover:shadow-blue-500/30 transition-shadow shrink-0">
-            <img
-              src="/assets/sopo_logo_1771857176169.png"
-              alt="Sopo Logo"
-              className="w-5 h-5 object-contain brightness-0 invert"
-            />
-          </div>
+          <img
+            src="/assets/sopo_logo.gif"
+            alt="Sopo Logo"
+            className="w-12 h-12 object-contain transition-transform duration-500 group-hover:scale-110"
+          />
           {!collapsed && (
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-gray-50 tracking-tight uppercase font-display">Sopo</span>
-              <span className="text-[9px] bg-blue-500/15 text-blue-400 border border-blue-500/20 px-1.5 py-0.5 rounded-md font-semibold">v2</span>
+            <div className="flex flex-col">
+              <span className="text-lg font-black tracking-tighter text-white font-display leading-none">SOPO</span>
+              <span className="text-[8px] font-black text-blue-500 uppercase tracking-[0.3em] mt-1">Infrastructure</span>
             </div>
           )}
         </Link>

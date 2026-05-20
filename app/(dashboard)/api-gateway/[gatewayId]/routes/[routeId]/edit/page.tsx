@@ -79,55 +79,80 @@ export default function EditRoutePage({ params }: { params: Promise<{ gatewayId:
   if (!gateway || !route) return null;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {/* Premium Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#1E224F] via-[#141833] to-[#0B101B] border border-white/5 rounded-[2.5rem] p-8 shadow-[0_0_50px_rgba(0,0,0,0.3)]">
-        <div className="absolute top-[-20%] right-[-10%] opacity-10 blur-3xl">
-          <RouteIcon className="w-96 h-96 text-emerald-500" />
-        </div>
-        
-        <div className="flex items-center gap-6 relative z-10">
-          <Link 
-            href={`/api-gateway/${gatewayId}/routes`}
-            className="group flex items-center justify-center w-12 h-12 bg-[#0F172A] border border-white/5 rounded-2xl text-[#64748B] hover:text-white hover:border-white/10 hover:bg-[#1E293B] transition-all shadow-xl active:scale-95"
-          >
-            <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
-          </Link>
-          <div>
-            <div className="flex items-center gap-2 text-emerald-400 font-black text-[10px] uppercase tracking-[0.2em] mb-2">
-              <div className="w-6 h-[2px] bg-emerald-500" />
-              Traffic Management
+    <div className="max-w-6xl mx-auto space-y-8 pb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* Consolidated Route Command Center */}
+      <div className="bg-[#0B101B] border border-white/5 rounded-[2.5rem] shadow-2xl relative overflow-hidden flex flex-col">
+        {/* Glow Effects */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-600/5 blur-[120px] -z-10" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-600/5 blur-[120px] -z-10" />
+
+        {/* Integrated Premium Header - Compact Style */}
+        <div className="p-6 md:p-8 border-b border-white/5 bg-white/[0.01] relative overflow-hidden">
+          <div className="absolute top-[-50%] right-[-5%] opacity-[0.03] blur-2xl -z-10">
+            <RouteIcon className="w-96 h-96 text-emerald-500" />
+          </div>
+          
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+            <div className="flex items-center gap-5">
+              <Link 
+                href={`/api-gateway/${gatewayId}/routes`}
+                className="group flex items-center justify-center w-10 h-10 bg-[#0F172A] border border-white/5 rounded-2xl text-[#64748B] hover:text-white hover:border-white/10 hover:bg-[#1E293B] transition-all shadow-xl active:scale-95"
+              >
+                <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+              </Link>
+              <div>
+                <div className="flex items-center gap-2 text-emerald-400 font-black text-[10px] uppercase tracking-[0.2em] mb-1.5">
+                  <div className="w-5 h-[2px] bg-emerald-500" />
+                  Traffic Management
+                </div>
+                <h2 className="text-2xl font-black font-display text-white tracking-tight flex items-center gap-2.5">
+                  <RouteIcon className="w-6 h-6 text-emerald-500 stroke-[2.5px]" />
+                  Edit Route
+                </h2>
+                <p className="text-[#94A3B8] font-medium text-xs mt-1 tracking-tight">Updating configuration for path <span className="text-blue-400 font-bold">{route.path}</span></p>
+              </div>
             </div>
-            <h2 className="text-3xl font-black font-display text-white tracking-tight flex items-center gap-3">
-              <RouteIcon className="w-8 h-8 text-emerald-500 stroke-[2.5px]" />
-              Edit Route
-            </h2>
-            <p className="text-[#94A3B8] font-medium text-sm mt-1.5 tracking-tight">Updating configuration for path <span className="text-blue-400 font-bold">{route.path}</span></p>
+
+            {/* Status Indicator */}
+            <div className="flex items-center gap-4 bg-[#050810]/80 px-4 py-2.5 rounded-xl border border-white/5 shadow-inner">
+              <div className="flex flex-col">
+                <span className="text-[8px] font-black text-[#475569] uppercase tracking-[0.2em]">Routing Status</span>
+                <span className="text-[10px] font-black text-emerald-400 flex items-center gap-1.5 mt-0.5">
+                  <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+                  LIVE TRAFFIC
+                </span>
+              </div>
+              <div className="w-[1px] h-6 bg-white/5 mx-1" />
+              <div className="flex flex-col">
+                <span className="text-[8px] font-black text-[#475569] uppercase tracking-[0.2em]">Gateway Context</span>
+                <span className="text-[10px] font-mono font-bold text-[#94A3B8] mt-0.5 uppercase">{gateway.name}</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="bg-[#0B101B] border border-white/5 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-600/5 blur-[100px] -z-10" />
-        <RouteForm 
-          initialValues={{
-            path: route.path,
-            method: route.method as any,
-            service_id: route.service_id,
-            is_aggregate: route.is_aggregate,
-            aggregate_merge_strategy: route.aggregate_merge_strategy,
-            aggregate_timeout: route.aggregate_timeout,
-            allow_partial_failure: route.allow_partial_failure,
-          }}
-          gatewayMode={(gateway.mode as "single" | "pro") || "single"}
-          gatewayName={gateway.name}
-          userSlug={userSlug}
-          collections={collections}
-          services={services}
-          onSubmit={handleSubmit}
-          onCancel={() => router.push(`/api-gateway/${gatewayId}/routes`)}
-          onDelete={handleDelete}
-        />
+        {/* Main Content Area */}
+        <div className="p-8 md:p-10">
+          <RouteForm 
+            initialValues={{
+              path: route.path,
+              method: route.method as any,
+              service_id: route.service_id,
+              is_aggregate: route.is_aggregate,
+              aggregate_merge_strategy: route.aggregate_merge_strategy,
+              aggregate_timeout: route.aggregate_timeout,
+              allow_partial_failure: route.allow_partial_failure,
+            }}
+            gatewayMode={(gateway.mode as "single" | "pro") || "single"}
+            gatewayName={gateway.name}
+            userSlug={userSlug}
+            collections={collections}
+            services={services}
+            onSubmit={handleSubmit}
+            onCancel={() => router.push(`/api-gateway/${gatewayId}/routes`)}
+            onDelete={handleDelete}
+          />
+        </div>
       </div>
     </div>
   );

@@ -61,9 +61,9 @@ export const metadata = {
     follow: true
   },
   icons: {
-    icon: "/assets/sopo_logo_1771857176169.png",
-    shortcut: "/assets/sopo_logo_1771857176169.png",
-    apple: "/assets/sopo_logo_1771857176169.png",
+    icon: "/assets/sopo_logo.gif",
+    shortcut: "/assets/sopo_logo.gif",
+    apple: "/assets/sopo_logo.gif",
   }
 };
 

@@ -57,25 +57,31 @@ export default function EditGatewayPage({ params }: { params: Promise<{ gatewayI
   if (!gateway) return null;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-5 pb-8 animate-in fade-in duration-500">
-      {/* Compact Header */}
-      <div className="flex items-center gap-4">
-        <Link 
-          href="/api-gateway" 
-          className="p-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 hover:text-blue-400 hover:border-blue-500/30 transition-all"
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </Link>
-        <div>
-          <h2 className="text-xl font-bold font-display text-gray-50 tracking-tight flex items-center gap-2">
-            <Globe className="w-5 h-5 text-blue-500" />
-            Edit Gateway
-          </h2>
-          <p className="text-sm text-gray-400 mt-0.5">Update settings for <span className="text-blue-400 font-semibold">{gateway.name}</span></p>
+    <div className="max-w-4xl mx-auto space-y-8 pb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* High-density Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="flex items-center gap-5">
+          <Link 
+            href="/api-gateway" 
+            className="w-11 h-11 flex items-center justify-center bg-[#0B101B] border border-white/5 rounded-xl text-[#64748B] hover:text-white hover:border-blue-500/30 transition-all shadow-xl active:scale-95 group"
+          >
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+          </Link>
+          <div>
+            <div className="flex items-center gap-3 text-blue-400 font-black text-[10px] uppercase tracking-[0.3em] mb-2">
+              <div className="w-8 h-[2px] bg-blue-500" />
+              Gateway Configuration
+            </div>
+            <h2 className="text-3xl font-black font-display text-white tracking-tight flex items-center gap-3">
+              Edit Gateway
+            </h2>
+            <p className="text-[13px] text-[#64748B] mt-1.5 font-medium">Update settings for <span className="text-blue-400 font-black">{gateway.name}</span></p>
+          </div>
         </div>
       </div>
 
-      <div className="bg-gray-950/40 border border-gray-800/60 rounded-xl p-6">
+      <div className="bg-[#0B101B] border border-white/5 rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[100px] -z-10" />
         <GatewayForm 
           initialValues={{
             name: gateway.name,

@@ -168,13 +168,16 @@ export default function GlobalRoutesPage() {
                 routes.map((rt) => (
                   <tr key={rt.id} className="hover:bg-white/[0.02] transition-all group">
                     <td className="px-7 py-5">
-                      <Link href={`/api-gateway/${rt.gateway_id}/routes/${rt.id}`} className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-white/[0.03] border border-white/5 flex items-center justify-center group-hover:border-blue-500/40 transition-all shadow-inner">
-                          <div className="w-1 h-1 rounded-full bg-blue-500 animate-pulse" />
+                      <Link href={`/api-gateway/${rt.gateway_id}/routes/${rt.id}`} className="flex items-center gap-4">
+                        <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-white/5 flex items-center justify-center group-hover:border-emerald-500/40 transition-all shadow-inner">
+                          <RouteIcon className="w-4.5 h-4.5 text-emerald-400 stroke-[2.5px]" />
                         </div>
-                        <span className="font-mono text-[11px] font-bold text-white group-hover:text-blue-400 transition-colors tracking-tight">
-                          {rt.path}
-                        </span>
+                        <div className="flex flex-col">
+                          <span className="font-mono text-white font-black text-sm group-hover:text-emerald-400 transition-colors tracking-tight">
+                            {rt.path}
+                          </span>
+                          <span className="text-[9px] text-[#475569] font-black uppercase tracking-widest mt-0.5">Active Gateway Path</span>
+                        </div>
                       </Link>
                     </td>
                     <td className="px-7 py-5">
