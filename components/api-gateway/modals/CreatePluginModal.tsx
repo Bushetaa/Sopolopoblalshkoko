@@ -48,29 +48,38 @@ export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayI
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-950/80 backdrop-blur-sm p-4">
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between bg-gray-900/50 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-              <Plug className="w-5 h-5 text-white" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#050810]/90 backdrop-blur-md p-4">
+      <div className="bg-[#0B101B] border border-white/5 rounded-[2.5rem] w-full max-w-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300">
+        {/* Header - Styled like Wizard */}
+        <div className="bg-gradient-to-br from-[#1E224F] via-[#141833] to-[#0B101B] px-8 py-5 border-b border-white/5 relative shrink-0">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-11 h-11 rounded-xl bg-[#2563EB] flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)] relative group">
+                <div className="absolute inset-0 bg-white/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Plug className="w-5 h-5 text-white stroke-[2.5px]" />
+              </div>
+              <div>
+                <h2 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
+                  Configure Plugin
+                  <span className="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest text-blue-400">Manual Entry</span>
+                </h2>
+                <p className="text-[#94A3B8] font-medium text-xs">Add a global plugin to your gateway</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-xl font-bold text-gray-50">Configure New Plugin</h2>
-              <p className="text-xs text-gray-400">Add a global plugin to your gateway</p>
-            </div>
+            <button 
+              onClick={onClose} 
+              className="p-2 text-[#64748B] hover:text-white rounded-lg hover:bg-white/5 transition-all"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
-          <button onClick={onClose} className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800 transition-colors">
-            <X className="w-5 h-5" />
-          </button>
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-gray-800 space-y-6">
+        <div className="flex-1 overflow-y-auto px-8 py-6 scrollbar-thin scrollbar-thumb-gray-800 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Plugin Name</label>
+            <div className="space-y-1.5">
+              <label className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">Plugin Module</label>
               <select 
                 value={newPluginName} 
                 onChange={(e) => {
@@ -82,7 +91,7 @@ export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayI
                   if (['cors', 'waf'].includes(e.target.value)) setNewPluginPhase('PreRouting');
                   if (['cache'].includes(e.target.value)) setNewPluginPhase('ResponseTransform');
                 }} 
-                className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100 outline-none focus:border-blue-500"
+                className="w-full h-11 px-4 bg-[#050810] border-[#1E293B] focus:border-[#2563EB] rounded-xl text-sm text-white outline-none transition-all appearance-none cursor-pointer"
               >
                 <option value="jwt">JWT Auth</option>
                 <option value="apikey">API Key</option>
@@ -93,12 +102,12 @@ export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayI
               </select>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Phase</label>
+            <div className="space-y-1.5">
+              <label className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">Execution Phase</label>
               <select 
                 value={newPluginPhase} 
                 onChange={(e) => setNewPluginPhase(e.target.value)} 
-                className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100 outline-none focus:border-blue-500"
+                className="w-full h-11 px-4 bg-[#050810] border-[#1E293B] focus:border-[#2563EB] rounded-xl text-sm text-white outline-none transition-all appearance-none cursor-pointer"
               >
                 <option value="PreRouting">Pre-Routing</option>
                 <option value="Authentication">Authentication</option>
@@ -112,19 +121,33 @@ export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayI
             </div>
           </div>
 
-          <div className="bg-gray-950 rounded-lg p-5 border border-gray-800">
-            <h5 className="text-sm font-medium text-gray-400 mb-4 uppercase tracking-wider">Plugin Configuration</h5>
+          <div className="bg-[#050810] rounded-2xl p-6 border border-[#1E293B]">
+            <h5 className="text-[10px] font-black uppercase tracking-[0.15em] text-[#64748B] mb-4 border-b border-white/5 pb-2">Plugin Configuration</h5>
             <DynamicPluginConfig pluginName={newPluginName} config={newPluginConfig} onChange={setNewPluginConfig} />
           </div>
         </div>
 
         {/* Footer Actions */}
-        <div className="px-6 py-4 border-t border-gray-800 bg-gray-900/50 flex justify-end gap-3 shrink-0">
-          <button onClick={onClose} className="px-4 py-2 text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded-lg font-medium transition-colors">
+        <div className="px-8 py-5 border-t border-white/5 bg-[#0B101B] flex justify-end gap-3 shrink-0">
+          <button 
+            onClick={onClose} 
+            className="px-6 py-2 text-[10px] font-black uppercase tracking-widest text-[#64748B] hover:text-white transition-all"
+          >
             Cancel
           </button>
-          <button disabled={isSubmitting} onClick={handleAddPlugin} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50">
-            {isSubmitting ? "Saving..." : "Save Plugin"}
+          <button 
+            disabled={isSubmitting} 
+            onClick={handleAddPlugin} 
+            className="flex items-center gap-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all shadow-md active:scale-95 disabled:opacity-50"
+          >
+            {isSubmitting ? (
+              <>
+                <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save Plugin"
+            )}
           </button>
         </div>
       </div>

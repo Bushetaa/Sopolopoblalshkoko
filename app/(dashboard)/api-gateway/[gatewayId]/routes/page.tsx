@@ -2,7 +2,7 @@
 
 import React, { use } from 'react';
 import Link from 'next/link';
-import { Route as RouteIcon, Plus, MoreVertical, GitMerge, Link as LinkIcon, Edit, Trash, Loader2 } from 'lucide-react';
+import { Route as RouteIcon, Plus, MoreVertical, GitMerge, Link as LinkIcon, Edit, Trash, Loader2, Server } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import {
@@ -81,124 +81,156 @@ export default function RoutesPage({ params }: { params: Promise<{ gatewayId: st
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h3 className="text-xl font-bold font-display text-gray-50">Routes</h3>
-          <p className="text-sm text-gray-400 mt-1">Map paths to your upstream services.</p>
+          <div className="flex items-center gap-3 text-emerald-400 font-black text-[10px] uppercase tracking-[0.3em] mb-2">
+            <div className="w-8 h-[2px] bg-emerald-500" />
+            Routing Infrastructure
+          </div>
+          <h2 className="text-3xl font-black font-display text-white tracking-tight flex items-center gap-3">
+            Gateway Routes
+          </h2>
+          <p className="text-[13px] text-[#64748B] mt-1.5 font-medium leading-relaxed">
+            Define access paths and map them to your upstream service cluster with granular control.
+          </p>
         </div>
         <button 
           onClick={() => setIsCreateModalOpen(true)}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg shadow-blue-900/20"
+          className="flex items-center justify-center gap-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-500/25 active:scale-95 group w-full md:w-auto"
         >
-          <Plus className="w-4 h-4" />
-          <span>Add Route</span>
+          <div className="w-4 h-4 rounded bg-white/10 flex items-center justify-center">
+            <Plus className="w-3 h-3 text-white stroke-[3px]" />
+          </div>
+          Create New Route
         </button>
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-gray-950 border-b border-gray-800 text-gray-400 uppercase tracking-wider text-xs">
-            <tr>
-              <th className="px-6 py-4 font-medium">Path</th>
-              <th className="px-6 py-4 font-medium">Method</th>
-              <th className="px-6 py-4 font-medium">Type</th>
-              <th className="px-6 py-4 font-medium">Service(s)</th>
-              <th className="px-6 py-4 font-medium text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-800">
-            {isLoading ? (
+      <div className="bg-[#0B101B] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl relative">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-600/5 blur-[100px] -z-10" />
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-[#050810]/80 border-b border-white/5 text-[#64748B] uppercase tracking-[0.2em] text-[9px] font-black">
               <tr>
-                <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                  <div className="flex flex-col items-center justify-center">
-                    <RouteIcon className="w-12 h-12 text-gray-700 mb-3 animate-pulse" />
-                    <p className="text-base font-medium text-gray-300">Loading Routes...</p>
-                  </div>
-                </td>
+                <th className="px-7 py-5">Endpoint Definition</th>
+                <th className="px-7 py-5">Method</th>
+                <th className="px-7 py-5">Strategy</th>
+                <th className="px-7 py-5">Target Upstream</th>
+                <th className="px-7 py-5 text-right">Operations</th>
               </tr>
-            ) : routes.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                  <div className="flex flex-col items-center justify-center">
-                    <RouteIcon className="w-12 h-12 text-gray-700 mb-3" />
-                    <p className="text-base font-medium text-gray-300">No Routes Found</p>
-                    <p className="mt-1">Add your first route to start proxying traffic.</p>
-                  </div>
-                </td>
-              </tr>
-            ) : (
-              routes.map((rt) => (
-                <tr key={rt.id} className="hover:bg-gray-800/30 transition-colors group">
-                  <td className="px-6 py-4">
-                    <Link href={`/api-gateway/${gatewayId}/routes/${rt.id}`} className="flex items-center gap-3">
-                      <span className="font-mono text-gray-100 group-hover:text-blue-400 transition-colors">
-                        {rt.path}
-                      </span>
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={cn(
-                      "inline-flex font-mono text-xs font-bold px-2 py-1 rounded border",
-                      rt.method === 'GET' ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :
-                      rt.method === 'POST' ? "bg-blue-500/10 text-blue-400 border-blue-500/20" :
-                      "bg-yellow-500/10 text-yellow-400 border-yellow-500/20"
-                    )}>
-                      {rt.method}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    {rt.is_aggregate ? (
-                      <span className="inline-flex items-center gap-1.5 text-xs text-purple-400 bg-purple-500/10 px-2 py-1 rounded border border-purple-500/20">
-                        <GitMerge className="w-3.5 h-3.5" /> Aggregate
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 text-xs text-gray-400 bg-gray-800 px-2 py-1 rounded border border-gray-700">
-                        <LinkIcon className="w-3.5 h-3.5" /> Standard
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 text-gray-400">
-                    {rt.serviceName}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button disabled={isDeleting === rt.id} className="p-1.5 text-gray-500 hover:text-gray-300 hover:bg-gray-800 rounded transition-colors disabled:opacity-50">
-                          {isDeleting === rt.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreVertical className="w-4 h-4" />}
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-44">
-                        <DropdownMenuItem onClick={() => {
-                          const baseUrl = process.env.NEXT_PUBLIC_GATEWAY_URL || 'http://localhost:5000';
-                          const path = rt.path.startsWith('/') ? rt.path : `/${rt.path}`;
-                          const slugStr = userSlug ? `/${userSlug}` : '';
-                          const fullUrl = `${baseUrl}${slugStr}${path}`;
-                          setSelectedSnippetRoute({ method: rt.method, url: fullUrl });
-                          setSnippetsModalOpen(true);
-                        }} className="cursor-pointer text-blue-400 hover:text-blue-300">
-                          <Code2 className="w-4 h-4 mr-2" />
-                          Integration Code
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => router.push(`/api-gateway/${gatewayId}/routes/${rt.id}/edit`)} className="cursor-pointer">
-                          <Edit className="w-4 h-4 mr-2" />
-                          Edit Route
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          onClick={() => rt.id && handleDelete(rt.id)}
-                          className="cursor-pointer text-red-500 hover:text-red-400 hover:bg-red-500/10 focus:text-red-400 focus:bg-red-500/10"
-                        >
-                          <Trash className="w-4 h-4 mr-2" />
-                          Delete Route
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {isLoading ? (
+                <tr>
+                  <td colSpan={5} className="px-7 py-20 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="w-16 h-16 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-center mb-4 animate-pulse">
+                        <RouteIcon className="w-8 h-8 text-emerald-500/40" />
+                      </div>
+                      <p className="text-[11px] font-black text-white uppercase tracking-widest">Compiling Route Topology...</p>
+                    </div>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : routes.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-7 py-20 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center mb-4">
+                        <RouteIcon className="w-8 h-8 text-[#1E293B]" />
+                      </div>
+                      <p className="text-[11px] font-black text-white uppercase tracking-widest">No Routes Configured</p>
+                      <p className="text-[10px] text-[#64748B] mt-2 font-medium uppercase tracking-wider">Start by defining your first API endpoint path.</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                routes.map((rt) => (
+                  <tr key={rt.id} className="hover:bg-white/[0.02] transition-all group">
+                    <td className="px-7 py-5">
+                      <Link href={`/api-gateway/${gatewayId}/routes/${rt.id}`} className="flex items-center gap-4">
+                        <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.1)] group-hover:border-emerald-500/40 transition-all">
+                          <RouteIcon className="w-4.5 h-4.5 text-emerald-400 stroke-[2.5px]" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="font-mono text-white font-black text-sm group-hover:text-emerald-400 transition-colors tracking-tight">
+                            {rt.path}
+                          </span>
+                          <span className="text-[9px] text-[#475569] font-black uppercase tracking-widest mt-0.5">Active Gateway Path</span>
+                        </div>
+                      </Link>
+                    </td>
+                    <td className="px-7 py-5">
+                      <span className={cn(
+                        "inline-flex font-black text-[9px] uppercase tracking-widest px-2.5 py-1.5 rounded-lg border transition-all shadow-sm",
+                        rt.method === 'GET' ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :
+                        rt.method === 'POST' ? "bg-blue-500/10 text-blue-400 border-blue-500/20" :
+                        "bg-orange-500/10 text-orange-400 border-orange-500/20"
+                      )}>
+                        {rt.method}
+                      </span>
+                    </td>
+                    <td className="px-7 py-5">
+                      {rt.is_aggregate ? (
+                        <span className="inline-flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-purple-400 bg-purple-500/5 px-3 py-1.5 rounded-lg border border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]">
+                          <GitMerge className="w-3 h-3" /> Aggregation
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-[#64748B] bg-white/[0.03] px-3 py-1.5 rounded-lg border border-white/5">
+                          <LinkIcon className="w-3 h-3" /> Standard
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-7 py-5">
+                      <div className="flex items-center gap-3 group/svc">
+                        <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center group-hover/svc:border-blue-500/30 transition-all">
+                          <Server className="w-4 h-4 text-[#475569] group-hover/svc:text-blue-400 transition-colors" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[11px] font-black text-gray-200 uppercase tracking-tighter group-hover/svc:text-white transition-colors">{rt.serviceName}</span>
+                          <span className="text-[9px] font-bold text-[#475569] uppercase tracking-widest">Internal Service</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-7 py-5 text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button disabled={isDeleting === rt.id} className="w-9 h-9 flex items-center justify-center text-[#64748B] hover:text-white hover:bg-white/5 rounded-xl transition-all active:scale-95 border border-transparent hover:border-white/5">
+                            {isDeleting === rt.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreVertical className="w-4 h-4" />}
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-56 bg-[#0B101B] border-white/5 rounded-2xl p-2 shadow-2xl backdrop-blur-xl">
+                          <DropdownMenuItem onClick={() => {
+                            const baseUrl = process.env.NEXT_PUBLIC_GATEWAY_URL || 'http://localhost:5000';
+                            const path = rt.path.startsWith('/') ? rt.path : `/${rt.path}`;
+                            const slugStr = userSlug ? `/${userSlug}` : '';
+                            const fullUrl = `${baseUrl}${slugStr}${path}`;
+                            setSelectedSnippetRoute({ method: rt.method, url: fullUrl });
+                            setSnippetsModalOpen(true);
+                          }} className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-blue-400 hover:text-blue-300 hover:bg-blue-500/5 focus:bg-blue-500/5 focus:text-blue-300 transition-all py-3 px-4">
+                            <Code2 className="w-3.5 h-3.5 mr-3" />
+                            Integration Code
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => router.push(`/api-gateway/${gatewayId}/routes/${rt.id}/edit`)} className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4">
+                            <Edit className="w-3.5 h-3.5 mr-3 text-blue-500" />
+                            Modify Parameters
+                          </DropdownMenuItem>
+                          <div className="h-[1px] bg-white/5 my-1" />
+                          <DropdownMenuItem 
+                            onClick={() => rt.id && handleDelete(rt.id)}
+                            className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-300 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-red-300 transition-all py-3 px-4"
+                          >
+                            <Trash className="w-3.5 h-3.5 mr-3" />
+                            Terminate Route
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
       
       <CreateRouteModal 

@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Server } from 'lucide-react';
+import { X, Server } from 'lucide-react';
 import { ServiceForm, ServiceFormValues } from '@/components/services/ServiceForm';
 import { apiClient, Gateway, GatewayCollection } from '@/lib/api-client';
 import { toast } from '@/hooks/use-toast';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface CreateServiceModalProps {
   isOpen: boolean;
@@ -41,6 +40,8 @@ export default function CreateServiceModal({ isOpen, onClose, onSuccess, gateway
     fetchData();
   }, [isOpen, gatewayId]);
 
+  if (!isOpen) return null;
+
   const handleSubmit = async (data: ServiceFormValues) => {
     try {
       await apiClient.services.create({
@@ -56,18 +57,35 @@ export default function CreateServiceModal({ isOpen, onClose, onSuccess, gateway
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-gray-900 border-gray-800 text-gray-100 max-w-3xl rounded-2xl p-0 overflow-hidden shadow-2xl">
-        <div className="p-5 border-b border-gray-800">
-          <DialogHeader>
-            <DialogTitle className="text-lg font-bold flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center"><Server className="w-4 h-4 text-white" /></div>
-              Create Upstream Service
-            </DialogTitle>
-            <DialogDescription className="text-gray-400 text-sm mt-1">Configure a new backend service for {gateway?.name || "your gateway"}.</DialogDescription>
-          </DialogHeader>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#050810]/90 backdrop-blur-md p-4">
+      <div className="bg-[#0B101B] border border-white/5 rounded-[2.5rem] w-full max-w-4xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300">
+        {/* Header - Styled like Wizard */}
+        <div className="bg-gradient-to-br from-[#1E224F] via-[#141833] to-[#0B101B] px-8 py-5 border-b border-white/5 relative shrink-0">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-11 h-11 rounded-xl bg-[#2563EB] flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)] relative group">
+                <div className="absolute inset-0 bg-white/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Server className="w-5 h-5 text-white stroke-[2.5px]" />
+              </div>
+              <div>
+                <h2 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
+                  Create Service
+                  <span className="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest text-blue-400">Manual Entry</span>
+                </h2>
+                <p className="text-[#94A3B8] font-medium text-xs">Configure a new backend service for {gateway?.name || "your gateway"}</p>
+              </div>
+            </div>
+            <button 
+              onClick={onClose} 
+              className="p-2 text-[#64748B] hover:text-white rounded-lg hover:bg-white/5 transition-all"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
-        <div className="p-5 overflow-y-auto max-h-[70vh]">
+
+        {/* Content Area */}
+        <div className="flex-1 overflow-y-auto px-8 py-6 scrollbar-thin scrollbar-thumb-gray-800">
           {isLoading ? (
             <div className="flex h-40 items-center justify-center">
               <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -81,7 +99,7 @@ export default function CreateServiceModal({ isOpen, onClose, onSuccess, gateway
             />
           )}
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 }

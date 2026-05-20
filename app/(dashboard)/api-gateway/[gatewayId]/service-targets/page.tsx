@@ -1,7 +1,7 @@
 "use client";
 
 import React, { use } from 'react';
-import { Target, Server, Plus, MoreVertical, Edit, Trash, Loader2, Globe, Zap, Scale, Info, CheckCircle2, X } from 'lucide-react';
+import { Target, Server, Plus, MoreVertical, Edit, Trash, Loader2, Globe, Zap, Scale, Info, CheckCircle2, X, Network } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { cn } from "@/lib/utils";
 import {
@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { apiClient, ServiceTarget, Service } from '@/lib/api-client';
+import CreateTargetModal from '@/components/api-gateway/modals/CreateTargetModal';
 
 interface EnhancedTarget extends ServiceTarget {
   serviceName: string;
@@ -104,219 +105,152 @@ export default function GatewayServiceTargetsPage({ params }: { params: Promise<
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h3 className="text-xl font-bold font-display text-gray-50">Service Targets</h3>
-          <p className="text-sm text-gray-400 mt-1">Manage upstream targets for this gateway's services.</p>
+          <h3 className="text-2xl font-black font-display text-white tracking-tight flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shadow-[0_0_15px_rgba(37,99,235,0.1)]">
+              <Target className="w-5 h-5 text-blue-400 stroke-[2.5px]" />
+            </div>
+            Upstream Targets
+          </h3>
+          <p className="text-[#94A3B8] font-medium text-xs mt-1.5 ml-1">
+            Map physical instances and IP addresses to your service registry.
+          </p>
         </div>
-        <Button 
+        <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
+          className="flex items-center justify-center gap-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-6 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-500/25 active:scale-95 group w-full sm:w-auto"
         >
-          <Plus className="w-4 h-4" />
-          <span>Add Target</span>
-        </Button>
+          <div className="w-5 h-5 rounded-lg bg-white/10 flex items-center justify-center">
+            <Plus className="w-3.5 h-3.5 text-white stroke-[3.5px]" />
+          </div>
+          <span>Register Target</span>
+        </button>
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-gray-950 border-b border-gray-800 text-gray-400 uppercase tracking-wider text-xs">
-            <tr>
-              <th className="px-6 py-4 font-medium">Target URL</th>
-              <th className="px-6 py-4 font-medium">Service</th>
-              <th className="px-6 py-4 font-medium">Weight</th>
-              <th className="px-6 py-4 font-medium text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-800">
-            {isLoading ? (
+      {/* High-Density Table Section */}
+      <div className="bg-[#0B101B] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.3)]">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-[#050810]/50 border-b border-white/5 text-[#64748B] uppercase tracking-[0.2em] text-[9px] font-black">
               <tr>
-                <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
-                  <div className="flex flex-col items-center justify-center">
-                    <Target className="w-12 h-12 text-gray-700 mb-3 animate-pulse" />
-                    <p className="text-base font-medium text-gray-300">Loading Targets...</p>
-                  </div>
-                </td>
+                <th className="px-8 py-6">Physical Endpoint</th>
+                <th className="px-8 py-6">Owner Service</th>
+                <th className="px-8 py-6">Traffic Weight</th>
+                <th className="px-8 py-6 text-right">Management</th>
               </tr>
-            ) : targets.length === 0 ? (
-              <tr>
-                <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
-                  <div className="flex flex-col items-center justify-center">
-                    <Target className="w-12 h-12 text-gray-700 mb-3" />
-                    <p className="text-base font-medium text-gray-300">No Targets Found</p>
-                    <p className="mt-1">Add a target to get started.</p>
-                  </div>
-                </td>
-              </tr>
-            ) : (
-              targets.map((target) => (
-                <tr key={target.id} className="hover:bg-gray-800/30 transition-colors group">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <Target className="w-4 h-4 text-gray-400 group-hover:text-blue-400 transition-colors" />
-                      <span className="font-mono text-sm text-gray-100">{target.url}</span>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {isLoading ? (
+                <tr>
+                  <td colSpan={4} className="px-8 py-24 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="w-20 h-20 rounded-[2rem] bg-blue-500/5 flex items-center justify-center mb-6 relative">
+                        <div className="absolute inset-0 rounded-[2rem] border border-blue-500/20 animate-ping" />
+                        <Target className="w-10 h-10 text-blue-500/40" />
+                      </div>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Probing Network Targets...</p>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <span className="text-gray-400 flex items-center gap-2">
-                      <Server className="w-3.5 h-3.5" />
-                      {target.serviceName}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center justify-center px-2 py-1 rounded bg-gray-800 text-gray-300 text-xs font-mono border border-gray-700">
-                      w:{target.weight || 1}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button disabled={isDeleting === target.id} className="p-1.5 text-gray-500 hover:text-gray-300 hover:bg-gray-800 rounded transition-colors disabled:opacity-50">
-                          {isDeleting === target.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreVertical className="w-4 h-4" />}
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-40">
-                        <DropdownMenuItem 
-                          onClick={() => router.push(`/api-gateway/${gatewayId}/services/${target.service_id}/edit`)} 
-                          className="cursor-pointer"
-                        >
-                          <Edit className="w-4 h-4 mr-2" />
-                          Edit Service
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          onClick={() => target.id && handleDelete(target.id)}
-                          className="cursor-pointer text-red-500 hover:text-red-400 hover:bg-red-500/10 focus:text-red-400 focus:bg-red-500/10"
-                        >
-                          <Trash className="w-4 h-4 mr-2" />
-                          Delete Target
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                </tr>
+              ) : targets.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-8 py-24 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="w-20 h-20 rounded-[2rem] bg-gray-900 flex items-center justify-center mb-6 border border-white/5 shadow-inner">
+                        <Target className="w-10 h-10 text-gray-800" />
+                      </div>
+                      <p className="text-sm font-black text-gray-300 uppercase tracking-widest">No Targets Identified</p>
+                      <p className="text-xs text-[#475569] mt-3 max-w-[300px] mx-auto leading-relaxed font-medium">
+                        Your services have no active upstream instances. Add a physical endpoint to start routing traffic.
+                      </p>
+                    </div>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                targets.map((target) => (
+                  <tr key={target.id} className="hover:bg-white/[0.02] transition-all group">
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-4">
+                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500/10 to-transparent border border-white/5 flex items-center justify-center group-hover:border-blue-500/30 transition-all shadow-lg">
+                          <Target className="w-5 h-5 text-blue-400 group-hover:text-blue-300 transition-colors" />
+                        </div>
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-mono text-white font-black text-sm group-hover:text-blue-400 transition-colors tracking-tight">
+                            {target.url}
+                          </span>
+                          <span className="text-[9px] text-[#475569] font-black uppercase tracking-widest flex items-center gap-1.5">
+                            <div className="w-1 h-1 rounded-full bg-blue-500" />
+                            Upstream instance
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-3 group/svc">
+                        <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center group-hover/svc:border-purple-500/30 transition-all">
+                          <Server className="w-4 h-4 text-[#475569] group-hover/svc:text-purple-400 transition-colors" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[11px] font-black text-gray-200 uppercase tracking-tighter group-hover/svc:text-white transition-colors">{target.serviceName}</span>
+                          <span className="text-[9px] font-bold text-[#475569] uppercase tracking-widest">Parent Service</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-[#0F172A] border border-white/5 flex items-center justify-center text-[10px] font-black text-blue-400 shadow-xl">
+                          {target.weight || 1}
+                        </div>
+                        <span className="text-[10px] font-bold text-[#475569] uppercase tracking-widest">Weighting</span>
+                      </div>
+                    </td>
+                    <td className="px-8 py-6 text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button disabled={isDeleting === target.id} className="p-2.5 text-[#475569] hover:text-white hover:bg-white/5 rounded-xl transition-all disabled:opacity-50 group">
+                            {isDeleting === target.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreVertical className="w-5 h-5 group-hover:scale-110" />}
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="bg-[#0B101B] border border-white/10 p-2 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] min-w-[180px] animate-in zoom-in-95 duration-200">
+                          <DropdownMenuItem 
+                            onClick={() => router.push(`/api-gateway/${gatewayId}/services/${target.service_id}/edit`)} 
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg focus:bg-white/5 focus:text-white transition-all cursor-pointer font-bold text-xs text-gray-400"
+                          >
+                            <Edit className="w-4 h-4 text-blue-400" />
+                            Edit Service
+                          </DropdownMenuItem>
+                          <div className="h-px bg-white/5 my-1" />
+                          <DropdownMenuItem 
+                            onClick={() => target.id && handleDelete(target.id)}
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg focus:bg-red-500/10 focus:text-red-400 transition-all cursor-pointer font-bold text-xs text-red-500"
+                          >
+                            <Trash className="w-4 h-4" />
+                            Remove Target
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Create Target Modal */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="bg-[#0B101B] border-[#1E293B] text-gray-100 max-w-[420px] rounded-[2rem] p-0 overflow-hidden shadow-2xl shadow-blue-500/10 [&>button:last-child]:hidden">
-          <div className="bg-gradient-to-br from-[#1E224F] via-[#141833] to-[#0B101B] p-6 border-b border-white/5 relative">
-            <DialogHeader>
-              <DialogTitle className="text-2xl font-bold tracking-tight flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#2563EB] flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.3)]">
-                  <Plus className="w-6 h-6 text-white stroke-[3px]" />
-                </div>
-                <span className="text-white">New Target</span>
-              </DialogTitle>
-              <DialogDescription className="text-[#94A3B8] mt-2 font-medium text-sm leading-relaxed">
-                Configure a new upstream destination for your backend traffic.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogClose className="absolute right-5 top-6 p-1.5 rounded-lg hover:bg-white/5 text-[#64748B] hover:text-white transition-all">
-              <X className="w-4 h-4" />
-            </DialogClose>
-          </div>
-
-          <div className="px-6 py-6 space-y-6 relative z-10">
-            {/* Target URL */}
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#64748B] uppercase tracking-[0.12em] ml-1">
-                DESTINATION URL
-              </label>
-              <Input 
-                placeholder="http://" 
-                value={formData.url}
-                onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                className="h-12 bg-[#050810] border-[#1E293B] focus:border-[#0EA5E9] focus:ring-0 rounded-xl text-base transition-all text-white placeholder:text-gray-700"
-              />
-              <p className="text-[9px] text-[#475569] font-medium ml-1">Must include protocol (http/https)</p>
-            </div>
-
-            {/* Target Service */}
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#64748B] uppercase tracking-[0.12em] ml-1">
-                ASSIGN TO SERVICE
-              </label>
-              <Select 
-                value={formData.service_id} 
-                onValueChange={(val) => setFormData({ ...formData, service_id: val })}
-              >
-                <SelectTrigger className="h-12 bg-[#050810] border-[#1E293B] focus:border-[#0EA5E9] focus:ring-0 rounded-xl text-base transition-all text-white">
-                  <SelectValue placeholder="Select target service" />
-                </SelectTrigger>
-                <SelectContent className="bg-[#0B101B] border-[#1E293B] rounded-xl p-1 shadow-2xl backdrop-blur-xl">
-                  {services.map(svc => (
-                    <SelectItem key={svc.id} value={svc.id!} className="rounded-lg py-2.5 focus:bg-[#2563EB]/10 focus:text-[#38BDF8] transition-all">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-md bg-[#050810] flex items-center justify-center">
-                          <Server className="w-3.5 h-3.5 text-[#2563EB]" />
-                        </div>
-                        <div className="flex flex-col text-left">
-                          <span className="font-bold text-gray-100 text-sm">{svc.name}</span>
-                          <span className="text-[8px] text-[#64748B] font-black uppercase tracking-widest">{svc.protocol} protocol</span>
-                        </div>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Weight */}
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#64748B] uppercase tracking-[0.12em] ml-1">
-                TRAFFIC WEIGHT (1-100)
-              </label>
-              <div className="flex gap-3">
-                <Input 
-                  type="number" 
-                  min="1"
-                  max="100"
-                  value={formData.weight}
-                  onChange={(e) => setFormData({ ...formData, weight: parseInt(e.target.value) || 1 })}
-                  className="h-12 w-20 bg-[#050810] border-[#1E293B] focus:border-[#0EA5E9] focus:ring-0 rounded-xl text-base transition-all text-center font-bold text-white"
-                />
-                <div className="flex-1 bg-[#050810]/50 border border-[#1E293B] rounded-xl px-4 flex items-center text-[10px] text-[#64748B] leading-tight font-medium">
-                  Higher weight sends more traffic to this destination.
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <DialogFooter className="p-6 pt-2 flex flex-col sm:flex-row gap-3 relative z-10 border-t border-white/5 bg-[#0B101B]">
-            <Button 
-              variant="ghost" 
-              onClick={() => setIsModalOpen(false)} 
-              className="w-full sm:w-auto h-12 px-8 text-[#64748B] font-bold hover:text-white hover:bg-white/5 rounded-xl transition-all text-sm"
-            >
-              Discard
-            </Button>
-            <Button 
-              onClick={handleCreate} 
-              disabled={isSaving || !formData.service_id || !formData.url}
-              className={cn(
-                "w-full sm:w-auto h-12 px-10 rounded-xl font-bold transition-all duration-300 shadow-lg active:scale-95 flex items-center justify-center text-sm",
-                isSaving 
-                  ? "bg-[#2563EB]/50" 
-                  : "bg-[#1E40AF] hover:bg-[#2563EB] text-white shadow-blue-900/20"
-              )}
-            >
-              {isSaving ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                  Deploying...
-                </>
-              ) : (
-                "Deploy Target"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <CreateTargetModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={fetchData}
+        services={services}
+        isSaving={isSaving}
+        formData={formData}
+        setFormData={setFormData}
+        handleCreate={handleCreate}
+      />
     </div>
   );
 }

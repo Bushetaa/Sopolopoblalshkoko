@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api-client';
-import { AnalyticsFilterState, LogLevel } from '@/types/layout';
+import { LogLevel } from '@/types/layout';
 
 const getLogLevel = (statusCode: number): LogLevel => {
   if (statusCode >= 500) return 'ERROR';
@@ -12,16 +12,13 @@ const getLogLevel = (statusCode: number): LogLevel => {
   return 'INFO';
 };
 
-export function useLiveLogs(filters?: AnalyticsFilterState) {
+export function useLiveLogs() {
   const [isPaused, setIsPaused] = useState(false);
   const [levelFilter, setLevelFilter] = useState<LogLevel | 'ALL'>('ALL');
 
   const { data: requestLogs = [], isLoading, error } = useQuery({
-    queryKey: ['gateway-logs', filters?.dateRange.from.toISOString(), filters?.dateRange.to.toISOString()],
-    queryFn: () => apiClient.logs.getRequests({
-      from: filters?.dateRange.from.toISOString(),
-      to: filters?.dateRange.to.toISOString()
-    }),
+    queryKey: ['gateway-logs'],
+    queryFn: () => apiClient.logs.getRequests(),
     refetchInterval: isPaused ? false : 3000,
   });
 

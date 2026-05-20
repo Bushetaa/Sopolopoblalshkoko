@@ -73,13 +73,13 @@ export function GatewayForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-10">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left Column: Basic Information */}
-          <div className="space-y-8">
-            <div className="flex items-center gap-2 text-gray-400 font-bold text-[11px] uppercase tracking-[0.2em]">
-              <Info className="w-3.5 h-3.5" />
+          <div className="space-y-5">
+            <div className="flex items-center gap-2 text-[#64748B] font-black text-[9px] uppercase tracking-[0.15em] ml-1">
+              <Info className="w-3 h-3" />
               Primary Configuration
             </div>
             
@@ -87,19 +87,19 @@ export function GatewayForm({
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel className="text-sm font-bold text-gray-300 ml-1">Gateway Identity</FormLabel>
+                <FormItem className="space-y-1.5">
+                  <FormLabel className="text-[10px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">Gateway Identifier <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
                     <div className="relative group">
-                      <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
+                      <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#475569] group-focus-within:text-[#2563EB] transition-colors" />
                       <Input 
-                        placeholder="e.g. Main E-Commerce" 
+                        placeholder="e.g. core-prod-gateway" 
                         {...field} 
-                        className="h-14 pl-12 bg-gray-900/40 border-gray-800 focus:ring-blue-500/20 focus:border-blue-500/50 rounded-2xl text-lg transition-all"
+                        className="h-11 pl-11 bg-[#050810] border-[#1E293B] focus:border-[#2563EB] focus:ring-0 rounded-xl text-sm transition-all text-white placeholder:text-gray-700"
                       />
                     </div>
                   </FormControl>
-                  <FormMessage className="text-red-400 font-medium" />
+                  <FormMessage className="text-red-400 text-[10px] font-medium" />
                 </FormItem>
               )}
             />
@@ -108,25 +108,25 @@ export function GatewayForm({
               control={form.control}
               name="description"
               render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel className="text-sm font-bold text-gray-300 ml-1">Infrastructure Description</FormLabel>
+                <FormItem className="space-y-1.5">
+                  <FormLabel className="text-[10px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">Infrastructure Description</FormLabel>
                   <FormControl>
                     <Textarea 
                       placeholder="Brief description of what this gateway handles..." 
-                      className="min-h-[140px] bg-gray-900/40 border-gray-800 focus:ring-blue-500/20 focus:border-blue-500/50 rounded-2xl text-base transition-all resize-none p-5" 
+                      className="min-h-[100px] bg-[#050810] border-[#1E293B] focus:border-[#2563EB] focus:ring-0 rounded-xl text-sm transition-all resize-none p-4 text-white placeholder:text-gray-700" 
                       {...field} 
                     />
                   </FormControl>
-                  <FormMessage className="text-red-400 font-medium" />
+                  <FormMessage className="text-red-400 text-[10px] font-medium" />
                 </FormItem>
               )}
             />
           </div>
 
-          {/* Right Column: Routing & Status */}
-          <div className="space-y-8">
-            <div className="flex items-center gap-2 text-gray-400 font-bold text-[11px] uppercase tracking-[0.2em]">
-              <Activity className="w-3.5 h-3.5" />
+          {/* Right Column: Operational Parameters */}
+          <div className="space-y-5">
+            <div className="flex items-center gap-2 text-[#64748B] font-black text-[9px] uppercase tracking-[0.15em] ml-1">
+              <Activity className="w-3 h-3" />
               Operational Parameters
             </div>
 
@@ -135,60 +135,62 @@ export function GatewayForm({
               name="mode"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel className="text-sm font-bold text-gray-300 ml-1">Routing Strategy</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="h-14 bg-gray-900/40 border-gray-800 focus:ring-blue-500/20 focus:border-blue-500/50 rounded-2xl text-lg transition-all">
-                        <SelectValue placeholder="Select a routing mode" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-gray-950 border-gray-800 rounded-2xl p-2 shadow-2xl">
-                      <SelectItem 
-                        value="single" 
+                  <FormLabel className="text-[10px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">Operational Mode</FormLabel>
+                  <FormControl>
+                    <div className="grid grid-cols-1 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => field.onChange('pro')}
+                        className={cn(
+                          "flex items-center gap-3 p-3 rounded-xl border transition-all duration-300 text-left group",
+                          field.value === 'pro' 
+                            ? "border-[#8B5CF6] bg-[#8B5CF6]/5 text-white shadow-lg" 
+                            : "border-[#1E293B] bg-[#050810] text-[#64748B] hover:border-[#334155]"
+                        )}
+                      >
+                        <div className={cn(
+                          "w-9 h-9 rounded-lg flex items-center justify-center transition-all",
+                          field.value === 'pro' ? "bg-[#8B5CF6] text-white" : "bg-[#1E293B] text-[#475569] group-hover:bg-[#334155]"
+                        )}>
+                          <Server className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm">PRO Mode</span>
+                            <span className="text-[7px] font-black uppercase tracking-widest bg-white/10 px-1 py-0.5 rounded">Clustered</span>
+                          </div>
+                          <p className="text-[10px] font-medium opacity-60 leading-tight">High availability multi-node setup.</p>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => field.onChange('single')}
                         disabled={hasSingleGateway && initialValues?.mode !== "single"}
-                        className="rounded-xl py-3 focus:bg-blue-500/10 focus:text-blue-400"
+                        className={cn(
+                          "flex items-center gap-3 p-3 rounded-xl border transition-all duration-300 text-left group",
+                          field.value === 'single' 
+                            ? "border-[#0EA5E9] bg-[#0EA5E9]/5 text-white shadow-lg" 
+                            : "border-[#1E293B] bg-[#050810] text-[#64748B] hover:border-[#334155] disabled:opacity-30 disabled:cursor-not-allowed"
+                        )}
                       >
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center">
-                            <Zap className="w-4 h-4 text-blue-400" />
-                          </div>
-                          <div className="flex flex-col">
-                            <span className="font-bold">Single Mode</span>
-                            <span className="text-[10px] text-gray-500">Global path matching</span>
-                          </div>
+                        <div className={cn(
+                          "w-9 h-9 rounded-lg flex items-center justify-center transition-all",
+                          field.value === 'single' ? "bg-[#0EA5E9] text-white" : "bg-[#1E293B] text-[#475569] group-hover:bg-[#334155]"
+                        )}>
+                          <Zap className="w-4 h-4" />
                         </div>
-                      </SelectItem>
-                      <SelectItem 
-                        value="pro"
-                        className="rounded-xl py-3 focus:bg-purple-500/10 focus:text-purple-400 mt-1"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center">
-                            <Server className="w-4 h-4 text-purple-400" />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm">SINGLE Mode</span>
+                            <span className="text-[7px] font-black uppercase tracking-widest bg-white/10 px-1 py-0.5 rounded">Standalone</span>
                           </div>
-                          <div className="flex flex-col">
-                            <span className="font-bold">Pro Mode</span>
-                            <span className="text-[10px] text-gray-500">Advanced hierarchical routing</span>
-                          </div>
+                          <p className="text-[10px] font-medium opacity-60 leading-tight">Performance optimized single instance.</p>
                         </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <div className="bg-blue-500/5 border border-blue-500/10 rounded-2xl p-4 mt-2">
-                    <p className="text-xs text-blue-400/80 font-medium leading-relaxed">
-                      {selectedMode === 'single' 
-                        ? `Unified Endpoint: /${userSlug}/{path}`
-                        : `Namespaced Endpoint: /${userSlug}/${form.getValues("name") || '{gateway}'}/{service}/{path}`
-                      }
-                    </p>
-                  </div>
-                  {hasSingleGateway && initialValues?.mode !== "single" && (
-                    <p className="text-[10px] font-bold text-yellow-500/80 uppercase tracking-wider mt-2 flex items-center gap-1.5">
-                      <Shield className="w-3 h-3" />
-                      Cluster Restriction: Only Pro mode available
-                    </p>
-                  )}
-                  <FormMessage className="text-red-400 font-medium" />
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-red-400 text-[10px] font-medium" />
                 </FormItem>
               )}
             />
@@ -197,25 +199,21 @@ export function GatewayForm({
               control={form.control}
               name="is_active"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-[2rem] border border-gray-800/60 p-6 bg-gray-950/40 backdrop-blur-sm group hover:border-blue-500/20 transition-all duration-300">
-                  <div className="space-y-1">
-                    <FormLabel className="text-lg font-bold text-gray-200 flex items-center gap-2">
+                <FormItem className="flex flex-row items-center justify-between rounded-2xl border border-[#1E293B] p-4 bg-[#050810] group hover:border-[#2563EB]/20 transition-all duration-300">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-sm font-bold text-gray-200 flex items-center gap-2">
                       Deployment Status
-                      {field.value ? (
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      ) : (
-                        <span className="w-2 h-2 rounded-full bg-gray-600" />
-                      )}
+                      {field.value && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
                     </FormLabel>
-                    <FormDescription className="text-xs text-gray-500 font-medium">
-                      Enable live traffic processing for this cluster
+                    <FormDescription className="text-[10px] text-[#64748B] font-medium">
+                      Enable live traffic processing
                     </FormDescription>
                   </div>
                   <FormControl>
                     <Switch
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                      className="data-[state=checked]:bg-blue-600"
+                      className="data-[state=checked]:bg-[#2563EB] scale-90"
                     />
                   </FormControl>
                 </FormItem>
@@ -224,13 +222,13 @@ export function GatewayForm({
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pt-8 border-t border-gray-800/60">
+        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-white/5">
           {isEditMode && onDelete && (
             <Button 
               type="button" 
               variant="destructive" 
               onClick={onDelete}
-              className="w-full sm:w-auto sm:mr-auto h-12 px-6 rounded-xl font-bold bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border-red-500/20 transition-all"
+              className="w-full sm:w-auto sm:mr-auto h-11 px-5 rounded-xl text-[10px] font-black uppercase tracking-widest bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border-red-500/20 transition-all"
             >
               Terminate Gateway
             </Button>
@@ -240,7 +238,7 @@ export function GatewayForm({
             type="button" 
             variant="outline" 
             onClick={onCancel}
-            className="w-full sm:w-auto h-12 px-8 border-gray-800 hover:bg-gray-800 text-gray-300 rounded-xl font-bold transition-all"
+            className="w-full sm:w-auto h-11 px-6 border-[#1E293B] hover:bg-[#1E293B] text-[#64748B] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
           >
             Cancel
           </Button>
@@ -249,20 +247,20 @@ export function GatewayForm({
             type="submit" 
             disabled={isSubmitting}
             className={cn(
-              "w-full sm:w-auto h-12 px-10 rounded-xl font-black transition-all duration-300 shadow-lg active:scale-95 flex items-center gap-2",
+              "w-full sm:w-auto h-11 px-8 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 shadow-md active:scale-95 flex items-center gap-2",
               isEditMode 
-                ? "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-900/20" 
+                ? "bg-[#2563EB] hover:bg-[#1D4ED8] text-white shadow-[#2563EB]/20" 
                 : "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/20"
             )}
           >
             {isSubmitting ? (
               <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Synchronizing...
+                <Loader2 className="w-3.5 h-3.5 animate-spin stroke-[3px]" />
+                Deploying...
               </>
             ) : (
               <>
-                {isEditMode ? <CheckCircle2 className="w-5 h-5" /> : <Zap className="w-5 h-5" />}
+                {isEditMode ? <CheckCircle2 className="w-4 h-4" /> : <Zap className="w-4 h-4" />}
                 {isEditMode ? "Commit Changes" : "Deploy Gateway"}
               </>
             )}

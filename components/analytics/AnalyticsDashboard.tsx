@@ -26,16 +26,16 @@ export default function AnalyticsDashboard() {
   const { kpiCards, trafficData, distributionData, histogramData, statusCodeData, slaMetrics, isLoading } = useAnalyticsData(filters);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header Section */}
       <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2 text-[10px] text-blue-400 font-black uppercase tracking-[0.2em]">
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+        <div className="flex items-center gap-2 text-xs text-blue-400 font-medium uppercase tracking-wider">
+          <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
           Analytics Engine
         </div>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <h2 className="text-2xl font-black text-gray-50 tracking-tight">Platform Insights</h2>
-          <div className="flex flex-wrap items-center gap-2">
+          <h2 className="text-3xl font-bold text-gray-50 tracking-tight">Platform Insights</h2>
+          <div className="flex flex-wrap items-center gap-3">
             <GranularityToggle 
               value={filters.granularity} 
               onChange={(g) => setFilters(f => ({ ...f, granularity: g }))} 
@@ -60,7 +60,7 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2">
           <TrafficChart data={trafficData} isLoading={isLoading} />
         </div>
@@ -70,7 +70,7 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* SLA & Status Codes */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2">
           <StatusCodeChart data={statusCodeData} isLoading={isLoading} />
         </div>
@@ -80,13 +80,13 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* Histogram Section */}
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-6">
         <ResponseHistogram data={histogramData} isLoading={isLoading} />
       </div>
 
       {/* Live Logs Section */}
-      <div className="grid grid-cols-1 gap-4">
-        <LiveLogFeed filters={filters} />
+      <div className="grid grid-cols-1 gap-6">
+        <LiveLogFeed />
       </div>
     </div>
   );

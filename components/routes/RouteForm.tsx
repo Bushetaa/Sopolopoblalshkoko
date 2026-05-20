@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronUp, Route as RouteIcon, Info, Settings2, CheckCircle2, Server, Network } from "lucide-react";
+import { ChevronDown, ChevronUp, Route as RouteIcon, Info, Settings2, CheckCircle2, Server, Network, Zap, Loader2 } from "lucide-react";
 import { GatewayCollection, Service } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 
@@ -119,27 +119,39 @@ export function RouteForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-10">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         
-        {/* URL Preview */}
-        <div className="bg-gray-950/50 border border-gray-800/60 rounded-2xl p-5 font-mono text-sm flex flex-wrap items-center gap-2 shadow-inner">
-          <span className="text-gray-500 font-medium">Mapped Endpoint:</span>
-          <div className="flex items-center gap-1 bg-gray-900 px-3 py-1.5 rounded-lg border border-gray-800">
-            <span className="text-blue-400 font-bold">/{userSlug}</span>
+        {/* URL Preview - Premium Style */}
+        <div className="bg-[#050810] border border-white/5 rounded-3xl p-5 font-mono text-xs flex flex-col sm:flex-row items-start sm:items-center gap-4 shadow-inner group relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-1 h-full bg-blue-500/50" />
+          <div className="flex items-center gap-2.5 text-[#64748B] font-black uppercase tracking-[0.2em] text-[10px]">
+            <Network className="w-3.5 h-3.5 text-blue-400" />
+            Mapped Topology
+          </div>
+          <div className="flex items-center gap-1.5 bg-[#0F172A] px-4 py-2.5 rounded-2xl border border-white/5 group-hover:border-blue-500/20 transition-all shadow-xl">
+            <span className="text-blue-400 font-black tracking-tight">/{userSlug}</span>
             {gatewayMode === "pro" && (
               <>
-                <span className="text-blue-400 font-bold">/{gatewayName.toLowerCase().replace(/\s+/g, "-")}</span>
-                {!isAggregate && <span className="text-emerald-400 font-bold">/{serviceName}</span>}
+                <span className="text-[#64748B] font-black opacity-30">/</span>
+                <span className="text-blue-400 font-black tracking-tight">{gatewayName.toLowerCase().replace(/\s+/g, "-")}</span>
+                {!isAggregate && (
+                  <>
+                    <span className="text-[#64748B] font-black opacity-30">/</span>
+                    <span className="text-emerald-400 font-black tracking-tight">{serviceName}</span>
+                  </>
+                )}
               </>
             )}
-            <span className="text-gray-100 font-bold">{path || "/..."}</span>
+            <span className="text-[#64748B] font-black opacity-30">/</span>
+            <span className="text-white font-black animate-pulse shadow-blue-500/10 tracking-tight">{path || "..."}</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* Left Column */}
-          <div className="space-y-8">
-            <div className="flex items-center gap-2 text-gray-400 font-bold text-[11px] uppercase tracking-[0.2em]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Left Column: Routing Identity */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 text-[#64748B] font-black text-[10px] uppercase tracking-[0.2em] ml-1">
+              <div className="w-5 h-px bg-white/10" />
               <Info className="w-3.5 h-3.5" />
               Routing Identity
             </div>
@@ -148,72 +160,63 @@ export function RouteForm({
               control={form.control}
               name="path"
               render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel className="text-sm font-bold text-gray-300 ml-1">Route Path</FormLabel>
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-[10px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">Incoming Gateway Path <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
                     <div className="relative group">
-                      <RouteIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <RouteIcon className="w-4 h-4 text-[#475569] group-focus-within:text-[#2563EB] transition-colors" />
+                      </div>
                       <Input 
-                        placeholder="e.g. /users/:id" 
+                        placeholder="e.g. /v1/user-profile" 
                         {...field} 
-                        className="h-14 pl-12 bg-gray-900/40 border-gray-800 focus:ring-blue-500/20 focus:border-blue-500/50 rounded-2xl text-lg transition-all"
+                        className="h-12 pl-11 bg-[#050810] border-[#1E293B] focus:border-[#2563EB] focus:ring-0 rounded-xl text-sm transition-all text-white placeholder:text-gray-700 font-mono"
                       />
                     </div>
                   </FormControl>
-                  <FormMessage className="text-red-400" />
+                  <FormMessage className="text-red-400 text-[10px] font-medium" />
                 </FormItem>
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="method"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel className="text-sm font-bold text-gray-300 ml-1">Method</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value} disabled={protocol === "grpc"}>
-                      <FormControl>
-                        <SelectTrigger className="h-14 bg-gray-900/40 border-gray-800 focus:ring-blue-500/20 focus:border-blue-500/50 rounded-2xl text-lg transition-all">
-                          <SelectValue placeholder="Method" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="bg-gray-950 border-gray-800 rounded-2xl p-2 shadow-2xl">
-                        {["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"].map(m => (
-                          <SelectItem key={m} value={m} className="rounded-xl py-2 font-mono font-bold text-gray-300">{m}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="protocol"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel className="text-sm font-bold text-gray-300 ml-1">Protocol</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="h-14 bg-gray-900/40 border-gray-800 focus:ring-blue-500/20 focus:border-blue-500/50 rounded-2xl text-lg transition-all">
-                          <SelectValue placeholder="Protocol" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="bg-gray-950 border-gray-800 rounded-2xl p-2 shadow-2xl">
-                        <SelectItem value="http" className="rounded-xl py-2">HTTP</SelectItem>
-                        <SelectItem value="grpc" className="rounded-xl py-2">gRPC</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="method"
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-[10px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">HTTP Operation Method</FormLabel>
+                  <FormControl>
+                    <div className="grid grid-cols-3 gap-2.5">
+                      {["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"].map(m => (
+                        <button
+                          key={m}
+                          type="button"
+                          disabled={protocol === "grpc"}
+                          onClick={() => field.onChange(m)}
+                          className={cn(
+                            "h-11 rounded-xl border font-black text-[10px] uppercase tracking-widest transition-all relative overflow-hidden",
+                            field.value === m 
+                              ? "bg-[#2563EB]/10 border-[#2563EB] text-[#38BDF8] shadow-[0_0_15px_rgba(37,99,235,0.1)]" 
+                              : "bg-[#050810] border-[#1E293B] text-[#475569] hover:border-[#475569] disabled:opacity-20"
+                          )}
+                        >
+                          {m}
+                          {field.value === m && <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-blue-500 rounded-bl-lg shadow-blue-500/50" />}
+                        </button>
+                      ))}
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-red-400 text-[10px] font-medium" />
+                </FormItem>
+              )}
+            />
           </div>
 
-          {/* Right Column */}
-          <div className="space-y-8">
-            <div className="flex items-center gap-2 text-gray-400 font-bold text-[11px] uppercase tracking-[0.2em]">
-              <Settings2 className="w-3.5 h-3.5" />
+          {/* Right Column: Target Destination */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 text-[#64748B] font-black text-[10px] uppercase tracking-[0.2em] ml-1">
+              <div className="w-5 h-px bg-white/10" />
+              <Network className="w-3.5 h-3.5" />
               Target Destination
             </div>
 
@@ -221,151 +224,167 @@ export function RouteForm({
               control={form.control}
               name="service_id"
               render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel className="text-sm font-bold text-gray-300 ml-1">Upstream Service</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-[10px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">Upstream Target Instance</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger className="h-14 bg-gray-900/40 border-gray-800 focus:ring-blue-500/20 focus:border-blue-500/50 rounded-2xl text-lg transition-all">
+                      <SelectTrigger className="h-12 bg-[#050810] border-[#1E293B] focus:border-[#2563EB] focus:ring-0 rounded-xl text-sm transition-all text-white font-medium">
                         <SelectValue placeholder="Select target service" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="bg-gray-950 border-gray-800 rounded-2xl p-2 shadow-2xl max-h-60">
+                    <SelectContent className="bg-[#0B101B] border-[#1E293B] rounded-2xl p-2 shadow-[0_10px_40px_rgba(0,0,0,0.5)] max-h-64 animate-in zoom-in-95 duration-200">
                       {services.length === 0 ? (
-                        <div className="p-4 text-sm text-gray-500 text-center">No services found</div>
+                        <div className="p-6 text-[10px] text-[#64748B] text-center font-black uppercase tracking-widest leading-relaxed">
+                          No services detected in <br/> this gateway cluster
+                        </div>
                       ) : (
                         services.map(s => (
-                          <SelectItem key={s.id} value={s.id!} className="rounded-xl py-3 focus:bg-blue-500/10">
-                            <div className="flex items-center gap-3">
-                              <Server className="w-4 h-4 text-blue-400" />
-                              <span className="font-bold">{s.name}</span>
+                          <SelectItem key={s.id} value={s.id!} className="rounded-xl py-3 px-4 focus:bg-[#2563EB]/10 focus:text-white group transition-all">
+                            <div className="flex items-center gap-4">
+                              <div className="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                                <Server className="w-4 h-4 stroke-[2.5px]" />
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="font-black text-[11px] uppercase tracking-wider">{s.name}</span>
+                                <span className="text-[9px] text-[#64748B] font-mono group-hover:text-blue-300 transition-colors uppercase tracking-widest mt-0.5">{s.protocol} ENGINE</span>
+                              </div>
                             </div>
                           </SelectItem>
                         ))
                       )}
                     </SelectContent>
                   </Select>
-                  <FormMessage className="text-red-400" />
+                  <FormMessage className="text-red-400 text-[10px] font-medium" />
                 </FormItem>
               )}
             />
 
-            {gatewayMode === "pro" && (
+            <div className="flex flex-col gap-4 pt-1">
               <FormField
                 control={form.control}
-                name="collection_id"
+                name="is_aggregate"
                 render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel className="text-sm font-bold text-gray-300 ml-1">Group Collection (Optional)</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="h-14 bg-gray-900/40 border-gray-800 focus:ring-blue-500/20 focus:border-blue-500/50 rounded-2xl text-lg transition-all">
-                          <SelectValue placeholder="Select a collection" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="bg-gray-950 border-gray-800 rounded-2xl p-2 shadow-2xl">
-                        <SelectItem value="none" className="rounded-xl py-2 italic text-gray-500">Standalone Route</SelectItem>
-                        {collections.map(c => (
-                          <SelectItem key={c.id} value={c.id!} className="rounded-xl py-2">{c.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  <FormItem className="flex flex-row items-center justify-between rounded-[1.25rem] border border-[#1E293B] p-5 bg-[#050810]/50 group hover:border-[#2563EB]/30 transition-all duration-300 shadow-inner">
+                    <div className="space-y-1">
+                      <FormLabel className="text-[11px] font-black uppercase tracking-widest text-white flex items-center gap-2.5">
+                        Aggregation Pipeline
+                        {field.value && <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(37,99,235,0.5)]" />}
+                      </FormLabel>
+                      <p className="text-[9px] text-[#64748B] font-bold uppercase tracking-widest opacity-60">Merge multiple downstream clusters</p>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className="data-[state=checked]:bg-[#2563EB] scale-90"
+                      />
+                    </FormControl>
                   </FormItem>
                 )}
               />
-            )}
+            </div>
           </div>
         </div>
 
-        {/* Advanced Settings Section */}
-        <Collapsible
-          open={isAdvancedOpen}
-          onOpenChange={setIsAdvancedOpen}
-          className="w-full border border-gray-800/60 rounded-[2rem] bg-gray-950/40 backdrop-blur-sm overflow-hidden group hover:border-blue-500/20 transition-all duration-500"
-        >
-          <CollapsibleTrigger asChild>
-            <div className="flex items-center justify-between p-7 cursor-pointer hover:bg-blue-500/[0.02] transition-colors group">
-              <div className="flex items-center gap-4">
-                <div className={cn(
-                  "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500",
-                  isAdvancedOpen ? "bg-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.2)]" : "bg-gray-900 border border-gray-800"
-                )}>
-                  <Network className={cn("w-6 h-6 transition-colors duration-500", isAdvancedOpen ? "text-blue-400" : "text-gray-500")} />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-lg font-bold text-gray-200 group-hover:text-blue-400 transition-colors">Advanced Configuration</span>
-                  <span className="text-xs text-gray-500 font-medium uppercase tracking-widest">Timeout, retry, and aggregations</span>
-                </div>
+        {/* Advanced Settings Collapsible - Compact Style */}
+        <div className="border border-white/5 rounded-2xl overflow-hidden bg-[#050810]/30 transition-all">
+          <button
+            type="button"
+            onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
+            className="w-full px-6 py-4 flex items-center justify-between hover:bg-white/5 transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <div className={cn(
+                "w-8 h-8 rounded-lg flex items-center justify-center transition-all",
+                isAdvancedOpen ? "bg-blue-500/10 text-blue-400" : "bg-gray-800/50 text-gray-500"
+              )}>
+                <Settings2 className="w-4 h-4" />
               </div>
-              <div className="w-10 h-10 rounded-xl bg-gray-900/50 border border-gray-800 flex items-center justify-center">
-                {isAdvancedOpen ? <ChevronUp className="w-5 h-5 text-blue-400" /> : <ChevronDown className="w-5 h-5 text-gray-500" />}
+              <div className="text-left">
+                <span className="text-xs font-black uppercase tracking-[0.1em] text-gray-200 block">Advanced Parameters</span>
+                <span className="text-[9px] text-[#64748B] font-medium">Timeouts, retries and protocol specifics</span>
               </div>
             </div>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="px-8 pb-8 pt-2 border-t border-gray-800/40 space-y-8 animate-in slide-in-from-top-2 duration-500">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <FormField
-                control={form.control}
-                name="timeout"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel className="text-[11px] font-black text-gray-500 uppercase tracking-widest ml-1">Route Timeout</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g. 30s" {...field} className="h-12 bg-gray-900/60 border-gray-800 focus:border-blue-500/50 rounded-xl text-sm" />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="target_path"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel className="text-[11px] font-black text-gray-500 uppercase tracking-widest ml-1">Rewrite Path Override</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g. /internal/api" {...field} className="h-12 bg-gray-900/60 border-gray-800 focus:border-blue-500/50 rounded-xl text-sm" />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <div className="col-span-1 md:col-span-2 grid grid-cols-2 gap-4">
+            {isAdvancedOpen ? <ChevronUp className="w-4 h-4 text-[#64748B]" /> : <ChevronDown className="w-4 h-4 text-[#64748B] group-hover:text-white" />}
+          </button>
+          
+          <div className={cn("px-6 overflow-hidden transition-all duration-300", isAdvancedOpen ? "pb-6 max-h-[500px]" : "max-h-0")}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="protocol"
+                  render={({ field }) => (
+                    <FormItem className="space-y-1.5">
+                      <FormLabel className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em]">Protocol</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="h-10 bg-[#0B101B] border-[#1E293B] focus:border-[#2563EB] rounded-lg text-xs text-white">
+                            <SelectValue placeholder="Protocol" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-[#0B101B] border-[#1E293B] rounded-xl text-white">
+                          <SelectItem value="http" className="text-xs focus:bg-[#2563EB]/10">HTTP/REST</SelectItem>
+                          <SelectItem value="grpc" className="text-xs focus:bg-[#2563EB]/10">gRPC/Proto</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="timeout"
+                  render={({ field }) => (
+                    <FormItem className="space-y-1.5">
+                      <FormLabel className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em]">Timeout</FormLabel>
+                      <FormControl>
+                        <Input placeholder="30s" {...field} className="h-10 bg-[#0B101B] border-[#1E293B] focus:border-[#2563EB] rounded-lg text-xs text-white" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="retry_max_attempts"
                   render={({ field }) => (
-                    <FormItem className="space-y-3">
-                      <FormLabel className="text-[11px] font-black text-gray-500 uppercase tracking-widest ml-1">Max Retries</FormLabel>
+                    <FormItem className="space-y-1.5">
+                      <FormLabel className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em]">Retries</FormLabel>
                       <FormControl>
-                        <Input type="number" min="0" {...field} className="h-12 bg-gray-900/60 border-gray-800 focus:border-blue-500/50 rounded-xl text-sm" />
+                        <Input type="number" {...field} className="h-10 bg-[#0B101B] border-[#1E293B] focus:border-[#2563EB] rounded-lg text-xs text-white" />
                       </FormControl>
                     </FormItem>
                   )}
                 />
                 <FormField
                   control={form.control}
-                  name="retry_on_status"
+                  name="websocket"
                   render={({ field }) => (
-                    <FormItem className="space-y-3">
-                      <FormLabel className="text-[11px] font-black text-gray-500 uppercase tracking-widest ml-1">Retry On Status</FormLabel>
+                    <FormItem className="flex items-center justify-between space-y-0 mt-4 px-3 py-2 bg-[#0B101B] border border-white/5 rounded-xl">
+                      <FormLabel className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em]">Websocket</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. 502,503" {...field} className="h-12 bg-gray-900/60 border-gray-800 focus:border-blue-500/50 rounded-xl text-sm" />
+                        <Switch checked={field.value} onCheckedChange={field.onChange} className="scale-75 data-[state=checked]:bg-blue-500" />
                       </FormControl>
                     </FormItem>
                   )}
                 />
               </div>
             </div>
-          </CollapsibleContent>
-        </Collapsible>
+          </div>
+        </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pt-8 border-t border-gray-800/60">
+        {/* Footer Actions */}
+        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-white/5">
           {isEditMode && onDelete && (
             <Button 
               type="button" 
               variant="destructive" 
               onClick={onDelete}
-              className="w-full sm:w-auto sm:mr-auto h-12 px-6 rounded-xl font-bold bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border-red-500/20 transition-all"
+              className="w-full sm:w-auto sm:mr-auto h-11 px-5 rounded-xl text-[10px] font-black uppercase tracking-widest bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border-red-500/20 transition-all"
             >
-              Delete Route
+              Terminate Route
             </Button>
           )}
           
@@ -373,7 +392,7 @@ export function RouteForm({
             type="button" 
             variant="outline" 
             onClick={onCancel}
-            className="w-full sm:w-auto h-12 px-8 border-gray-800 hover:bg-gray-800 text-gray-300 rounded-xl font-bold transition-all"
+            className="w-full sm:w-auto h-11 px-6 border-[#1E293B] hover:bg-[#1E293B] text-[#64748B] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
           >
             Cancel
           </Button>
@@ -382,19 +401,21 @@ export function RouteForm({
             type="submit" 
             disabled={isSubmitting}
             className={cn(
-              "w-full sm:w-auto h-12 px-10 rounded-xl font-black transition-all duration-300 shadow-lg active:scale-95 flex items-center gap-2",
-              "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-900/20"
+              "w-full sm:w-auto h-11 px-8 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 shadow-md active:scale-95 flex items-center gap-2",
+              isEditMode 
+                ? "bg-[#2563EB] hover:bg-[#1D4ED8] text-white shadow-blue-900/20" 
+                : "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/20"
             )}
           >
             {isSubmitting ? (
               <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Processing...
+                <Loader2 className="w-3.5 h-3.5 animate-spin stroke-[3px]" />
+                Deploying...
               </>
             ) : (
               <>
-                {isEditMode ? <CheckCircle2 className="w-5 h-5" /> : <RouteIcon className="w-5 h-5" />}
-                {isEditMode ? "Update Route" : "Provision Route"}
+                {isEditMode ? <CheckCircle2 className="w-4 h-4" /> : <Zap className="w-4 h-4" />}
+                {isEditMode ? "Commit Changes" : "Deploy Route"}
               </>
             )}
           </Button>

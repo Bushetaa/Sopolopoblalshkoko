@@ -19,7 +19,7 @@ export default function DateRangePicker({ value, onChange }: DateRangePickerProp
   ];
 
   return (
-    <div className="flex items-center gap-1.5 bg-gray-950 p-1 rounded-lg border border-gray-800">
+    <div className="flex items-center gap-2 bg-gray-950 p-1 rounded-xl border border-gray-800">
       <div className="flex items-center">
         {presets.map((preset) => {
           const isActive = format(value.from, 'yyyy-MM-dd') === format(preset.getValue().from, 'yyyy-MM-dd');
@@ -28,10 +28,10 @@ export default function DateRangePicker({ value, onChange }: DateRangePickerProp
               key={preset.label}
               onClick={() => onChange(preset.getValue())}
               className={cn(
-                "px-2.5 py-1.5 rounded-md text-[10px] font-black uppercase tracking-tight transition-all",
+                "px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
                 isActive 
-                  ? "bg-gray-800 text-blue-400 shadow-sm" 
-                  : "text-gray-600 hover:text-gray-400"
+                  ? "bg-gray-800 text-gray-50 shadow-sm" 
+                  : "text-gray-500 hover:text-gray-300"
               )}
             >
               {preset.label}
@@ -39,11 +39,11 @@ export default function DateRangePicker({ value, onChange }: DateRangePickerProp
           );
         })}
       </div>
-      <div className="w-[1px] h-3 bg-gray-800 mx-0.5" />
-      <button className="flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-black uppercase tracking-tight text-gray-500 hover:text-gray-200 transition-colors">
-        <CalendarIcon className="h-3 w-3" />
+      <div className="w-[1px] h-4 bg-gray-800 mx-1" />
+      <button className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-gray-400 hover:text-gray-200 transition-colors">
+        <CalendarIcon className="h-3.5 w-3.5" />
         <span>{format(value.from, 'MMM dd')} - {format(value.to, 'MMM dd')}</span>
-        <ChevronDown className="h-2.5 w-2.5" />
+        <ChevronDown className="h-3 w-3" />
       </button>
     </div>
   );

@@ -37,179 +37,125 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ gatew
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link 
-            href={`/api-gateway/${gatewayId}/services`} 
-            className="p-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 hover:text-gray-100 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Link>
-          <div>
-            <h2 className="text-2xl font-bold font-display text-gray-50 flex items-center gap-2">
-              <Server className="w-6 h-6 text-blue-400" />
-              {isNew ? 'Create Service' : 'Edit Service'}
-            </h2>
-            <p className="text-sm text-gray-400 mt-1">Configure upstream service logic and target URLs.</p>
+    <div className="max-w-6xl mx-auto pb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="bg-[#0B101B] border border-white/5 rounded-[3rem] overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.4)] relative">
+        {/* Unified Premium Header */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#1E224F] via-[#141833] to-[#0B101B] border-b border-white/5 p-7">
+          <div className="absolute top-[-20%] right-[-10%] opacity-10 blur-3xl">
+            <Server className="w-64 h-64 text-blue-500" />
           </div>
-        </div>
-        {!isNew && (
-          <button className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg font-medium transition-colors border border-red-500/20">
-            <Trash2 className="w-4 h-4" />
-            Delete
-          </button>
-        )}
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Main Config */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm space-y-6">
-          <h3 className="text-lg font-bold text-gray-100 border-b border-gray-800 pb-3 mb-4">General Configuration</h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
-                Service Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100 focus:ring-2 focus:ring-blue-500/50 outline-none"
-                placeholder="e.g. users-service"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
-                Protocol <span className="text-red-500">*</span>
-              </label>
-              <select
-                value={protocol}
-                onChange={(e) => setProtocol(e.target.value as 'http' | 'grpc')}
-                className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100 focus:ring-2 focus:ring-blue-500/50 outline-none appearance-none"
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+            <div className="flex items-center gap-6">
+              <Link 
+                href={`/api-gateway/${gatewayId}/services`}
+                className="group flex items-center justify-center w-11 h-11 bg-[#0F172A] border border-white/5 rounded-2xl text-[#64748B] hover:text-white hover:border-white/10 hover:bg-[#1E293B] transition-all shadow-xl active:scale-95"
               >
-                <option value="http">HTTP</option>
-                <option value="grpc">gRPC</option>
-              </select>
+                <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+              </Link>
+              <div>
+                <div className="flex items-center gap-3 text-blue-400 font-black text-[10px] uppercase tracking-[0.3em] mb-2.5">
+                  <div className="w-8 h-[2px] bg-blue-500" />
+                  Service Infrastructure Control
+                </div>
+                <h2 className="text-2xl font-black font-display text-white tracking-tight flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center shadow-[0_0_30px_rgba(37,99,235,0.3)]">
+                    <Server className="w-5 h-5 text-white stroke-[2.5px]" />
+                  </div>
+                  {isNew ? 'Provision Service' : name}
+                </h2>
+                <div className="flex items-center gap-4 mt-2.5">
+                  <p className="text-[#94A3B8] font-medium text-xs tracking-tight">
+                    Cluster Status: <span className="text-emerald-400 font-bold uppercase tracking-widest text-[9px] ml-1">Operational</span>
+                  </p>
+                  <div className="w-1 h-1 rounded-full bg-white/10" />
+                  <p className="text-[#64748B] font-mono text-[9px] uppercase tracking-widest">ID: {serviceId.substring(0, 12)}...</p>
+                </div>
+              </div>
             </div>
             
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
-                Load Balancing Policy <span className="text-red-500">*</span>
-              </label>
-              <select
-                value={lbPolicy}
-                onChange={(e) => setLbPolicy(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100 focus:ring-2 focus:ring-blue-500/50 outline-none appearance-none"
-              >
-                <option value="round_robin">Round Robin</option>
-                <option value="weighted">Weighted</option>
-                <option value="latency">Latency</option>
-                <option value="least_connections">Least Connections</option>
-                <option value="random">Random</option>
-              </select>
-            </div>
-
-            {isProMode && (
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Collection
-                </label>
-                <select
-                  value={collection}
-                  onChange={(e) => setCollection(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100 focus:ring-2 focus:ring-blue-500/50 outline-none appearance-none"
+            {!isNew && (
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={() => router.push(`/api-gateway/${gatewayId}/services/${serviceId}/edit`)}
+                  className="flex items-center gap-3 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-500/25 active:scale-95 group"
                 >
-                  <option value="">None</option>
-                  <option value="col-1">v1</option>
-                  <option value="col-2">auth</option>
-                </select>
+                  <Settings2 className="w-4 h-4 text-white group-hover:rotate-90 transition-transform" />
+                  Modify Configuration
+                </button>
               </div>
             )}
           </div>
         </div>
 
-        {/* Health Checks */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-sm">
-          <button 
-            type="button"
-            onClick={() => setShowHealthCheck(!showHealthCheck)}
-            className="w-full flex items-center justify-between p-6 bg-gray-900 hover:bg-gray-800/50 transition-colors"
-          >
-            <div className="flex items-center gap-3 text-gray-100 font-bold text-lg">
-              <Activity className="w-5 h-5 text-green-400" />
-              Health Check Settings (Advanced)
-            </div>
-            <Settings2 className={cn("w-5 h-5 text-gray-500 transition-transform duration-200", showHealthCheck && "rotate-90 text-blue-400")} />
-          </button>
+        <div className="bg-[#0B101B] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl relative">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/5 blur-[120px] -z-10" />
           
-          <div className={cn("px-6 pb-6 space-y-4 border-t border-gray-800 pt-6", !showHealthCheck && "hidden")}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Path</label>
-                <input type="text" value={hcPath} onChange={(e) => setHcPath(e.target.value)} className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100" placeholder="/health" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Interval (e.g. 10s)</label>
-                <input type="text" value={hcInterval} onChange={(e) => setHcInterval(e.target.value)} className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100" placeholder="10s" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Timeout</label>
-                <input type="text" value={hcTimeout} onChange={(e) => setHcTimeout(e.target.value)} className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100" placeholder="5s" />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-white/5">
+            {/* Left Panel: Integrated Metrics & Info */}
+            <div className="lg:col-span-1 p-6 bg-white/[0.01]">
+              <div className="space-y-8">
+                {/* Core Parameters */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">Fail Threshold</label>
-                  <input type="number" min={0} value={hcFail} onChange={(e) => setHcFail(parseInt(e.target.value) || 0)} className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100" />
+                  <h4 className="text-[10px] font-black text-[#64748B] uppercase tracking-[0.2em] mb-5 flex items-center gap-2">
+                    <Activity className="w-3.5 h-3.5 text-blue-500" />
+                    Core Parameters
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                      <span className="text-[9px] font-bold text-[#94A3B8] uppercase tracking-wider">Protocol</span>
+                      <span className="text-[9px] font-black text-white uppercase tracking-widest bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20">{protocol}</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                      <span className="text-[9px] font-bold text-[#94A3B8] uppercase tracking-wider">LB Policy</span>
+                      <span className="text-[9px] font-black text-white uppercase tracking-widest bg-purple-500/10 px-2 py-0.5 rounded-md border border-purple-500/20">{lbPolicy.replace('_', ' ')}</span>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Health Status */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">Pass Threshold</label>
-                  <input type="number" min={0} value={hcPass} onChange={(e) => setHcPass(parseInt(e.target.value) || 0)} className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-gray-100" />
+                  <h4 className="text-[10px] font-black text-[#64748B] uppercase tracking-[0.2em] mb-5 flex items-center gap-2">
+                    <ShieldAlert className="w-3.5 h-3.5 text-emerald-500" />
+                    Health Status
+                  </h4>
+                  <div className="p-4 bg-gradient-to-br from-emerald-500/5 to-transparent border border-emerald-500/10 rounded-2xl relative overflow-hidden group">
+                    <div className="flex items-center gap-4 relative z-10">
+                      <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-black text-base shadow-[0_0_20px_rgba(16,185,129,0.1)]">
+                        100%
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black text-white uppercase tracking-widest">Global Uptime</span>
+                        <span className="text-[8px] text-emerald-500/60 font-bold uppercase tracking-tighter mt-0.5">All nodes online</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Conditional Notice */}
+                {lbPolicy === 'weighted' && (
+                  <div className="p-4 bg-amber-500/[0.03] border border-amber-500/10 rounded-2xl">
+                    <div className="flex items-center gap-2 text-amber-500 mb-2">
+                      <ShieldAlert className="w-3.5 h-3.5" />
+                      <span className="text-[9px] font-black uppercase tracking-widest">Notice</span>
+                    </div>
+                    <p className="text-[10px] text-[#64748B] leading-relaxed font-medium">
+                      Proportional traffic distribution is active. Ensure weights are balanced across the registry.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Right Panel: Registry Table */}
+            <div className="lg:col-span-3 p-8">
+              <div className="relative">
+                <ServiceTargets serviceId={serviceId} lbPolicy={lbPolicy} />
               </div>
             </div>
           </div>
         </div>
-
-        {/* Service Targets Component */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
-          <ServiceTargets serviceId={serviceId} lbPolicy={lbPolicy} />
-        </div>
-
-        {lbPolicy === 'weighted' && (
-            <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 mt-4 flex items-start gap-3">
-              <ShieldAlert className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
-              <p className="text-sm text-yellow-200">
-                You have selected the <strong>Weighted</strong> load balancing policy. Traffic will be distributed proportionally based on the Weight values assigned to each target.
-              </p>
-            </div>
-          )}
-
-        {/* Form Actions */}
-        <div className="flex justify-end gap-3 pt-4">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="px-4 py-2 text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded-lg font-medium transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={isLoading || !name}
-            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center min-w-[140px]"
-          >
-            {isLoading ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            ) : (
-              isNew ? "Create Service" : "Save Changes"
-            )}
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }

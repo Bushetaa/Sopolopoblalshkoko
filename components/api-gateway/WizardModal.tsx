@@ -156,28 +156,38 @@ export default function WizardModal({ isOpen, onClose, onSuccess }: WizardModalP
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-950/80 backdrop-blur-sm p-4">
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between bg-gray-900/50">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-              <Zap className="w-5 h-5 text-white" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#050810]/90 backdrop-blur-md p-4">
+      <div className="bg-[#0B101B] border border-white/5 rounded-[2rem] w-full max-w-4xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300">
+        
+        {/* Header - More Compact */}
+        <div className="bg-gradient-to-br from-[#1E224F] via-[#141833] to-[#0B101B] px-8 py-5 border-b border-white/5 relative shrink-0">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-11 h-11 rounded-xl bg-[#2563EB] flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)] relative group">
+                <div className="absolute inset-0 bg-white/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Zap className="w-5 h-5 text-white stroke-[2.5px]" />
+              </div>
+              <div>
+                <h2 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
+                  Gateway Wizard
+                  <span className="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest text-blue-400">Stack Deploy</span>
+                </h2>
+                <p className="text-[#94A3B8] font-medium text-xs">Deploy a production-ready gateway stack instantly</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-xl font-bold text-gray-50">Create Gateway Wizard</h2>
-              <p className="text-xs text-gray-400">Deploy a full gateway stack in seconds</p>
-            </div>
+            <button 
+              onClick={onClose} 
+              className="p-2 text-[#64748B] hover:text-white rounded-lg hover:bg-white/5 transition-all"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
-          <button onClick={onClose} className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800 transition-colors">
-            <X className="w-5 h-5" />
-          </button>
         </div>
 
-        {/* Stepper */}
-        <div className="px-8 py-5 border-b border-gray-800 bg-gray-950/30">
-          <div className="flex items-center justify-between relative">
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-0.5 bg-gray-800 z-0"></div>
+        {/* Stepper - Compact & Elegant */}
+        <div className="px-8 py-4 bg-[#0B101B]/50 border-b border-white/5 relative shrink-0">
+          <div className="flex items-center justify-between relative max-w-xl mx-auto">
+            <div className="absolute left-0 top-4 w-full h-[1px] bg-[#1E293B] z-0"></div>
             {steps.map((step, idx) => {
               const Icon = step.icon;
               const isActive = currentStep === step.num;
@@ -186,16 +196,16 @@ export default function WizardModal({ isOpen, onClose, onSuccess }: WizardModalP
               return (
                 <div key={step.num} className="relative z-10 flex flex-col items-center gap-2">
                   <div className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-colors duration-300",
-                    isActive ? "bg-blue-600 border-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]" : 
-                    isCompleted ? "bg-emerald-500 border-emerald-400 text-white" : 
-                    "bg-gray-900 border-gray-700 text-gray-500"
+                    "w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-500",
+                    isActive ? "bg-[#2563EB] border-[#3B82F6] text-white shadow-[0_0_15px_rgba(37,99,235,0.4)] scale-110" : 
+                    isCompleted ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400" : 
+                    "bg-[#0F172A] border-[#1E293B] text-[#475569]"
                   )}>
-                    {isCompleted ? <Check className="w-5 h-5" /> : <Icon className="w-4 h-4" />}
+                    {isCompleted ? <Check className="w-4 h-4 stroke-[3px]" /> : <Icon className="w-3.5 h-3.5 stroke-[2px]" />}
                   </div>
                   <span className={cn(
-                    "text-xs font-medium absolute -bottom-6 whitespace-nowrap",
-                    isActive ? "text-blue-400" : isCompleted ? "text-emerald-400" : "text-gray-500"
+                    "text-[8px] font-black uppercase tracking-[0.12em] transition-colors duration-300",
+                    isActive ? "text-[#38BDF8]" : isCompleted ? "text-emerald-400" : "text-[#475569]"
                   )}>
                     {step.title}
                   </span>
@@ -205,57 +215,86 @@ export default function WizardModal({ isOpen, onClose, onSuccess }: WizardModalP
           </div>
         </div>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-8 scrollbar-thin scrollbar-thumb-gray-800">
+        {/* Content Area - Optimized Density */}
+        <div className="flex-1 overflow-y-auto px-8 py-6 scrollbar-thin scrollbar-thumb-gray-800">
           
           {/* STEP 1: Gateway */}
           {currentStep === 1 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-100 mb-1">Gateway Details</h3>
-                <p className="text-sm text-gray-400">The main entry point for your API traffic.</p>
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-400">
+              <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                  <Globe className="w-5 h-5 text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white tracking-tight">Infrastructure</h3>
+                  <p className="text-[#64748B] text-xs font-medium">Configure the entry point for your API traffic.</p>
+                </div>
               </div>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Gateway Name <span className="text-red-400">*</span></label>
-                  <input
-                    type="text"
-                    className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-gray-100 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                    placeholder="e.g. production-gateway"
-                    value={formData.gateway.name}
-                    onChange={(e) => updateData('gateway', 'name', e.target.value)}
-                  />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">
+                      IDENTIFIER <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="h-10 w-full bg-[#050810] border-[#1E293B] focus:border-[#2563EB] focus:ring-0 rounded-lg px-4 text-sm transition-all text-white placeholder:text-gray-700"
+                      placeholder="e.g. core-prod-gateway"
+                      value={formData.gateway.name}
+                      onChange={(e) => updateData('gateway', 'name', e.target.value)}
+                    />
+                  </div>
+                  
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">
+                      DESCRIPTION
+                    </label>
+                    <textarea
+                      className="w-full bg-[#050810] border-[#1E293B] focus:border-[#2563EB] focus:ring-0 rounded-lg px-4 py-2 text-sm transition-all text-white placeholder:text-gray-700 h-20 resize-none"
+                      placeholder="Purpose of this gateway..."
+                      value={formData.gateway.description}
+                      onChange={(e) => updateData('gateway', 'description', e.target.value)}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Description</label>
-                  <textarea
-                    className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-gray-100 focus:outline-none focus:border-blue-500 h-20 resize-none"
-                    placeholder="Brief description of this gateway..."
-                    value={formData.gateway.description}
-                    onChange={(e) => updateData('gateway', 'description', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Gateway Mode</label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <button
-                      type="button"
-                      onClick={() => updateData('gateway', 'mode', 'pro')}
-                      className={cn("flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all", formData.gateway.mode === 'pro' ? "border-purple-500 bg-purple-500/10 text-purple-400" : "border-gray-800 bg-gray-950 text-gray-500 hover:border-gray-700")}
-                    >
-                      <Server className="w-5 h-5 mb-1" />
-                      <span className="font-bold text-sm">PRO Mode</span>
-                      <span className="text-[10px] opacity-70 mt-0.5 text-center px-2">Multi-node clustered setup</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => updateData('gateway', 'mode', 'single')}
-                      className={cn("flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all", formData.gateway.mode === 'single' ? "border-blue-500 bg-blue-500/10 text-blue-400" : "border-gray-800 bg-gray-950 text-gray-500 hover:border-gray-700")}
-                    >
-                      <Zap className="w-5 h-5 mb-1" />
-                      <span className="font-bold text-sm">SINGLE Mode</span>
-                      <span className="text-[10px] opacity-70 mt-0.5 text-center px-2">Standalone fast instance</span>
-                    </button>
+
+                <div className="space-y-4">
+                  <label className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1 block">
+                    OPERATIONAL MODE
+                  </label>
+                  <div className="grid grid-cols-1 gap-3">
+                    {[
+                      { id: 'pro', label: 'PRO Mode', tag: 'Clustered', desc: 'High availability multi-node setup.', icon: Server, color: '#8B5CF6' },
+                      { id: 'single', label: 'SINGLE Mode', tag: 'Standalone', desc: 'Single-instance performance setup.', icon: Zap, color: '#0EA5E9' }
+                    ].map((mode) => (
+                      <button
+                        key={mode.id}
+                        type="button"
+                        onClick={() => updateData('gateway', 'mode', mode.id)}
+                        className={cn(
+                          "flex items-center gap-3 p-3 rounded-xl border transition-all duration-300 text-left group",
+                          formData.gateway.mode === mode.id 
+                            ? `border-[${mode.color}] bg-[${mode.color}]/5 text-white shadow-lg` 
+                            : "border-[#1E293B] bg-[#050810] text-[#64748B] hover:border-[#334155]"
+                        )}
+                        style={formData.gateway.mode === mode.id ? { borderColor: mode.color, backgroundColor: `${mode.color}10` } : {}}
+                      >
+                        <div className={cn(
+                          "w-9 h-9 rounded-lg flex items-center justify-center transition-all",
+                          formData.gateway.mode === mode.id ? "text-white" : "bg-[#1E293B] text-[#475569] group-hover:bg-[#334155]"
+                        )} style={formData.gateway.mode === mode.id ? { backgroundColor: mode.color } : {}}>
+                          <mode.icon className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm">{mode.label}</span>
+                            <span className="text-[7px] font-black uppercase tracking-widest bg-white/10 px-1 py-0.5 rounded">{mode.tag}</span>
+                          </div>
+                          <p className="text-[10px] font-medium opacity-60 leading-tight">{mode.desc}</p>
+                        </div>
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -264,56 +303,98 @@ export default function WizardModal({ isOpen, onClose, onSuccess }: WizardModalP
 
           {/* STEP 2: Service */}
           {currentStep === 2 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-100 mb-1">Core Service</h3>
-                <p className="text-sm text-gray-400">Define the upstream service that will handle the requests.</p>
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-2 duration-400">
+              <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                  <Server className="w-5 h-5 text-purple-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white tracking-tight">Upstream Service</h3>
+                  <p className="text-[#64748B] text-xs font-medium">The backend application processing the traffic.</p>
+                </div>
               </div>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Service Name <span className="text-red-400">*</span></label>
-                  <input
-                    type="text"
-                    className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-gray-100 focus:outline-none focus:border-blue-500"
-                    placeholder="e.g. user-auth-service"
-                    value={formData.service.name}
-                    onChange={(e) => updateData('service', 'name', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Target URL <span className="text-red-400">*</span></label>
-                  <input
-                    type="url"
-                    className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-gray-100 focus:outline-none focus:border-blue-500"
-                    placeholder="e.g. https://api.backend.internal:8080"
-                    value={formData.service.targetUrl}
-                    onChange={(e) => updateData('service', 'targetUrl', e.target.value)}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1.5">Protocol</label>
-                    <select
-                      className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-gray-100 focus:outline-none focus:border-blue-500"
-                      value={formData.service.protocol}
-                      onChange={(e) => updateData('service', 'protocol', e.target.value)}
-                    >
-                      <option value="http">HTTP</option>
-                      <option value="https">HTTPS</option>
-                      <option value="grpc">gRPC</option>
-                    </select>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">
+                      SERVICE NAME <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="h-10 w-full bg-[#050810] border-[#1E293B] focus:border-[#2563EB] focus:ring-0 rounded-lg px-4 text-sm transition-all text-white placeholder:text-gray-700"
+                      placeholder="e.g. user-auth-api"
+                      value={formData.service.name}
+                      onChange={(e) => updateData('service', 'name', e.target.value)}
+                    />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1.5">Load Balancing</label>
-                    <select
-                      className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-gray-100 focus:outline-none focus:border-blue-500"
-                      value={formData.service.lb_policy}
-                      onChange={(e) => updateData('service', 'lb_policy', e.target.value)}
-                    >
-                      <option value="round_robin">Round Robin</option>
-                      <option value="least_request">Least Request</option>
-                      <option value="ring_hash">Ring Hash</option>
-                    </select>
+                  
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">
+                      TARGET URL <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="url"
+                      className="h-10 w-full bg-[#050810] border-[#1E293B] focus:border-[#2563EB] focus:ring-0 rounded-lg px-4 text-sm transition-all text-white placeholder:text-gray-700 font-mono"
+                      placeholder="https://api.internal.cluster:8080"
+                      value={formData.service.targetUrl}
+                      onChange={(e) => updateData('service', 'targetUrl', e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="space-y-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">
+                        PROTOCOL
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {['http', 'https', 'grpc'].map((proto) => (
+                          <button
+                            key={proto}
+                            type="button"
+                            onClick={() => updateData('service', 'protocol', proto)}
+                            className={cn(
+                              "h-9 rounded-lg border font-bold text-[10px] uppercase tracking-widest transition-all",
+                              formData.service.protocol === proto 
+                                ? "bg-[#2563EB]/10 border-[#2563EB] text-[#38BDF8]" 
+                                : "bg-[#050810] border-[#1E293B] text-[#475569] hover:border-[#334155]"
+                            )}
+                          >
+                            {proto}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">
+                        LOAD BALANCING
+                      </label>
+                      <div className="grid grid-cols-1 gap-2">
+                        {[
+                          { id: 'round_robin', label: 'Round Robin' },
+                          { id: 'least_request', label: 'Least Request' },
+                          { id: 'ring_hash', label: 'Ring Hash' }
+                        ].map((policy) => (
+                          <button
+                            key={policy.id}
+                            type="button"
+                            onClick={() => updateData('service', 'lb_policy', policy.id)}
+                            className={cn(
+                              "h-9 px-4 rounded-lg border transition-all text-[11px] font-bold flex items-center justify-between",
+                              formData.service.lb_policy === policy.id 
+                                ? "bg-[#2563EB]/5 border-[#2563EB]/50 text-white" 
+                                : "bg-[#050810] border-[#1E293B] text-[#64748B] hover:border-[#334155]"
+                            )}
+                          >
+                            {policy.label}
+                            {formData.service.lb_policy === policy.id && <Check className="w-3 h-3 text-[#38BDF8]" />}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -322,39 +403,63 @@ export default function WizardModal({ isOpen, onClose, onSuccess }: WizardModalP
 
           {/* STEP 3: Route */}
           {currentStep === 3 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-100 mb-1">Default Route</h3>
-                <p className="text-sm text-gray-400">Map an incoming path to your new service.</p>
-              </div>
-              <div className="space-y-4">
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-2 duration-400">
+              <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                  <RouteIcon className="w-5 h-5 text-emerald-400" />
+                </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Route Path <span className="text-red-400">*</span></label>
-                  <div className="flex">
-                    <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-800 bg-gray-900 text-gray-400 text-sm">
-                      {window.location.hostname}
-                    </span>
+                  <h3 className="text-lg font-bold text-white tracking-tight">Access Route</h3>
+                  <p className="text-[#64748B] text-xs font-medium">Map an external path to your service.</p>
+                </div>
+              </div>
+
+              <div className="max-w-xl mx-auto space-y-6 py-2">
+                <div className="space-y-2">
+                  <label className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1 block">
+                    INCOMING PATH <span className="text-red-500">*</span>
+                  </label>
+                  <div className="flex items-stretch group">
+                    <div className="flex items-center px-4 rounded-l-xl border border-r-0 border-[#1E293B] bg-[#0F172A] text-[#38BDF8] text-xs font-mono border-dashed">
+                      {formData.gateway.name ? `${formData.gateway.name}.sopo.io` : 'gateway.sopo.io'}
+                    </div>
                     <input
                       type="text"
-                      className="flex-1 bg-gray-950 border border-gray-800 rounded-r-lg px-4 py-2.5 text-sm text-gray-100 focus:outline-none focus:border-blue-500"
-                      placeholder="/api/v1/users"
+                      className="flex-1 h-12 bg-[#050810] border-[#1E293B] focus:border-[#2563EB] focus:ring-0 rounded-r-xl px-4 text-base transition-all text-white placeholder:text-gray-800 font-mono"
+                      placeholder="/v1/users/auth"
                       value={formData.route.path}
                       onChange={(e) => updateData('route', 'path', e.target.value)}
                     />
                   </div>
+                  <p className="text-[9px] text-[#475569] font-medium ml-1 mt-1">
+                    Your API will be accessible at: <span className="text-[#38BDF8]">https://{formData.gateway.name || 'gateway'}.sopo.io{formData.route.path}</span>
+                  </p>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1.5">HTTP Method</label>
-                  <select
-                    className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-gray-100 focus:outline-none focus:border-blue-500"
-                    value={formData.route.method}
-                    onChange={(e) => updateData('route', 'method', e.target.value)}
-                  >
-                    <option value="GET">GET</option>
-                    <option value="POST">POST</option>
-                    <option value="PUT">PUT</option>
-                    <option value="DELETE">DELETE</option>
-                  </select>
+
+                <div className="space-y-2">
+                  <label className="text-[9px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1 block">
+                    HTTP METHOD
+                  </label>
+                  <div className="grid grid-cols-4 gap-2">
+                    {['GET', 'POST', 'PUT', 'DELETE'].map((method) => (
+                      <button
+                        key={method}
+                        type="button"
+                        onClick={() => updateData('route', 'method', method)}
+                        className={cn(
+                          "h-12 rounded-xl border transition-all flex items-center justify-center",
+                          formData.route.method === method 
+                            ? "bg-[#2563EB]/10 border-[#2563EB] text-white" 
+                            : "bg-[#050810] border-[#1E293B] text-[#475569] hover:border-[#334155]"
+                        )}
+                      >
+                        <span className={cn(
+                          "font-black text-xs",
+                          formData.route.method === method ? "text-[#38BDF8]" : "text-[#475569]"
+                        )}>{method}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -362,97 +467,90 @@ export default function WizardModal({ isOpen, onClose, onSuccess }: WizardModalP
 
           {/* STEP 4: Plugins & Review */}
           {currentStep === 4 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-100 mb-1">Enhance & Review</h3>
-                <p className="text-sm text-gray-400">Add optional plugins and review your configuration.</p>
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-2 duration-400">
+              <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                  <Plug className="w-5 h-5 text-orange-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white tracking-tight">Finalize</h3>
+                  <p className="text-[#64748B] text-xs font-medium">Add security and review deployment.</p>
+                </div>
               </div>
               
-              <div className={cn("border rounded-xl p-4 transition-colors", formData.plugin.name !== 'none' ? "bg-blue-500/5 border-blue-500/30" : "bg-gray-900 border-gray-800")}>
-                <div className="flex items-start gap-4">
-                  <div className={cn("p-2 rounded-lg shrink-0 transition-colors", formData.plugin.name !== 'none' ? "bg-blue-500/20 text-blue-400" : "bg-gray-800 text-gray-500")}>
-                    <Shield className="w-5 h-5" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-medium text-gray-200 mb-1">Select a Plugin (Optional)</h4>
-                    <p className="text-xs text-gray-400 mb-4">Enhance your gateway with security or traffic control right out of the box.</p>
-                    
-                    <div className="space-y-4">
-                      <div>
-                        <select
-                          className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-100 focus:outline-none focus:border-blue-500"
-                          value={formData.plugin.name}
-                          onChange={(e) => updateData('plugin', 'name', e.target.value)}
-                        >
-                          <option value="none">No Plugin (Skip this step)</option>
-                          <option value="rate-limiting">Rate Limiting (Traffic Control)</option>
-                          <option value="key-auth">API Key Authentication</option>
-                          <option value="cors">CORS (Cross-Origin)</option>
-                        </select>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className={cn(
+                  "border rounded-2xl p-6 transition-all duration-500 relative overflow-hidden group", 
+                  formData.plugin.name !== 'none' 
+                    ? "bg-[#2563EB]/5 border-[#2563EB]/30 shadow-md" 
+                    : "bg-[#050810] border-[#1E293B]"
+                )}>
+                  <div className="relative z-10 space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        "w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-500",
+                        formData.plugin.name !== 'none' ? "bg-[#2563EB] text-white" : "bg-[#1E293B] text-[#475569]"
+                      )}>
+                        <Shield className="w-4 h-4" />
                       </div>
+                      <h4 className="font-bold text-white text-sm">Security Module</h4>
+                    </div>
 
-                      {formData.plugin.name === 'rate-limiting' && (
-                        <div className="animate-in fade-in slide-in-from-top-2">
-                          <label className="block text-xs font-medium text-gray-400 mb-1.5">Requests Per Minute Limit</label>
-                          <input
-                            type="number"
-                            className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-100 focus:outline-none focus:border-blue-500"
-                            value={formData.plugin.rateLimitingLimit}
-                            onChange={(e) => updateData('plugin', 'rateLimitingLimit', parseInt(e.target.value) || 0)}
-                          />
-                        </div>
-                      )}
+                    <div className="space-y-3">
+                      <select
+                        className="w-full h-10 bg-[#0B101B] border-[#1E293B] focus:border-[#2563EB] focus:ring-0 rounded-lg px-3 text-xs text-white appearance-none cursor-pointer"
+                        value={formData.plugin.name}
+                        onChange={(e) => updateData('plugin', 'name', e.target.value)}
+                      >
+                        <option value="none">No Plugin (Skip)</option>
+                        <option value="rate-limiting">Rate Limiting</option>
+                        <option value="key-auth">API Key Auth</option>
+                        <option value="cors">CORS Policy</option>
+                      </select>
 
-                      {formData.plugin.name === 'key-auth' && (
-                        <div className="animate-in fade-in slide-in-from-top-2">
-                          <label className="block text-xs font-medium text-gray-400 mb-1.5">Key Names (Comma separated)</label>
+                      {formData.plugin.name !== 'none' && (
+                        <div className="animate-in fade-in slide-in-from-top-2 duration-300 bg-[#0B101B]/50 p-4 rounded-xl border border-white/5">
+                          <label className="text-[8px] font-bold text-[#64748B] uppercase tracking-[0.1em] mb-2 block">
+                            CONFIGURATION
+                          </label>
                           <input
-                            type="text"
-                            className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-100 focus:outline-none focus:border-blue-500"
-                            placeholder="e.g. apikey, x-api-key"
-                            value={formData.plugin.keyAuthNames}
-                            onChange={(e) => updateData('plugin', 'keyAuthNames', e.target.value)}
-                          />
-                        </div>
-                      )}
-
-                      {formData.plugin.name === 'cors' && (
-                        <div className="animate-in fade-in slide-in-from-top-2">
-                          <label className="block text-xs font-medium text-gray-400 mb-1.5">Allowed Origins (Comma separated, * for all)</label>
-                          <input
-                            type="text"
-                            className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-100 focus:outline-none focus:border-blue-500"
-                            placeholder="e.g. https://myapp.com, *"
-                            value={formData.plugin.corsOrigins}
-                            onChange={(e) => updateData('plugin', 'corsOrigins', e.target.value)}
+                            type={formData.plugin.name === 'rate-limiting' ? 'number' : 'text'}
+                            className="w-full h-9 bg-[#050810] border-[#1E293B] focus:border-[#2563EB] focus:ring-0 rounded-lg px-3 text-sm text-white"
+                            placeholder={formData.plugin.name === 'key-auth' ? 'apikey, x-api-key' : ''}
+                            value={formData.plugin.name === 'rate-limiting' ? formData.plugin.rateLimitingLimit : (formData.plugin.name === 'key-auth' ? formData.plugin.keyAuthNames : formData.plugin.corsOrigins)}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              if (formData.plugin.name === 'rate-limiting') updateData('plugin', 'rateLimitingLimit', parseInt(val) || 0);
+                              else if (formData.plugin.name === 'key-auth') updateData('plugin', 'keyAuthNames', val);
+                              else updateData('plugin', 'corsOrigins', val);
+                            }}
                           />
                         </div>
                       )}
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="bg-gray-950 border border-gray-800 rounded-xl p-4 space-y-3">
-                <h4 className="text-sm font-medium text-gray-300 border-b border-gray-800 pb-2">Deployment Summary</h4>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="text-gray-500 block text-xs">Gateway</span>
-                    <span className="text-gray-200 font-medium">{formData.gateway.name} <span className="text-[10px] uppercase text-gray-500 ml-1">({formData.gateway.mode})</span></span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500 block text-xs">Service Target</span>
-                    <span className="text-gray-200 font-medium truncate block" title={formData.service.targetUrl}>{formData.service.targetUrl}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500 block text-xs">Route</span>
-                    <span className="text-gray-200 font-medium">{formData.route.method} {formData.route.path}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500 block text-xs">Plugin</span>
-                    <span className="text-gray-200 font-medium">
-                      {formData.plugin.name !== 'none' ? formData.plugin.name : 'None'}
-                    </span>
+                <div className="bg-[#050810] border border-[#1E293B] rounded-2xl p-6 space-y-4">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.15em] text-[#64748B] border-b border-white/5 pb-2">Review Summary</h4>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-[#475569] font-bold uppercase">Gateway</span>
+                      <span className="text-gray-100 font-bold">{formData.gateway.name} ({formData.gateway.mode})</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-[#475569] font-bold uppercase">Service</span>
+                      <span className="text-gray-100 font-bold truncate max-w-[120px]">{formData.service.name}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-[#475569] font-bold uppercase">Path</span>
+                      <span className="text-emerald-400 font-bold">{formData.route.path}</span>
+                    </div>
+                    <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[11px]">
+                      <span className="text-[#475569] font-bold uppercase">Security</span>
+                      <span className="text-orange-400 font-bold uppercase">{formData.plugin.name !== 'none' ? formData.plugin.name.replace('-', ' ') : 'None'}</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -461,38 +559,44 @@ export default function WizardModal({ isOpen, onClose, onSuccess }: WizardModalP
           )}
         </div>
 
-        {/* Footer Actions */}
-        <div className="px-6 py-4 border-t border-gray-800 bg-gray-900/50 flex items-center justify-between">
+        {/* Footer Actions - Optimized Height */}
+        <div className="px-8 py-5 border-t border-white/5 bg-[#0B101B] flex items-center justify-between shrink-0">
           <button
             onClick={handleBack}
             disabled={currentStep === 1 || isSubmitting}
-            className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-[#64748B] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center gap-2 group"
           >
-            {currentStep > 1 ? <span className="flex items-center gap-1"><ChevronLeft className="w-4 h-4"/> Back</span> : ''}
+            {currentStep > 1 && (
+              <>
+                <ChevronLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+                Back
+              </>
+            )}
           </button>
           
           {currentStep < 4 ? (
             <button
               onClick={handleNext}
-              className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-blue-500/20"
+              className="flex items-center gap-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all shadow-md active:scale-[0.98] group"
             >
-              Next Step <ChevronRight className="w-4 h-4" />
+              Continue 
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform stroke-[3px]" />
             </button>
           ) : (
             <button
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all shadow-md active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Deploying Stack...
+                  <Loader2 className="w-3.5 h-3.5 animate-spin stroke-[3px]" />
+                  Deploying...
                 </>
               ) : (
                 <>
-                  <Zap className="w-4 h-4" />
-                  Deploy Gateway Stack
+                  <Zap className="w-3.5 h-3.5 fill-white stroke-none" />
+                  Launch Stack
                 </>
               )}
             </button>

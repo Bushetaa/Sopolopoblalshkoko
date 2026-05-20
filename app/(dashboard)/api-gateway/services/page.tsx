@@ -77,31 +77,37 @@ export default function GlobalServicesPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8 max-w-6xl mx-auto pb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h2 className="text-2xl font-bold font-display text-gray-50">All Services</h2>
-          <p className="text-sm text-gray-400 mt-1">A global view of services across all your gateways.</p>
+          <div className="flex items-center gap-3 text-blue-400 font-black text-[10px] uppercase tracking-[0.3em] mb-2">
+            <div className="w-8 h-[2px] bg-blue-500" />
+            Service Management
+          </div>
+          <h2 className="text-3xl font-black font-display text-white tracking-tight">All Services</h2>
+          <p className="text-[13px] text-[#64748B] mt-1.5 font-medium">A global view of services across all your gateways.</p>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg shadow-blue-900/20">
-              <Plus className="w-4 h-4" />
-              <span>Create Service</span>
+            <button className="flex items-center gap-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-500/25 active:scale-95 group">
+              <div className="w-4 h-4 rounded bg-white/10 flex items-center justify-center">
+                <Plus className="w-3 h-3 text-white stroke-[3px]" />
+              </div>
+              Create Service
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>Select a Gateway</DropdownMenuLabel>
-            <DropdownMenuSeparator />
+          <DropdownMenuContent align="end" className="w-56 bg-[#0B101B] border-white/5 rounded-2xl p-2 shadow-2xl backdrop-blur-xl">
+            <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-widest text-[#64748B] px-4 py-2">Select a Gateway</DropdownMenuLabel>
+            <DropdownMenuSeparator className="bg-white/5" />
             {gateways.length === 0 ? (
-              <DropdownMenuItem disabled className="text-gray-500">No gateways available</DropdownMenuItem>
+              <DropdownMenuItem disabled className="text-[#64748B] text-[10px] font-bold uppercase tracking-wider px-4 py-3">No gateways available</DropdownMenuItem>
             ) : (
               gateways.map(gw => (
                 <DropdownMenuItem key={gw.id} onClick={() => {
                   setSelectedGatewayId(gw.id!);
                   setIsCreateModalOpen(true);
-                }} className="cursor-pointer">
-                  <Globe className="w-4 h-4 mr-2 text-blue-400" />
+                }} className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4">
+                  <Globe className="w-3.5 h-3.5 mr-3 text-blue-400" />
                   {gw.name}
                 </DropdownMenuItem>
               ))
@@ -110,93 +116,121 @@ export default function GlobalServicesPage() {
         </DropdownMenu>
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-gray-950 border-b border-gray-800 text-gray-400 uppercase tracking-wider text-xs">
-            <tr>
-              <th className="px-6 py-4 font-medium">Service Name</th>
-              <th className="px-6 py-4 font-medium">Gateway</th>
-              <th className="px-6 py-4 font-medium">Protocol</th>
-              <th className="px-6 py-4 font-medium">LB Policy</th>
-              <th className="px-6 py-4 font-medium">Targets</th>
-              <th className="px-6 py-4 font-medium text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-800">
-            {isLoading ? (
+      <div className="bg-[#0B101B] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl relative">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[100px] -z-10" />
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-[#050810]/80 border-b border-white/5 text-[#64748B] uppercase tracking-[0.2em] text-[9px] font-black">
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                  <Server className="w-12 h-12 text-gray-700 mx-auto mb-3 animate-pulse" />
-                  <p className="text-base font-medium text-gray-300">Loading Services...</p>
-                </td>
+                <th className="px-7 py-5">Service Topology</th>
+                <th className="px-7 py-5">Parent Gateway</th>
+                <th className="px-7 py-5">Protocol</th>
+                <th className="px-7 py-5">LB Strategy</th>
+                <th className="px-7 py-5">Nodes</th>
+                <th className="px-7 py-5 text-right">Operations</th>
               </tr>
-            ) : services.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                  <Server className="w-12 h-12 text-gray-700 mx-auto mb-3" />
-                  <p className="text-base font-medium text-gray-300">No Services Found</p>
-                </td>
-              </tr>
-            ) : (
-              services.map((svc) => (
-                <tr key={svc.id} className="hover:bg-gray-800/30 transition-colors group">
-                  <td className="px-6 py-4">
-                    <Link href={`/api-gateway/${svc.gateway_id}/services/${svc.id}`} className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded bg-gray-800 border border-gray-700 flex items-center justify-center">
-                        <Server className="w-4 h-4 text-gray-400 group-hover:text-blue-400 transition-colors" />
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {isLoading ? (
+                <tr>
+                  <td colSpan={6} className="px-7 py-20 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="w-16 h-16 rounded-2xl bg-blue-500/5 border border-blue-500/10 flex items-center justify-center mb-4 animate-pulse">
+                        <Server className="w-8 h-8 text-blue-500/40" />
                       </div>
-                      <span className="font-medium text-gray-100 group-hover:text-blue-400 transition-colors">{svc.name}</span>
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4">
-                    <Link href={`/api-gateway/${svc.gateway_id}/services`} className="text-gray-400 hover:text-blue-400 transition-colors text-xs">
-                      {svc.gatewayName}
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={cn(
-                      "inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border",
-                      svc.protocol === 'grpc'
-                        ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
-                        : "bg-blue-500/10 text-blue-400 border-blue-500/20"
-                    )}>
-                      {svc.protocol === 'grpc' ? <Activity className="w-3 h-3" /> : <Globe className="w-3 h-3" />}
-                      {svc.protocol}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-gray-300 font-mono text-xs bg-gray-800 px-2 py-1 rounded">{svc.lb_policy}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-800 text-gray-300 text-xs font-medium border border-gray-700">{svc.targetsCount}</span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button disabled={isDeleting === svc.id} className="p-1.5 text-gray-500 hover:text-gray-300 hover:bg-gray-800 rounded transition-colors disabled:opacity-50">
-                          {isDeleting === svc.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreVertical className="w-4 h-4" />}
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-40">
-                        <DropdownMenuItem onClick={() => router.push(`/api-gateway/${svc.gateway_id}/services/${svc.id}/edit`)} className="cursor-pointer">
-                          <Edit className="w-4 h-4 mr-2" />
-                          Edit Service
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          onClick={() => svc.id && handleDelete(svc.id)}
-                          className="cursor-pointer text-red-500 hover:text-red-400 hover:bg-red-500/10 focus:text-red-400 focus:bg-red-500/10"
-                        >
-                          <Trash className="w-4 h-4 mr-2" />
-                          Delete Service
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                      <p className="text-[11px] font-black text-white uppercase tracking-widest">Synchronizing Services...</p>
+                    </div>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : services.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-7 py-20 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center mb-4">
+                        <Server className="w-8 h-8 text-[#1E293B]" />
+                      </div>
+                      <p className="text-[11px] font-black text-white uppercase tracking-widest">No Active Services</p>
+                      <p className="text-[10px] text-[#64748B] mt-2 font-medium uppercase tracking-wider">Start by creating a new service for your gateway.</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                services.map((svc) => (
+                  <tr key={svc.id} className="hover:bg-white/[0.02] transition-all group">
+                    <td className="px-7 py-5">
+                      <Link href={`/api-gateway/${svc.gateway_id}/services/${svc.id}`} className="flex items-center gap-4">
+                        <div className="w-9 h-9 rounded-xl bg-gray-800/50 border border-white/5 flex items-center justify-center group-hover:border-blue-500/40 transition-all shadow-inner">
+                          <Server className="w-4.5 h-4.5 text-[#64748B] group-hover:text-blue-400 transition-colors" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="font-black text-white tracking-tight group-hover:text-blue-400 transition-colors">
+                            {svc.name}
+                          </span>
+                          <span className="text-[9px] text-[#475569] font-black uppercase tracking-widest mt-0.5">Application Service</span>
+                        </div>
+                      </Link>
+                    </td>
+                    <td className="px-7 py-5">
+                      <Link href={`/api-gateway/${svc.gateway_id}/services`} className="flex items-center gap-2 group/gw">
+                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500/40 group-hover/gw:bg-blue-500 transition-colors" />
+                        <span className="text-[11px] font-bold text-[#94A3B8] group-hover/gw:text-white transition-colors">
+                          {svc.gatewayName}
+                        </span>
+                      </Link>
+                    </td>
+                    <td className="px-7 py-5">
+                      <span className={cn(
+                        "inline-flex items-center gap-2 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border",
+                        svc.protocol === 'grpc'
+                          ? "bg-purple-500/10 text-purple-400 border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]"
+                          : "bg-blue-500/10 text-blue-400 border-blue-500/20"
+                      )}>
+                        {svc.protocol === 'grpc' ? <Activity className="w-3 h-3" /> : <Globe className="w-3 h-3" />}
+                        {svc.protocol}
+                      </span>
+                    </td>
+                    <td className="px-7 py-5">
+                      <span className="text-[#94A3B8] font-mono text-[10px] bg-white/[0.03] border border-white/5 px-2.5 py-1 rounded-lg uppercase tracking-wider tabular-nums">
+                        {svc.lb_policy.replace('_', ' ')}
+                      </span>
+                    </td>
+                    <td className="px-7 py-5">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-[#0F172A] border border-white/5 flex items-center justify-center text-[10px] font-black text-blue-400 shadow-xl">
+                          {svc.targetsCount}
+                        </div>
+                        <span className="text-[8px] text-[#475569] font-black uppercase tracking-widest">Active</span>
+                      </div>
+                    </td>
+                    <td className="px-7 py-5 text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button disabled={isDeleting === svc.id} className="w-9 h-9 flex items-center justify-center text-[#64748B] hover:text-white hover:bg-white/5 rounded-xl transition-all active:scale-95 border border-transparent hover:border-white/5">
+                            {isDeleting === svc.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreVertical className="w-4 h-4" />}
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48 bg-[#0B101B] border-white/5 rounded-2xl p-2 shadow-2xl backdrop-blur-xl">
+                          <DropdownMenuItem onClick={() => router.push(`/api-gateway/${svc.gateway_id}/services/${svc.id}/edit`)} className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4">
+                            <Edit className="w-3.5 h-3.5 mr-3 text-blue-500" />
+                            Modify Configuration
+                          </DropdownMenuItem>
+                          <div className="h-[1px] bg-white/5 my-1" />
+                          <DropdownMenuItem 
+                            onClick={() => svc.id && handleDelete(svc.id)}
+                            className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-300 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-red-300 transition-all py-3 px-4"
+                          >
+                            <Trash className="w-3.5 h-3.5 mr-3" />
+                            Terminate Service
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {selectedGatewayId && (

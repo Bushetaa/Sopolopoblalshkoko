@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { apiClient, ServiceTarget, Service } from '@/lib/api-client';
+import CreateTargetModal from '@/components/api-gateway/modals/CreateTargetModal';
 
 interface EnhancedTarget extends ServiceTarget { serviceName: string; gatewayId: string; }
 
@@ -85,9 +86,15 @@ export default function GlobalServiceTargetsPage() {
             </div>
           </div>
         </div>
-        <Button onClick={() => setIsModalOpen(true)} size="sm" className="h-9 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold text-sm shadow-lg shadow-blue-900/20 active:scale-95">
-          <Plus className="w-4 h-4 mr-1.5" />Create Target
-        </Button>
+        <button 
+          onClick={() => setIsModalOpen(true)} 
+          className="flex items-center gap-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95 group"
+        >
+          <div className="w-5 h-5 rounded-lg bg-white/10 flex items-center justify-center">
+            <Plus className="w-3.5 h-3.5 text-white stroke-[3px]" />
+          </div>
+          <span className="text-sm">Create Target</span>
+        </button>
       </div>
 
       <div className="flex items-center gap-3">
@@ -168,44 +175,16 @@ export default function GlobalServiceTargetsPage() {
       </div>
 
       {/* Create Target Modal */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="bg-gray-900 border-gray-800 text-gray-100 max-w-md rounded-2xl p-0 overflow-hidden shadow-2xl">
-          <div className="p-5 border-b border-gray-800">
-            <DialogHeader>
-              <DialogTitle className="text-lg font-bold flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center"><Plus className="w-4 h-4 text-white" /></div>
-                New Target
-              </DialogTitle>
-              <DialogDescription className="text-gray-400 text-sm mt-1">Configure a new upstream destination.</DialogDescription>
-            </DialogHeader>
-          </div>
-          <div className="p-5 space-y-4">
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">URL</label>
-              <Input placeholder="https://api.service:8080" value={formData.url} onChange={(e) => setFormData({ ...formData, url: e.target.value })} className="h-10 bg-gray-950 border-gray-800 rounded-lg font-mono text-sm" />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Service</label>
-              <Select value={formData.service_id} onValueChange={(val) => setFormData({ ...formData, service_id: val })}>
-                <SelectTrigger className="h-10 bg-gray-950 border-gray-800 rounded-lg text-sm"><SelectValue placeholder="Select service" /></SelectTrigger>
-                <SelectContent className="bg-gray-900 border-gray-800 text-gray-100 rounded-xl">
-                  {services.map(svc => (<SelectItem key={svc.id} value={svc.id!} className="rounded-lg my-0.5"><div className="flex items-center gap-2"><Server className="w-3 h-3 text-blue-400" />{svc.name}</div></SelectItem>))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Weight (1-100)</label>
-              <Input type="number" min="1" max="100" value={formData.weight} onChange={(e) => setFormData({ ...formData, weight: parseInt(e.target.value) || 1 })} className="h-10 w-24 bg-gray-950 border-gray-800 rounded-lg text-center font-bold" />
-            </div>
-          </div>
-          <div className="p-4 bg-gray-950/50 border-t border-gray-800 flex gap-2">
-            <Button variant="ghost" onClick={() => setIsModalOpen(false)} className="flex-1 h-9 rounded-lg text-gray-400 hover:bg-gray-800 font-semibold text-sm">Cancel</Button>
-            <Button onClick={handleCreate} disabled={isSaving || !formData.service_id || !formData.url} className="flex-1 h-9 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold text-sm">
-              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create"}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <CreateTargetModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={fetchData}
+        services={services}
+        isSaving={isSaving}
+        formData={formData}
+        setFormData={setFormData}
+        handleCreate={handleCreate}
+      />
     </div>
   );
 }
