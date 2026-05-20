@@ -31,7 +31,7 @@ export default function DashboardPage() {
           <p className="text-[13px] text-[#64748B] mt-1.5 font-medium leading-relaxed">Real-time intelligence and operational metrics for your infrastructure.</p>
         </div>
         <Link 
-          href="/api-gateway/new"
+          href="/api-gateway"
           className="group relative flex items-center gap-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 shadow-lg shadow-blue-500/25 active:scale-95 overflow-hidden border border-white/10"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />

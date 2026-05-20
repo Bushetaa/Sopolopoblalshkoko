@@ -31,6 +31,7 @@ export function proxy(request: NextRequest) {
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/assets') ||
+    pathname.startsWith('/auth') ||
     pathname.includes('.')
   ) {
     return NextResponse.next();

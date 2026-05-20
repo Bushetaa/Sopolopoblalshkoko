@@ -144,12 +144,21 @@ interface FetchOptions extends Omit<RequestInit, 'body'> {
 class APIClient {
   private baseURL: string;
 
-  constructor(baseURL: string = process.env.NEXT_PUBLIC_BACKEND_URL || "") {
-    this.baseURL = baseURL;
+  constructor(baseURL?: string) {
+    this.baseURL = baseURL || "";
   }
 
   private async fetchWithAuth<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
+    let url = "";
+    if (this.baseURL) {
+      url = `${this.baseURL}${endpoint}`;
+    } else if (typeof window !== "undefined") {
+      // Client-side: use relative URL to hit Next.js rewrites (avoids CORS)
+      url = endpoint;
+    } else {
+      // Server-side (SSR): explicitly route to the correct service
+      url = `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${endpoint}`;
+    }
     
     // Default headers
     const headers = new Headers(options.headers as HeadersInit);
@@ -426,7 +435,14 @@ class APIClient {
         return null;
       }
 
-      const url = `${this.baseURL}/auth/token`;
+      let url = "";
+      if (this.baseURL) {
+        url = `${this.baseURL}/auth/token`;
+      } else if (typeof window !== "undefined") {
+        url = `/auth/token`;
+      } else {
+        url = `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}/auth/token`;
+      }
       const response = await fetch(url, {
         method: "POST",
         headers: {
