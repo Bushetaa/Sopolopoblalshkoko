@@ -31,6 +31,8 @@ export default function GlobalPluginsPage() {
   const [isDeleting, setIsDeleting] = React.useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
   const [selectedGatewayId, setSelectedGatewayId] = React.useState<string>('');
+  const [editingPlugin, setEditingPlugin] = React.useState<EnhancedPlugin | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
 
   const fetchData = async () => {
       try {
@@ -231,7 +233,14 @@ export default function GlobalPluginsPage() {
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48 bg-[#0B101B] border-white/5 rounded-2xl p-2 shadow-2xl backdrop-blur-xl">
-                          <DropdownMenuItem onClick={() => router.push(`/api-gateway/${plg.gateway_id}/plugins`)} className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4">
+                          <DropdownMenuItem 
+                            onClick={() => {
+                              setEditingPlugin(plg);
+                              setSelectedGatewayId(plg.gateway_id || '');
+                              setIsEditModalOpen(true);
+                            }} 
+                            className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4"
+                          >
                             <Edit className="w-3.5 h-3.5 mr-3 text-blue-500" />
                             Manage Logic
                           </DropdownMenuItem>
@@ -260,6 +269,17 @@ export default function GlobalPluginsPage() {
           onClose={() => setIsCreateModalOpen(false)}
           onSuccess={fetchData}
           gatewayId={selectedGatewayId}
+        />
+      )}
+
+      {selectedGatewayId && editingPlugin && (
+        <CreatePluginModal 
+          isOpen={isEditModalOpen}
+          onClose={() => { setIsEditModalOpen(false); setEditingPlugin(null); }}
+          onSuccess={fetchData}
+          gatewayId={selectedGatewayId}
+          editingPlugin={editingPlugin}
+          isEditMode={true}
         />
       )}
     </div>

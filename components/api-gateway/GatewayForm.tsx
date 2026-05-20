@@ -18,7 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Server, Zap, Globe, Info, Activity, Shield, CheckCircle2, X } from "lucide-react";
+import { Server, Zap, Globe, Info, Activity, Shield, CheckCircle2, X, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const gatewaySchema = z.object({

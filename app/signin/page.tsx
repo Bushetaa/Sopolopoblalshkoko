@@ -14,9 +14,7 @@ export default function LoginPage() {
       
       <div className="container mx-auto px-4 max-w-md relative z-10">
         <div className="flex flex-col items-center gap-4 mb-8">
-          <div className="p-3 glass-panel rounded-2xl shadow-xl">
-            <img src="/assets/sopo_logo.gif" alt="SOPO" className="w-16 h-16" />
-          </div>
+          <img src="/assets/sopo_logo.gif" alt="SOPO" className="w-32 h-24" />
           <div className="text-center">
             <h1 className="text-3xl font-display font-bold text-foreground">Welcome Back</h1>
             <p className="text-muted-foreground text-sm mt-2">Enter your credentials to access your workspace</p>

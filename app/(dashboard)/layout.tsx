@@ -5,6 +5,7 @@ import CommandPalette from "@/components/layout/CommandPalette";
 import { LayoutProvider } from "@/context/LayoutContext";
 import AuthGuard from "@/components/auth/AuthGuard";
 import { Suspense } from "react";
+import Chatbot from "@/components/dashboard/Chatbot";
 
 export default function DashboardLayout({
   children,
@@ -29,6 +30,7 @@ export default function DashboardLayout({
                 {children}
               </main>
             </div>
+            <Chatbot />
           </div>
         </LayoutProvider>
       </AuthGuard>

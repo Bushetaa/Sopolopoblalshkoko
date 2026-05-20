@@ -26,6 +26,8 @@ export default function ServicesPage({ params }: { params: Promise<{ gatewayId: 
   const [isLoading, setIsLoading] = React.useState(true);
   const [isDeleting, setIsDeleting] = React.useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
+  const [editingService, setEditingService] = React.useState<EnhancedService | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
 
   const fetchData = async () => {
     try {
@@ -195,7 +197,13 @@ export default function ServicesPage({ params }: { params: Promise<{ gatewayId: 
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="bg-[#0B101B] border border-white/10 p-2 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] min-w-[180px] animate-in zoom-in-95 duration-200">
-                          <DropdownMenuItem onClick={() => router.push(`/api-gateway/${gatewayId}/services/${svc.id}/edit`)} className="flex items-center gap-3 px-3 py-2.5 rounded-lg focus:bg-white/5 focus:text-white transition-all cursor-pointer font-bold text-xs text-gray-400">
+                          <DropdownMenuItem 
+                            onClick={() => {
+                              setEditingService(svc);
+                              setIsEditModalOpen(true);
+                            }} 
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg focus:bg-white/5 focus:text-white transition-all cursor-pointer font-bold text-xs text-gray-400"
+                          >
                             <Edit className="w-4 h-4 text-blue-400" />
                             Edit Configuration
                           </DropdownMenuItem>
@@ -224,6 +232,17 @@ export default function ServicesPage({ params }: { params: Promise<{ gatewayId: 
         onSuccess={fetchData}
         gatewayId={gatewayId}
       />
+
+      {editingService && (
+        <CreateServiceModal 
+          isOpen={isEditModalOpen}
+          onClose={() => { setIsEditModalOpen(false); setEditingService(null); }}
+          onSuccess={fetchData}
+          gatewayId={gatewayId}
+          editingService={editingService}
+          isEditMode={true}
+        />
+      )}
     </div>
   );
 }

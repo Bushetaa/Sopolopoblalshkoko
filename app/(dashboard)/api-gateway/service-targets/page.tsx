@@ -30,6 +30,7 @@ export default function GlobalServiceTargetsPage() {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
   const [formData, setFormData] = React.useState({ url: 'http://', service_id: '', weight: 1 });
+  const [editingTargetId, setEditingTargetId] = React.useState<string | null>(null);
 
   const fetchData = async () => {
     try {
@@ -45,12 +46,34 @@ export default function GlobalServiceTargetsPage() {
 
   React.useEffect(() => { fetchData(); }, []);
 
-  const handleCreate = async () => {
+  const handleSave = async () => {
     if (!formData.service_id || !formData.url) return;
     setIsSaving(true);
-    try { await apiClient.serviceTargets.create(formData); setIsModalOpen(false); setFormData({ url: 'http://', service_id: '', weight: 1 }); await fetchData(); }
-    catch (error) { console.error("Failed to create target", error); }
-    finally { setIsSaving(false); }
+    try {
+      if (editingTargetId) {
+        await apiClient.serviceTargets.update(editingTargetId, {
+          url: formData.url,
+          weight: formData.weight,
+          service_id: formData.service_id
+        });
+      } else {
+        await apiClient.serviceTargets.create(formData);
+      }
+      setIsModalOpen(false);
+      setEditingTargetId(null);
+      setFormData({ url: 'http://', service_id: '', weight: 1 });
+      await fetchData();
+    } catch (error) {
+      console.error("Failed to save target", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingTargetId(null);
+    setFormData({ url: 'http://', service_id: '', weight: 1 });
   };
 
   const handleDelete = async (id: string) => {
@@ -91,7 +114,11 @@ export default function GlobalServiceTargetsPage() {
           </div>
         </div>
         <button 
-          onClick={() => setIsModalOpen(true)} 
+          onClick={() => {
+            setEditingTargetId(null);
+            setFormData({ url: 'http://', service_id: '', weight: 1 });
+            setIsModalOpen(true);
+          }} 
           className="flex items-center gap-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-500/25 active:scale-95 group"
         >
           <div className="w-4 h-4 rounded bg-white/10 flex items-center justify-center">
@@ -201,7 +228,18 @@ export default function GlobalServiceTargetsPage() {
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-48 bg-[#0B101B] border-white/5 rounded-2xl p-2 shadow-2xl backdrop-blur-xl">
-                        <DropdownMenuItem onClick={() => target.gatewayId && router.push(`/api-gateway/${target.gatewayId}/services/${target.service_id}/edit`)} className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4">
+                        <DropdownMenuItem 
+                          onClick={() => {
+                            setEditingTargetId(target.id!);
+                            setFormData({
+                              url: target.url,
+                              service_id: target.service_id,
+                              weight: target.weight || 1
+                            });
+                            setIsModalOpen(true);
+                          }} 
+                          className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4"
+                        >
                           <Edit className="w-3.5 h-3.5 mr-3 text-blue-500" />
                           Modify Configuration
                         </DropdownMenuItem>
@@ -223,16 +261,17 @@ export default function GlobalServiceTargetsPage() {
         </div>
       </div>
 
-      {/* Create Target Modal */}
+      {/* Create / Edit Target Modal */}
       <CreateTargetModal 
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         onSuccess={fetchData}
         services={services}
         isSaving={isSaving}
         formData={formData}
         setFormData={setFormData}
-        handleCreate={handleCreate}
+        handleCreate={handleSave}
+        isEditMode={!!editingTargetId}
       />
     </div>
   );

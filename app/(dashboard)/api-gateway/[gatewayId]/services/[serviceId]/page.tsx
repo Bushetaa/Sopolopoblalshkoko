@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Server, Plus, Trash2, Activity, Settings2, ShieldAlert } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ServiceTargets } from '@/components/services/ServiceTargets';
+import { apiClient, Service } from '@/lib/api-client';
+import CreateServiceModal from '@/components/api-gateway/modals/CreateServiceModal';
 
 export default function ServiceDetailsPage({ params }: { params: Promise<{ gatewayId: string; serviceId: string }> }) {
   const router = useRouter();
@@ -19,6 +21,8 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ gatew
   const [showHealthCheck, setShowHealthCheck] = useState(false);
   
   const [isLoading, setIsLoading] = useState(false);
+  const [editingService, setEditingService] = useState<Service | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Health Check State
   const [hcPath, setHcPath] = useState('');
@@ -77,7 +81,13 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ gatew
             {!isNew && (
               <div className="flex items-center gap-4">
                 <button 
-                  onClick={() => router.push(`/api-gateway/${gatewayId}/services/${serviceId}/edit`)}
+                  onClick={async () => {
+                    try {
+                      const svc = await apiClient.services.getById(serviceId);
+                      setEditingService(svc);
+                      setIsEditModalOpen(true);
+                    } catch (e) { console.error(e); }
+                  }}
                   className="flex items-center gap-3 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-500/25 active:scale-95 group"
                 >
                   <Settings2 className="w-4 h-4 text-white group-hover:rotate-90 transition-transform" />
@@ -156,6 +166,17 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ gatew
           </div>
         </div>
       </div>
+
+      {editingService && (
+        <CreateServiceModal 
+          isOpen={isEditModalOpen}
+          onClose={() => { setIsEditModalOpen(false); setEditingService(null); }}
+          onSuccess={() => { router.refresh(); }}
+          gatewayId={gatewayId}
+          editingService={editingService}
+          isEditMode={true}
+        />
+      )}
     </div>
   );
 }

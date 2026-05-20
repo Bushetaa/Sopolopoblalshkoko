@@ -35,6 +35,8 @@ export default function GlobalRoutesPage() {
   const [userSlug, setUserSlug] = React.useState<string>('');
   const [snippetsModalOpen, setSnippetsModalOpen] = React.useState(false);
   const [selectedSnippetRoute, setSelectedSnippetRoute] = React.useState<{ method: string, url: string } | null>(null);
+  const [editingRoute, setEditingRoute] = React.useState<EnhancedRoute | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
 
   const fetchData = async () => {
       try {
@@ -234,7 +236,14 @@ export default function GlobalRoutesPage() {
                             <Code2 className="w-3.5 h-3.5 mr-3" />
                             Integration Code
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push(`/api-gateway/${rt.gateway_id}/routes/${rt.id}/edit`)} className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4">
+                          <DropdownMenuItem 
+                            onClick={() => {
+                              setEditingRoute(rt);
+                              setSelectedGatewayId(rt.gateway_id);
+                              setIsEditModalOpen(true);
+                            }} 
+                            className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4"
+                          >
                             <Edit className="w-3.5 h-3.5 mr-3 text-blue-500" />
                             Modify Configuration
                           </DropdownMenuItem>
@@ -263,6 +272,17 @@ export default function GlobalRoutesPage() {
           onClose={() => setIsCreateModalOpen(false)}
           onSuccess={fetchData}
           gatewayId={selectedGatewayId}
+        />
+      )}
+
+      {selectedGatewayId && editingRoute && (
+        <CreateRouteModal 
+          isOpen={isEditModalOpen}
+          onClose={() => { setIsEditModalOpen(false); setEditingRoute(null); }}
+          onSuccess={fetchData}
+          gatewayId={selectedGatewayId}
+          editingRoute={editingRoute}
+          isEditMode={true}
         />
       )}
 

@@ -1,0 +1,228 @@
+# SOPO (Secure Operations Policy Orchestrator) - Frontend & User Experience Guide
+
+## Introduction to SOPO
+SOPO is a comprehensive platform designed to manage, secure, and monitor API traffic through a unified, user-friendly interface. It acts as the central control room for users to oversee their API infrastructure without needing to write complex code. The primary goal of the SOPO frontend is to provide a seamless, visual way to manage routing, apply security policies, and analyze traffic.
+
+## Key Benefits for the User
+- **Centralized Control:** Users can manage all their API connections from one single, easy-to-navigate dashboard.
+- **Simplified Security:** Users can apply advanced security rules (like Rate Limiting, Authentication, and IP Restrictions) with just a few clicks.
+- **Performance Enhancement:** The platform allows users to combine multiple requests into one, significantly speeding up their applications.
+- **Actionable Insights:** Users have access to real-time visual analytics and charts to monitor performance, track usage, and identify issues.
+
+## Public Pages (Before Login)
+- **Landing Page:** The main entry point of the website. 
+  - **Buttons:** `Get Started` button to go to registration, and top navigation buttons (like Docs and Features).
+- **Authentication Pages:** 
+  - **Inputs:** `Email`, `Password`, and an additional `Workspace Name` field on the signup page.
+  - **Buttons:** `Sign In` or `Sign Up` buttons, and a `Forgot Password` button for account recovery.
+- **Informational Pages:** These pages do not have input forms; they are read-only documentation pages.
+
+## Dashboard Pages (Authenticated Area)
+Once logged in, the user gains access to the core features of the platform.
+
+### Creation Workflow (Logical Dependency)
+To set up a complete API infrastructure, the user MUST follow this exact order:
+1. **Gateway:** First, create a Gateway (the main entry point).
+2. **Service:** Second, create a Service and link it to the Gateway.
+3. **Service Target:** Third, add a Service Target to the Service (the actual physical server IP/URL).
+4. **Route:** Fourth, create a Route to direct specific traffic (e.g., `/users`) to the Service.
+5. **Plugin:** Finally, attach Plugins (like Rate Limiting) to secure the Route or Service.
+
+### System Overview Dashboard
+- **Purpose:** The main landing screen after logging in, showing real-time intelligence and operational metrics.
+- **Buttons:** `DEPLOY NEW GATEWAY` button at the top right. Inside the Traffic Overview section, there are `REQUESTS` and `LATENCY` buttons to toggle charts.
+- **Display Elements:** Summary cards for `TOTAL REQUESTS`, `SUCCESS RATE`, `AVG RESPONSE TIME`, and `ERROR RATE`. Also features a `Live Traffic Logs` stream showing Level, Method, Endpoint Path, Status, Latency, Service, and Request ID.
+
+### API Gateways
+- **Purpose:** Manage your entry points, routing, and traffic policies with precision.
+- **Buttons:** 
+  - `+ MANUAL CREATE`: To manually configure a new gateway.
+  - `⚡ WIZARD SETUP`: To use an automated setup wizard.
+  - `Operations (...)`: The three dots button next to each gateway in the table to manage it.
+- **Table Columns:** `GATEWAY TOPOLOGY`, `DEPLOYMENT MODE`, `SYSTEM STATUS`, `DEPLOYMENT DATE`, and `OPERATIONS`.
+
+### All Services
+- **Important Distinction:** A "Service" is a logical grouping or a name for a specific API (e.g., "User Service"). It does NOT point to a real server yet. If a user asks about "Services", give them this logical overview.
+- **Purpose:** Provides a global view of services across all your gateways.
+- **Buttons:** 
+  - `+ CREATE SERVICE`: To add a new service.
+  - `Operations (...)`: The three dots button for each service.
+- **Table Columns:** `SERVICE TOPOLOGY`, `PARENT GATEWAY`, `PROTOCOL`, `LB STRATEGY`, `NODES`, and `OPERATIONS`.
+
+### Service Targets
+- **Important Distinction:** A "Service Target" is the actual physical destination (IP address or URL) where the Service is hosted. If a user asks about "Service Targets", explain that this is where the traffic is physically sent and balanced.
+- **Purpose:** Manage upstream destinations and load distribution weights.
+- **Buttons:** 
+  - `+ CREATE TARGET`: To add a new server location.
+  - `FILTER`: To filter the targets list.
+  - `Operations (...)`: The three dots button for each target.
+- **Table Columns:** `DESTINATION`, `SERVICE`, `WEIGHT`, `STATUS`, and `OPERATIONS`.
+- **Inputs:** A Search bar at the top to `Search targets...`.
+
+### All Routes
+- **Purpose:** Provides a global view of routes across all your gateways.
+- **Buttons:** 
+  - `+ CREATE ROUTE`: To define a new traffic path.
+  - `Operations (...)`: The three dots button for each route.
+- **Table Columns:** `ROUTE PATH`, `METHOD`, `TOPOLOGY TYPE`, `UPSTREAM SERVICE`, `PARENT GATEWAY`, and `OPERATIONS`.
+
+### Plugins & Policies
+- **Purpose:** The security and rules control center.
+- **Buttons:** 
+  - `Add Plugin` to attach a new security policy.
+  - `Enable / Disable Toggle` to quickly turn a policy on or off.
+- **Inputs:** (Varies by plugin)
+  - **Rate Limiting:** `Requests Count` (allowed number of requests) and `Time Window` (duration in seconds).
+  - **IP Restriction:** `IP Addresses` field to whitelist or blacklist specific IPs.
+
+### Analytics Engine
+- **Purpose:** Deep insights and reporting.
+- **Buttons:** 
+  - `Time Range Filters` (e.g., 24 Hours, 7 Days, 30 Days).
+  - `Generate Report`: Sends a full API analytics report to the user's email (limited to once per 24 hours).
+- **Inputs:** Dropdowns to filter analytics by specific Gateway or Route. No text inputs.
+
+### API Logs
+- **Purpose:** Displays real-time request and response data to track data flow and debug issues.
+- **Buttons:**
+  - `Auto-refresh` or `Live Stream` to watch logs come in real-time.
+  - `Export` or `Download` to save the logs to a file.
+  - `Clear Logs` to empty the current view.
+- **Log Boxes & Analytics Details:** Each log entry is divided into specific data boxes:
+  - **Method & Path Box:** Shows the HTTP method (GET, POST) and the requested path (e.g., `/api/users`). Helps identify exactly where the request was going.
+  - **Status Code Box:** Displays the result of the request (e.g., `200` Success, `401` Unauthorized, `500` Server Error). Critical for spotting failures or downtime quickly.
+  - **Latency / Duration Box:** Measures how many milliseconds the server took to respond. Useful for monitoring performance bottlenecks.
+  - **Client IP Box:** Shows the IP address of the user who made the request. Helps track traffic sources and identify malicious actors.
+  - **Timestamp Box:** The exact date and time the request happened, down to the second, for sorting and auditing.
+- **Inputs:**
+  - `Search Bar`: A quick text search for specific keywords, IPs, or error codes.
+  - `Date Range Picker`: A calendar input to filter logs within a specific time frame.
+
+### Developer Hub
+- **Purpose:** Sharing APIs with the outside world.
+- **Buttons:** 
+  - Language Tabs (Python, Node.js, Go) to switch between code examples.
+  - `Copy Code` button to quickly copy the snippet.
+- No direct input fields; this is an output and documentation page.
+
+### Settings & Workspaces
+- **Purpose:** Account and billing management.
+- **Buttons:** `Save Changes` to apply updates, and `Upgrade Plan` to manage subscriptions.
+- **Inputs:** 
+  - `Profile Name` to change user display name.
+  - `Workspace Name` to rename the active workspace.
+
+
+# SOPO (Secure Operations Policy Orchestrator) - دليل واجهة المستخدم والفرونت إند
+
+## إيه هو SOPO؟
+سوبو (SOPO) عبارة عن منصة متكاملة معمولة عشان تدير وتأمن وتراقب كل الـ API ترافيك بتاعك من خلال واجهة سهلة وبسيطة جداً. المنصة بتعتبر غرفة التحكم المركزية للمستخدم عشان يتابع كل الـ APIs بتاعته من غير ما يحتاج يكتب كود معقد. الهدف الأساسي من واجهة المستخدم (الفرونت إند) هنا هو تقديم طريقة سلسة وواضحة بصرياً عشان تتحكم في توجيه الترافيك (Routing)، تطبق سياسات الأمان، وتشوف إحصائيات الترافيك.
+
+## أهم الفوائد للمستخدم
+- **تحكم مركزي:** المستخدم يقدر يدير كل اتصالات الـ APIs بتاعته من داشبورد واحدة سهلة في التعامل.
+- **أمان بسيط وسهل:** المستخدم يقدر يطبق قواعد أمان متقدمة زي (تقييد عدد الطلبات Rate Limiting، المصادقة Authentication، وحظر أيبيهات معينة IP Restrictions) بشوية كليكات من غير أي تعقيد.
+- **تحسين الأداء:** المنصة بتسمح للمستخدم إنه يدمج أكتر من طلب (Requests) في طلب واحد، وده بيسرع التطبيقات بتاعته بشكل ملحوظ.
+- **إحصائيات وتحليلات فورية:** المستخدم عنده وصول مباشر لرسومات بيانية وإحصائيات لايف عشان يراقب الأداء، يشوف مين بيستخدم الـ APIs، ويكتشف أي مشاكل بسهولة.
+
+## الصفحات العامة (قبل تسجيل الدخول)
+- **الصفحة الرئيسية:** دي واجهة الموقع الأساسية. 
+  - **الزراير (Buttons):** زرار `Get Started` عشان يوديك لصفحة التسجيل، وزراير للتنقل في القائمة العلوية (زي Docs و Features).
+- **صفحات تسجيل الدخول وإنشاء الحساب:** 
+  - **حقول الإدخال (Inputs):** حقل الإيميل `Email`، وحقل الباسورد `Password`، وفي صفحة التسجيل حقل لاسم مساحة العمل `Workspace Name`.
+  - **الزراير (Buttons):** زرار `Sign In` أو `Sign Up` لتأكيد الدخول أو إنشاء الحساب، وزرار `Forgot Password` لاسترجاع الباسورد لو نسيته.
+- **الصفحات المعلوماتية:** الصفحات دي مفيهاش فورمز أو حقول إدخال، هي بس صفحات قراية.
+
+## صفحات الداشبورد (بعد تسجيل الدخول)
+بمجرد ما المستخدم يسجل دخول، بيبدأ يتحكم في كل الخواص الأساسية للمنصة.
+
+### تسلسل الإنشاء (Logical Dependency Workflow)
+عشان تبني بنية API كاملة وشغالة، لازم المستخدم يمشي بالترتيب ده بالظبط:
+1. **Gateway:** أول حاجة لازم تتكريت هي الـ Gateway (نقطة الدخول الرئيسية).
+2. **Service:** تاني حاجة بتكريت Service وتربطها بالـ Gateway.
+3. **Service Target:** تالت حاجة بتضيف Service Target للـ Service دي (وهو عنوان السيرفر الحقيقي).
+4. **Route:** رابع حاجة بتعمل Route عشان توجه مسار معين (زي `/users`) للـ Service دي.
+5. **Plugin:** أخيراً بتركب الـ Plugins (زي تقييد الطلبات) عشان تأمن الـ Route أو الـ Service.
+
+### نظرة عامة على النظام - System Overview
+- **الهدف منها:** دي أول شاشة بتظهر للمستخدم بعد ما يسجل دخول، وبتعرض ملخص حي للإحصائيات (Real-time intelligence).
+- **الزراير (Buttons):** زرار `DEPLOY NEW GATEWAY` فوق يمين الشاشة عشان ترفع جيتواي جديد. وجوه رسم الترافيك البياني فيه زراير لـ `REQUESTS` و `LATENCY` عشان تبدل العرض.
+- **عناصر العرض (Display Elements):** كروت إحصائيات لـ `TOTAL REQUESTS`, `SUCCESS RATE`, `AVG RESPONSE TIME`, و `ERROR RATE`. كمان فيها قسم سجلات الترافيك المباشر (Live Traffic Logs) بيعرض المستوى، المسار، الحالة، السرعة، ومعرف الطلب.
+
+### إدارة الـ Gateways - API Gateways
+- **الهدف منها:** إدارة نقاط الدخول (entry points)، وتوجيه الترافيك بدقة. مفيش حاجة اسمها Gateway Hub.
+- **الزراير (Buttons):** 
+  - زرار `+ MANUAL CREATE`: لإنشاء Gateway يدوياً.
+  - زرار `⚡ WIZARD SETUP`: لإعداد Gateway باستخدام المعالج الذكي بخطوات سريعة.
+  - زرار العمليات `Operations (...)`: التلات نقط اللي جنب كل Gateway في الجدول عشان تدير إعداداته.
+- **عناصر الجدول (Table Columns):** بيعرض `GATEWAY TOPOLOGY`, `DEPLOYMENT MODE`, `SYSTEM STATUS`, `DEPLOYMENT DATE`, و `OPERATIONS`.
+
+### كل الخدمات - All Services
+- **فرق مهم جداً:** الـ "Service" هنا عبارة عن اسم أو تجميع منطقي للـ API (زي خدمة المستخدمين). هي لسه مش بتشاور على سيرفر حقيقي. لو المستخدم سأل عن "الخدمات" بس، اشرحله الجزء المنطقي ده.
+- **الهدف منها:** بتوفر نظرة شاملة (global view) لكل الخدمات الموجودة في كل الـ Gateways.
+- **الزراير (Buttons):** 
+  - زرار `+ CREATE SERVICE`: لإنشاء خدمة جديدة.
+  - زرار العمليات `Operations (...)`: التلات نقط جنب كل خدمة لإدارتها.
+- **عناصر الجدول (Table Columns):** بيعرض `SERVICE TOPOLOGY`, `PARENT GATEWAY`, `PROTOCOL`, `LB STRATEGY` (استراتيجية توزيع الحمل)، `NODES`، و `OPERATIONS`.
+
+### أهداف الخدمات - Service Targets
+- **فرق مهم جداً:** الـ "Service Target" هو المكان أو العنوان الفعلي (IP أو URL) اللي شغال عليه السيرفر الحقيقي اللي بيقدم الخدمة دي. لو المستخدم سأل عن "Service Targets"، اشرحله إن دي خطوات ربط الخدمة بالسيرفر الفعلي وتوزيع الحمل.
+- **الهدف منها:** إدارة الوجهات الفعلية (upstream destinations) وتحديد أوزان توزيع الحمل (load distribution weights).
+- **الزراير (Buttons):** 
+  - زرار `+ CREATE TARGET`: لإضافة سيرفر أو وجهة جديدة.
+  - زرار `FILTER`: لفلترة الأهداف المعروضة.
+  - زرار العمليات `Operations (...)`: التلات نقط جنب كل هدف.
+- **حقول الإدخال (Inputs):** شريط بحث علوي للبحث في الأهداف `Search targets...`.
+- **عناصر الجدول (Table Columns):** بيعرض `DESTINATION`, `SERVICE`, `WEIGHT`, `STATUS`, و `OPERATIONS`.
+
+### كل مسارات التوجيه - All Routes
+- **الهدف منها:** بتوفر نظرة شاملة لكل مسارات التوجيه (Routes) عبر كل الـ Gateways.
+- **الزراير (Buttons):** 
+  - زرار `+ CREATE ROUTE`: لإنشاء مسار جديد.
+  - زرار العمليات `Operations (...)`: التلات نقط جنب كل مسار لإدارته.
+- **عناصر الجدول (Table Columns):** بيعرض `ROUTE PATH`, `METHOD`, `TOPOLOGY TYPE`, `UPSTREAM SERVICE`, `PARENT GATEWAY`, و `OPERATIONS`.
+
+### الإضافات والسياسات - Plugins & Policies
+- **الهدف منها:** مركز التحكم في الأمان والقواعد.
+- **الزراير (Buttons):** 
+  - زرار `Add Plugin` لتركيب سياسة جديدة. 
+  - زرار التفعيل/الإيقاف `Enable / Disable Toggle` عشان تشغل أو توقف السياسة بضغطة واحدة.
+- **حقول الإدخال (Inputs):** (بتختلف حسب نوع الـ Plugin، أمثلة:)
+  - **في الـ Rate Limiting:** حقل `Requests Count` (عدد الطلبات المسموح بيها)، وحقل `Time Window` (الفترة الزمنية بالثواني).
+  - **في الـ IP Restriction:** حقل `IP Addresses` (عشان تحط الأيبيهات المسموح بيها أو اللي عايز تمنعها).
+
+### محرك الإحصائيات - Analytics Engine
+- **الهدف منها:** تقديم تقارير وإحصائيات عميقة عن النظام.
+- **الزراير (Buttons):** 
+  - زراير تحديد وقت العرض `Time Range Filters` (زي 24 Hours, 7 Days, 30 Days).
+  - زرار التقرير `Generate Report`: زرار مميز بيبعت تقرير تحليلي كامل على الإيميل بتاعك. الخاصية دي متاحة تدوس عليها مرة واحدة بس كل 24 ساعة.
+- **حقول الإدخال (Inputs):** مفيش حقول كتابة يدوية، بس فيه قوائم منسدلة (Dropdowns) لاختيار الـ Gateway أو الـ Route اللي عايز تفلتر الإحصائيات بتاعتهم.
+
+### سجلات الترافيك - API Logs
+- **الهدف منها:** عرض كل الطلبات (Requests) اللي بتدخل وتخرج من الـ APIs بشكل مفصل عشان تتبع المشاكل (Debugging) وتراقب حركة البيانات.
+- **الزراير (Buttons):**
+  - زرار `Auto-refresh` أو `Live Stream` عشان تتفرج على اللوجز وهي بتنزل في نفس اللحظة (Real-time).
+  - زرار `Export` أو `Download` لو عايز تنزل السجلات دي في ملف عشان تراجعها براحتك.
+  - زرار `Clear Logs` لو متاح عشان تمسح الشاشة.
+- **صناديق اللوجز والبيانات (Log Details & Boxes):** كل سطر لوج بيبقى مقسوم لمجموعة صناديق (Boxes) أو أعمدة:
+  - **صندوق الـ (Method & Path):** بيوضح نوع الطلب (زي GET أو POST) والمسار المطلوب (زي `/api/users`). فايدته تعرف الطلب رايح لأي صفحة أو خدمة بالظبط.
+  - **صندوق الـ (Status Code):** بيعرض حالة الطلب (زي `200` يعني نجاح، `401` يعني مش مصرح ليه، أو `500` مشكلة في السيرفر). فايدته المهمة هي اكتشاف الأخطاء وتحديد لو فيه خدمة وقعت.
+  - **صندوق الـ (Latency / Duration):** بيقيس سرعة الاستجابة بالملي ثانية. فايدته تعرف لو السيرفر بطيء أو فيه تأخير في الرد وتراقب الأداء.
+  - **صندوق الـ (Client IP):** بيعرض عنوان الـ IP بتاع الجهاز اللي بعت الطلب. فايدته تتبع مصادر الترافيك وتعرف لو فيه هجوم أو محاولة دخول غريبة.
+  - **صندوق الـ (Timestamp):** بيوضح الوقت والتاريخ بالثانية، عشان ترتب الأحداث تاريخياً وتعرف المشكلة حصلت إمتى بالظبط.
+- **حقول الإدخال (Inputs):**
+  - `Search Bar`: شريط بحث سريع عشان تدور على كلمة معينة، IP معين، مسار معين، أو Error Code محدد.
+  - `Date Range Picker`: نتيجة (Calendar) عشان تختار فترة زمنية معينة وتجيب اللوجز اللي حصلت فيها بس.
+
+### مركز المطورين - Developer Hub
+- **الهدف منها:** مشاركة الـ APIs مع المطورين التانيين.
+- **الزراير (Buttons):** 
+  - زراير لغات البرمجة (Tab Buttons) عشان تبدل بين الأكواد (Python, Node.js, Go).
+  - زرار النسخ `Copy Code` عشان تاخد كود الـ Snippet بسهولة وتستخدمه.
+- مفيهاش حقول إدخال مباشرة لأنها صفحة استخراج كود ودوكيومنتيشن.
+
+### الإعدادات ومساحات العمل - Settings & Workspaces
+- **الهدف منها:** إدارة الحساب والفواتير.
+- **الزراير (Buttons):** زرار `Save Changes` لحفظ أي تعديل تعمله، وزرار `Upgrade Plan` لو حابب ترقي اشتراكك.
+- **حقول الإدخال (Inputs):** 
+  - `Profile Name` لتغيير اسم المستخدم.
+  - `Workspace Name` لتعديل اسم مساحة العمل الحالية.

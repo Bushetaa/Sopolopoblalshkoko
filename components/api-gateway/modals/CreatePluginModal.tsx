@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Plug } from 'lucide-react';
-import { apiClient } from '@/lib/api-client';
+import { apiClient, GatewayPlugin } from '@/lib/api-client';
 import DynamicPluginConfig from '@/components/forms/DynamicPluginConfig';
 import { toast } from '@/hooks/use-toast';
 
@@ -11,27 +11,53 @@ interface CreatePluginModalProps {
   onClose: () => void;
   onSuccess: () => void;
   gatewayId: string;
+  editingPlugin?: GatewayPlugin;
+  isEditMode?: boolean;
 }
 
-export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayId }: CreatePluginModalProps) {
+export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayId, editingPlugin, isEditMode = false }: CreatePluginModalProps) {
   const [newPluginName, setNewPluginName] = useState('jwt');
   const [newPluginPhase, setNewPluginPhase] = useState('Authentication');
   const [newPluginConfig, setNewPluginConfig] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Populate fields when editing
+  useEffect(() => {
+    if (isEditMode && editingPlugin) {
+      setNewPluginName(editingPlugin.name || 'jwt');
+      setNewPluginPhase(editingPlugin.phase || 'Authentication');
+      setNewPluginConfig(editingPlugin.config || {});
+    } else if (!isEditMode) {
+      setNewPluginName('jwt');
+      setNewPluginPhase('Authentication');
+      setNewPluginConfig({});
+    }
+  }, [isEditMode, editingPlugin, isOpen]);
+
   if (!isOpen) return null;
 
-  const handleAddPlugin = async () => {
+  const handleSavePlugin = async () => {
     setIsSubmitting(true);
     try {
-      await apiClient.gatewayPlugins.create({
-        name: newPluginName,
-        phase: newPluginPhase,
-        gateway_id: gatewayId,
-        config: newPluginConfig,
-        enabled: true,
-      });
-      toast({ title: "Success", description: "Plugin added successfully!" });
+      if (isEditMode && editingPlugin?.id) {
+        await apiClient.gatewayPlugins.update(editingPlugin.id, {
+          name: newPluginName,
+          phase: newPluginPhase,
+          gateway_id: gatewayId,
+          config: newPluginConfig,
+          enabled: editingPlugin.enabled,
+        });
+        toast({ title: "Success", description: "Plugin updated successfully!" });
+      } else {
+        await apiClient.gatewayPlugins.create({
+          name: newPluginName,
+          phase: newPluginPhase,
+          gateway_id: gatewayId,
+          config: newPluginConfig,
+          enabled: true,
+        });
+        toast({ title: "Success", description: "Plugin added successfully!" });
+      }
       
       // Reset state for next time
       setNewPluginName('jwt');
@@ -41,7 +67,7 @@ export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayI
       onSuccess();
       onClose();
     } catch (error: any) {
-      toast({ title: "Error", description: error.message || "Failed to create plugin", variant: "destructive" });
+      toast({ title: "Error", description: error.message || `Failed to ${isEditMode ? 'update' : 'create'} plugin`, variant: "destructive" });
     } finally {
       setIsSubmitting(false);
     }
@@ -60,10 +86,14 @@ export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayI
               </div>
               <div>
                 <h2 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
-                  Configure Plugin
-                  <span className="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest text-blue-400">Manual Entry</span>
+                  {isEditMode ? "Modify Plugin" : "Configure Plugin"}
+                  <span className="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest text-blue-400">
+                    {isEditMode ? "Update" : "Manual Entry"}
+                  </span>
                 </h2>
-                <p className="text-[#94A3B8] font-medium text-xs">Add a global plugin to your gateway</p>
+                <p className="text-[#94A3B8] font-medium text-xs">
+                  {isEditMode ? "Modify plugin configuration and parameters" : "Add a global plugin to your gateway"}
+                </p>
               </div>
             </div>
             <button 
@@ -84,7 +114,7 @@ export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayI
                 value={newPluginName} 
                 onChange={(e) => {
                   setNewPluginName(e.target.value);
-                  setNewPluginConfig({});
+                  if (!isEditMode) setNewPluginConfig({});
                   // Auto-set a reasonable phase based on the plugin type
                   if (['jwt', 'apikey'].includes(e.target.value)) setNewPluginPhase('Authentication');
                   if (['ratelimit'].includes(e.target.value)) setNewPluginPhase('RateLimiting');
@@ -137,7 +167,7 @@ export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayI
           </button>
           <button 
             disabled={isSubmitting} 
-            onClick={handleAddPlugin} 
+            onClick={handleSavePlugin} 
             className="flex items-center gap-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all shadow-md active:scale-95 disabled:opacity-50"
           >
             {isSubmitting ? (
@@ -146,7 +176,7 @@ export default function CreatePluginModal({ isOpen, onClose, onSuccess, gatewayI
                 Saving...
               </>
             ) : (
-              "Save Plugin"
+              isEditMode ? "Update Plugin" : "Save Plugin"
             )}
           </button>
         </div>

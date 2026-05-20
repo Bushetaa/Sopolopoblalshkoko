@@ -3,31 +3,43 @@
 import React from 'react';
 import { X, Globe } from 'lucide-react';
 import { GatewayForm, GatewayFormValues } from '@/components/api-gateway/GatewayForm';
-import { apiClient } from '@/lib/api-client';
+import { apiClient, Gateway } from '@/lib/api-client';
 import { toast } from '@/hooks/use-toast';
 
 interface CreateGatewayModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  editingGateway?: Gateway;
+  isEditMode?: boolean;
 }
 
-export default function CreateGatewayModal({ isOpen, onClose, onSuccess }: CreateGatewayModalProps) {
+export default function CreateGatewayModal({ isOpen, onClose, onSuccess, editingGateway, isEditMode = false }: CreateGatewayModalProps) {
   if (!isOpen) return null;
 
   const handleSubmit = async (data: GatewayFormValues) => {
     try {
-      await apiClient.gateways.create({
-        name: data.name,
-        description: data.description,
-        mode: data.mode,
-        is_active: data.is_active,
-      });
-      toast({ title: "Success", description: "Gateway created successfully!" });
+      if (isEditMode && editingGateway?.id) {
+        await apiClient.gateways.update(editingGateway.id, {
+          name: data.name,
+          description: data.description,
+          mode: data.mode,
+          is_active: data.is_active,
+        });
+        toast({ title: "Success", description: "Gateway updated successfully!" });
+      } else {
+        await apiClient.gateways.create({
+          name: data.name,
+          description: data.description,
+          mode: data.mode,
+          is_active: data.is_active,
+        });
+        toast({ title: "Success", description: "Gateway created successfully!" });
+      }
       onSuccess();
       onClose();
     } catch (error: any) {
-      toast({ title: "Error", description: error.message || "Failed to create gateway", variant: "destructive" });
+      toast({ title: "Error", description: error.message || `Failed to ${isEditMode ? 'update' : 'create'} gateway`, variant: "destructive" });
     }
   };
 
@@ -44,10 +56,14 @@ export default function CreateGatewayModal({ isOpen, onClose, onSuccess }: Creat
               </div>
               <div>
                 <h2 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
-                  Create Gateway
-                  <span className="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest text-blue-400">Manual Entry</span>
+                  {isEditMode ? "Modify Gateway" : "Create Gateway"}
+                  <span className="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest text-blue-400">
+                    {isEditMode ? "Update" : "Manual Entry"}
+                  </span>
                 </h2>
-                <p className="text-[#94A3B8] font-medium text-xs">Configure a new API Gateway to route and manage your traffic</p>
+                <p className="text-[#94A3B8] font-medium text-xs">
+                  {isEditMode ? "Modify your gateway configuration" : "Configure a new API Gateway to route and manage your traffic"}
+                </p>
               </div>
             </div>
             <button 
@@ -62,6 +78,12 @@ export default function CreateGatewayModal({ isOpen, onClose, onSuccess }: Creat
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto px-8 py-6 scrollbar-thin scrollbar-thumb-gray-800">
           <GatewayForm 
+            initialValues={isEditMode && editingGateway ? {
+              name: editingGateway.name,
+              description: editingGateway.description || '',
+              mode: (editingGateway.mode as "single" | "pro") || 'single',
+              is_active: editingGateway.is_active,
+            } : undefined}
             onSubmit={handleSubmit}
             onCancel={onClose}
             hasSingleGateway={false}

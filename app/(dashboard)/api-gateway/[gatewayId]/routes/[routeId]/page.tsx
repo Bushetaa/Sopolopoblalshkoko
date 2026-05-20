@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Route as RouteIcon, GitMerge, Link as LinkIcon, Trash2, Plus, Info, Settings2, Server } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { apiClient, GatewayRoute } from '@/lib/api-client';
+import CreateRouteModal from '@/components/api-gateway/modals/CreateRouteModal';
 
 export default function RouteDetailsPage({ params }: { params: Promise<{ gatewayId: string; routeId: string }> }) {
   const router = useRouter();
@@ -34,6 +36,8 @@ export default function RouteDetailsPage({ params }: { params: Promise<{ gateway
   );
 
   const [isLoading, setIsLoading] = useState(false);
+  const [editingRoute, setEditingRoute] = useState<GatewayRoute | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const handleAddSubRequest = () => {
     setSubRequests([...subRequests, { id: Math.random().toString(), key: '', service: '', targetPath: '', method: 'GET', required: false, timeout: '' }]);
@@ -89,7 +93,13 @@ export default function RouteDetailsPage({ params }: { params: Promise<{ gateway
           
           {!isNew && (
             <button 
-              onClick={() => router.push(`/api-gateway/${gatewayId}/routes/${routeId}/edit`)}
+              onClick={async () => {
+                try {
+                  const rt = await apiClient.gatewayRoutes.getById(routeId);
+                  setEditingRoute(rt);
+                  setIsEditModalOpen(true);
+                } catch (e) { console.error(e); }
+              }}
               className="flex items-center gap-2.5 bg-white/5 hover:bg-white/10 text-white border border-white/10 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all backdrop-blur-md active:scale-95"
             >
               <Settings2 className="w-4 h-4 text-emerald-400" />
@@ -188,6 +198,17 @@ export default function RouteDetailsPage({ params }: { params: Promise<{ gateway
           </div>
         </div>
       </div>
+
+      {editingRoute && (
+        <CreateRouteModal 
+          isOpen={isEditModalOpen}
+          onClose={() => { setIsEditModalOpen(false); setEditingRoute(null); }}
+          onSuccess={() => { router.refresh(); }}
+          gatewayId={gatewayId}
+          editingRoute={editingRoute}
+          isEditMode={true}
+        />
+      )}
     </div>
   );
 }

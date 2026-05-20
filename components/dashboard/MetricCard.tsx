@@ -11,7 +11,7 @@ interface MetricCardProps {
   data: MetricCardData;
   isLoading?: boolean;
   onClick?: () => void;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'compact';
 }
 
 export default function MetricCard({ data, isLoading, onClick, size = 'md' }: MetricCardProps) {
@@ -33,6 +33,20 @@ export default function MetricCard({ data, isLoading, onClick, size = 'md' }: Me
   const themeColor = colorMap[baseColor] || '#3b82f6';
 
   if (isLoading) {
+    if (size === 'compact') {
+      return (
+        <div className="bg-gray-900/20 border border-gray-800/50 p-4 rounded-2xl animate-pulse flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gray-800/50 rounded-xl" />
+            <div className="space-y-2">
+              <div className="w-16 h-3 bg-gray-800/30 rounded-full" />
+              <div className="w-24 h-6 bg-gray-800/50 rounded-lg" />
+            </div>
+          </div>
+          <div className="w-14 h-6 bg-gray-800/40 rounded-full" />
+        </div>
+      );
+    }
     return (
       <div className="bg-gray-900/20 border border-gray-800/50 p-6 rounded-3xl animate-pulse">
         <div className="flex items-center justify-between mb-6">
@@ -44,6 +58,69 @@ export default function MetricCard({ data, isLoading, onClick, size = 'md' }: Me
           <div className="w-32 h-10 bg-gray-800/50 rounded-xl" />
         </div>
         <div className="mt-6 w-full h-12 bg-gray-800/20 rounded-2xl" />
+      </div>
+    );
+  }
+
+  if (size === 'compact') {
+    return (
+      <div 
+        onClick={onClick}
+        className="relative group bg-gray-900/40 border border-gray-800/60 p-4 rounded-2xl hover:border-white/20 hover:bg-gray-900/60 transition-all duration-500 overflow-hidden cursor-pointer shadow-xl flex items-center justify-between gap-4"
+      >
+        {/* Interactive Background Glow */}
+        <div 
+          className="absolute -right-6 -top-6 w-24 h-24 blur-[50px] opacity-0 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none" 
+          style={{ backgroundColor: themeColor }}
+        />
+
+        <div className="flex items-center gap-3.5 relative z-10 min-w-0">
+          {/* Icon */}
+          <div className="relative shrink-0">
+            <div 
+              className="absolute inset-0 blur-md opacity-0 group-hover:opacity-40 transition-opacity duration-500 rounded-xl"
+              style={{ backgroundColor: themeColor }}
+            />
+            <div className={cn(
+              "relative p-2.5 rounded-xl ring-1 ring-white/10 shadow-xl backdrop-blur-xl transition-all duration-500 group-hover:scale-105",
+              data.iconBg, data.iconColor
+            )}>
+              <Icon className="h-4.5 w-4.5" />
+            </div>
+          </div>
+          
+          {/* Title and Value */}
+          <div className="flex flex-col min-w-0">
+            <span className="text-[10px] font-bold text-gray-500 group-hover:text-gray-400 transition-colors uppercase tracking-[0.2em] truncate mb-0.5">
+              {data.title}
+            </span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-2xl font-black text-white tracking-tight">
+                {data.value}
+              </span>
+              {data.unit && (
+                <span className="text-[10px] font-bold text-gray-600 uppercase tracking-wider">
+                  {data.unit}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right side: Trend and label */}
+        <div className="flex flex-col items-end gap-1 relative z-10 shrink-0">
+          <div className={cn(
+            "flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border backdrop-blur-md shadow-sm transition-transform group-hover:scale-105",
+            isUp ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : 
+                   "bg-rose-500/10 text-rose-400 border-rose-500/20"
+          )}>
+            {isUp ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+            {data.trend.value}%
+          </div>
+          <p className="text-[8px] text-gray-600 font-bold uppercase tracking-wider group-hover:text-gray-500 transition-colors">
+            {data.trend.label}
+          </p>
+        </div>
       </div>
     );
   }

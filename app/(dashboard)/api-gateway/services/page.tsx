@@ -30,6 +30,8 @@ export default function GlobalServicesPage() {
   const [isDeleting, setIsDeleting] = React.useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
   const [selectedGatewayId, setSelectedGatewayId] = React.useState<string>('');
+  const [editingService, setEditingService] = React.useState<EnhancedService | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
 
   const fetchData = async () => {
       try {
@@ -210,7 +212,14 @@ export default function GlobalServicesPage() {
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48 bg-[#0B101B] border-white/5 rounded-2xl p-2 shadow-2xl backdrop-blur-xl">
-                          <DropdownMenuItem onClick={() => router.push(`/api-gateway/${svc.gateway_id}/services/${svc.id}/edit`)} className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4">
+                          <DropdownMenuItem 
+                            onClick={() => {
+                              setEditingService(svc);
+                              setSelectedGatewayId(svc.gateway_id);
+                              setIsEditModalOpen(true);
+                            }} 
+                            className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4"
+                          >
                             <Edit className="w-3.5 h-3.5 mr-3 text-blue-500" />
                             Modify Configuration
                           </DropdownMenuItem>
@@ -239,6 +248,17 @@ export default function GlobalServicesPage() {
           onClose={() => setIsCreateModalOpen(false)}
           onSuccess={fetchData}
           gatewayId={selectedGatewayId}
+        />
+      )}
+
+      {selectedGatewayId && editingService && (
+        <CreateServiceModal 
+          isOpen={isEditModalOpen}
+          onClose={() => { setIsEditModalOpen(false); setEditingService(null); }}
+          onSuccess={fetchData}
+          gatewayId={selectedGatewayId}
+          editingService={editingService}
+          isEditMode={true}
         />
       )}
     </div>

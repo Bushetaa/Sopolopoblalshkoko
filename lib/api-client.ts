@@ -598,6 +598,10 @@ class APIClient {
     delete: () => this.delete<void>('/api/v1/user-profiles')
   };
 
+  async getUserProviders(): Promise<any[]> {
+    return [];
+  }
+
   public readonly logs = {
     getRequests: () => this.get<RequestLog[]>('/api/v1/logs/requests'),
     getHourlyMetrics: () => this.get<HourlyMetric[]>('/api/v1/logs/hourly-metrics'),

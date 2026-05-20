@@ -31,6 +31,8 @@ export default function RoutesPage({ params }: { params: Promise<{ gatewayId: st
   const [userSlug, setUserSlug] = React.useState<string>('');
   const [snippetsModalOpen, setSnippetsModalOpen] = React.useState(false);
   const [selectedSnippetRoute, setSelectedSnippetRoute] = React.useState<{ method: string, url: string } | null>(null);
+  const [editingRoute, setEditingRoute] = React.useState<EnhancedRoute | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
 
   const fetchData = async () => {
     try {
@@ -210,7 +212,13 @@ export default function RoutesPage({ params }: { params: Promise<{ gatewayId: st
                             <Code2 className="w-3.5 h-3.5 mr-3" />
                             Integration Code
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push(`/api-gateway/${gatewayId}/routes/${rt.id}/edit`)} className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4">
+                          <DropdownMenuItem 
+                            onClick={() => {
+                              setEditingRoute(rt);
+                              setIsEditModalOpen(true);
+                            }} 
+                            className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4"
+                          >
                             <Edit className="w-3.5 h-3.5 mr-3 text-blue-500" />
                             Modify Parameters
                           </DropdownMenuItem>
@@ -239,6 +247,17 @@ export default function RoutesPage({ params }: { params: Promise<{ gatewayId: st
         onSuccess={fetchData}
         gatewayId={gatewayId}
       />
+
+      {editingRoute && (
+        <CreateRouteModal 
+          isOpen={isEditModalOpen}
+          onClose={() => { setIsEditModalOpen(false); setEditingRoute(null); }}
+          onSuccess={fetchData}
+          gatewayId={gatewayId}
+          editingRoute={editingRoute}
+          isEditMode={true}
+        />
+      )}
 
       {selectedSnippetRoute && (
         <CodeSnippetsModal

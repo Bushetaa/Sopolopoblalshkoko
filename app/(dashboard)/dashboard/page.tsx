@@ -45,7 +45,7 @@ export default function DashboardPage() {
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {kpiCards.map((card) => (
-          <MetricCard key={card.id} data={card} isLoading={isLoading} />
+          <MetricCard key={card.id} data={card} isLoading={isLoading} size="compact" />
         ))}
       </div>
 

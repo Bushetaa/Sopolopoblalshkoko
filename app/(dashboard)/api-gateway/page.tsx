@@ -23,6 +23,8 @@ export default function ApiGatewayPage() {
   const [isDeleting, setIsDeleting] = React.useState<string | null>(null);
   const [isWizardOpen, setIsWizardOpen] = React.useState(false);
   const [isManualCreateOpen, setIsManualCreateOpen] = React.useState(false);
+  const [editingGateway, setEditingGateway] = React.useState<Gateway | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
 
   const fetchGateways = async () => {
       try {
@@ -177,7 +179,13 @@ export default function ApiGatewayPage() {
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48 bg-[#0B101B] border-white/5 rounded-2xl p-2 shadow-2xl backdrop-blur-xl">
-                          <DropdownMenuItem onClick={() => router.push(`/api-gateway/${gw.id}/edit`)} className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4">
+                          <DropdownMenuItem 
+                            onClick={() => {
+                              setEditingGateway(gw);
+                              setIsEditModalOpen(true);
+                            }} 
+                            className="cursor-pointer rounded-xl text-[10px] font-black uppercase tracking-widest text-[#94A3B8] hover:text-white hover:bg-white/5 focus:bg-white/5 focus:text-white transition-all py-3 px-4"
+                          >
                             <Edit className="w-3.5 h-3.5 mr-3 text-blue-500" />
                             Modify Parameters
                           </DropdownMenuItem>
@@ -210,6 +218,14 @@ export default function ApiGatewayPage() {
         isOpen={isManualCreateOpen}
         onClose={() => setIsManualCreateOpen(false)}
         onSuccess={fetchGateways}
+      />
+
+      <CreateGatewayModal 
+        isOpen={isEditModalOpen}
+        onClose={() => { setIsEditModalOpen(false); setEditingGateway(null); }}
+        onSuccess={fetchGateways}
+        editingGateway={editingGateway || undefined}
+        isEditMode={true}
       />
     </div>
   );

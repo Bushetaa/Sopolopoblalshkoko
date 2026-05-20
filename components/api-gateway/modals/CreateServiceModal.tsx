@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Server } from 'lucide-react';
 import { ServiceForm, ServiceFormValues } from '@/components/services/ServiceForm';
-import { apiClient, Gateway, GatewayCollection } from '@/lib/api-client';
+import { apiClient, Gateway, GatewayCollection, Service } from '@/lib/api-client';
 import { toast } from '@/hooks/use-toast';
 
 interface CreateServiceModalProps {
@@ -11,9 +11,11 @@ interface CreateServiceModalProps {
   onClose: () => void;
   onSuccess: () => void;
   gatewayId: string;
+  editingService?: Service;
+  isEditMode?: boolean;
 }
 
-export default function CreateServiceModal({ isOpen, onClose, onSuccess, gatewayId }: CreateServiceModalProps) {
+export default function CreateServiceModal({ isOpen, onClose, onSuccess, gatewayId, editingService, isEditMode = false }: CreateServiceModalProps) {
   const [gateway, setGateway] = useState<Gateway | null>(null);
   const [collections, setCollections] = useState<GatewayCollection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,15 +46,23 @@ export default function CreateServiceModal({ isOpen, onClose, onSuccess, gateway
 
   const handleSubmit = async (data: ServiceFormValues) => {
     try {
-      await apiClient.services.create({
-        ...data,
-        gateway_id: gatewayId,
-      });
-      toast({ title: "Success", description: "Service created successfully!" });
+      if (isEditMode && editingService?.id) {
+        await apiClient.services.update(editingService.id, {
+          ...data,
+          gateway_id: gatewayId,
+        });
+        toast({ title: "Success", description: "Service updated successfully!" });
+      } else {
+        await apiClient.services.create({
+          ...data,
+          gateway_id: gatewayId,
+        });
+        toast({ title: "Success", description: "Service created successfully!" });
+      }
       onSuccess();
       onClose();
     } catch (error: any) {
-      toast({ title: "Error", description: error.message || "Failed to create service", variant: "destructive" });
+      toast({ title: "Error", description: error.message || `Failed to ${isEditMode ? 'update' : 'create'} service`, variant: "destructive" });
     }
   };
 
@@ -69,10 +79,14 @@ export default function CreateServiceModal({ isOpen, onClose, onSuccess, gateway
               </div>
               <div>
                 <h2 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
-                  Create Service
-                  <span className="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest text-blue-400">Manual Entry</span>
+                  {isEditMode ? "Modify Service" : "Create Service"}
+                  <span className="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest text-blue-400">
+                    {isEditMode ? "Update" : "Manual Entry"}
+                  </span>
                 </h2>
-                <p className="text-[#94A3B8] font-medium text-xs">Configure a new backend service for {gateway?.name || "your gateway"}</p>
+                <p className="text-[#94A3B8] font-medium text-xs">
+                  {isEditMode ? `Modify configuration for ${editingService?.name || 'this service'}` : `Configure a new backend service for ${gateway?.name || "your gateway"}`}
+                </p>
               </div>
             </div>
             <button 
@@ -92,6 +106,18 @@ export default function CreateServiceModal({ isOpen, onClose, onSuccess, gateway
             </div>
           ) : (
             <ServiceForm 
+              key={isEditMode ? editingService?.id : 'create'}
+              initialValues={isEditMode && editingService ? {
+                name: editingService.name,
+                protocol: editingService.protocol as "http" | "grpc",
+                lb_policy: editingService.lb_policy as any,
+                collection_id: editingService.collection_id || '',
+                health_check_path: editingService.health_check_path || '',
+                health_check_interval: editingService.health_check_interval || '',
+                health_check_timeout: editingService.health_check_timeout || '',
+                health_check_fail_threshold: editingService.health_check_fail_threshold || 0,
+                health_check_pass_threshold: editingService.health_check_pass_threshold || 0,
+              } : undefined}
               gatewayMode={(gateway?.mode as "single" | "pro") || "pro"}
               collections={collections}
               onSubmit={handleSubmit}
