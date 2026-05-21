@@ -35,9 +35,46 @@ export default function RouteDetailsPage({ params }: { params: Promise<{ gateway
     isNew ? [] : []
   );
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(!isNew);
   const [editingRoute, setEditingRoute] = useState<GatewayRoute | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  React.useEffect(() => {
+    if (!isNew && routeId) {
+      const fetchRoute = async () => {
+        try {
+          const rt = await apiClient.gatewayRoutes.getById(routeId);
+          setPath(rt.path);
+          setMethod(rt.method || 'GET');
+          setTimeoutVal(rt.timeout || '30s');
+          setIsAggregate(rt.is_aggregate || false);
+          
+          if (!rt.is_aggregate && rt.service_id) {
+            try {
+              const svc = await apiClient.services.getById(rt.service_id);
+              setService(svc.name);
+            } catch (e) {
+              setService('Unknown Service');
+            }
+          }
+          
+          if (rt.is_aggregate) {
+            setMergeStrategy(rt.aggregate_merge_strategy || 'merge_object');
+            setAggTimeout(rt.aggregate_timeout || '30s');
+            setPartialFailure(rt.allow_partial_failure || false);
+            // If there are subrequests stored in the route object, we should parse them here
+            // Assuming they might be in a metadata or specific field if not already handled
+          }
+        } catch (error) {
+          console.error("Failed to fetch route details:", error);
+          setPath("Error Loading Route");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchRoute();
+    }
+  }, [routeId, isNew]);
 
   const handleAddSubRequest = () => {
     setSubRequests([...subRequests, { id: Math.random().toString(), key: '', service: '', targetPath: '', method: 'GET', required: false, timeout: '' }]);

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import {
   Shield, Lock, Key,
-  Clock, LogOut, Eye, EyeOff, Loader2, AlertCircle, AtSign, Check, X,
+  Clock, LogOut, Eye, EyeOff, Loader2, AlertCircle, AtSign, Check, X, Zap, Server, Network
 } from "lucide-react";
 import {
   Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,
@@ -184,90 +184,141 @@ export default function SecuritySettingsPage() {
 
       <Separator />
 
-      {/* ===== Workspace Slug (Username) ===== */}
-      <Card className="border-indigo-500/30 bg-gray-900/50 backdrop-blur-sm relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-transparent pointer-events-none" />
-        <CardHeader className="relative">
-          <CardTitle className="flex items-center gap-2">
-            <AtSign className="h-5 w-5 text-indigo-400" />
-            Workspace Slug
+      {/* ===== Infrastructure Identity (Hostname) ===== */}
+      <Card className="bg-[#0B101B] border-white/5 rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[100px] -z-10 transition-opacity group-hover:opacity-100 opacity-50" />
+        
+        <CardHeader className="relative pb-4">
+          <div className="flex items-center gap-3 text-blue-400 font-black text-[10px] uppercase tracking-[0.3em] mb-2">
+            <div className="w-8 h-[2px] bg-blue-500" />
+            Infrastructure Identity
+          </div>
+          <CardTitle className="flex items-center gap-3 text-2xl font-black tracking-tight text-white">
+            <AtSign className="h-6 w-6 text-blue-500" />
+            Workspace Hostname
           </CardTitle>
-          <CardDescription>
-            Your unique username for API Gateway URLs. All your gateway routes will be prefixed with this slug.
+          <CardDescription className="text-[13px] text-[#64748B] font-medium max-w-lg">
+            Your unique infrastructure identifier. This hostname defines the entry point for all your gateway deployments and traffic routing.
           </CardDescription>
         </CardHeader>
-        <CardContent className="relative space-y-4">
+
+        <CardContent className="relative space-y-6">
           {isLoadingSlug ? (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Loading slug...
+            <div className="flex items-center justify-center py-10 bg-[#050810]/60 rounded-3xl border border-white/5">
+              <div className="flex items-center gap-3 text-sm text-[#64748B] font-black uppercase tracking-widest">
+                <Loader2 className="h-5 w-5 animate-spin text-blue-500" />
+                Synchronizing Hostname...
+              </div>
             </div>
           ) : isEditingSlug ? (
-            <>
+            <div className="p-6 rounded-3xl bg-[#050810]/60 border border-white/5 shadow-inner space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="slug">Slug</Label>
-                <Input
-                  id="slug"
-                  value={slug}
-                  onChange={(e) => handleSlugChange(e.target.value)}
-                  className={`bg-gray-950 border-gray-800 font-mono ${slugError ? "border-red-500/50 focus-visible:ring-red-500" : isSlugValid ? "border-green-500/50 focus-visible:ring-green-500" : ""}`}
-                  placeholder="my-workspace"
-                  disabled={isSavingSlug}
-                />
+                <Label htmlFor="slug" className="text-[10px] font-bold text-[#64748B] uppercase tracking-[0.1em] ml-1">Proposed Hostname Identifier</Label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <AtSign className="w-4 h-4 text-[#475569] group-focus-within:text-[#2563EB] transition-colors" />
+                  </div>
+                  <Input
+                    id="slug"
+                    value={slug}
+                    onChange={(e) => handleSlugChange(e.target.value)}
+                    className={`h-12 pl-11 bg-[#0B101B] border-[#1E293B] focus:border-[#2563EB]/50 focus:ring-0 rounded-xl text-sm transition-all text-white font-mono ${slugError ? "border-red-500/50" : isSlugValid ? "border-green-500/50" : ""}`}
+                    placeholder="my-workspace"
+                    disabled={isSavingSlug}
+                  />
+                </div>
                 {slugError && (
-                  <p className="text-xs text-red-400 flex items-center gap-1">
-                    <X className="h-3 w-3" /> {slugError}
+                  <p className="text-[10px] text-red-400 font-bold uppercase tracking-wide flex items-center gap-2 ml-1">
+                    <AlertCircle className="h-3 w-3" /> {slugError}
                   </p>
                 )}
                 {isSlugValid && (
-                  <p className="text-xs text-green-400 flex items-center gap-1">
-                    <Check className="h-3 w-3" /> Slug looks good!
+                  <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-wide flex items-center gap-2 ml-1">
+                    <Check className="h-3 w-3" /> Hostname availability verified
                   </p>
                 )}
               </div>
 
               {/* Live Preview */}
               {slug && (
-                <div className="p-3 rounded-lg border border-indigo-500/20 bg-indigo-500/5">
-                  <p className="text-xs text-muted-foreground mb-1">Your URLs will start with:</p>
-                  <code className="text-sm text-indigo-300 font-mono">/{slug}/...</code>
+                <div className="space-y-3">
+                  <p className="text-[9px] font-black text-[#475569] uppercase tracking-[0.2em] ml-1">Deployment Preview:</p>
+                  <div className="p-4 rounded-2xl border border-blue-500/10 bg-blue-500/5 flex items-center gap-3">
+                    <code className="text-xs text-blue-400 font-black">/{slug}/...</code>
+                  </div>
                 </div>
               )}
 
-              <div className="flex gap-2">
+              <div className="flex gap-3 pt-2">
                 <Button
                   onClick={handleSaveSlug}
                   disabled={isSavingSlug || !isSlugValid || !isSlugChanged}
-                  className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 flex items-center gap-2"
+                  className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white h-11 px-6 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-500/25 active:scale-95"
                 >
-                  {isSavingSlug && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {hasExistingSlug ? "Update Slug" : "Create Profile"}
+                  {isSavingSlug && <Loader2 className="h-3.5 w-3.5 animate-spin mr-2" />}
+                  {hasExistingSlug ? "Update Hostname" : "Deploy Profile"}
                 </Button>
                 {hasExistingSlug && (
-                  <Button variant="ghost" onClick={handleCancelSlugEdit} disabled={isSavingSlug}>
+                  <Button 
+                    variant="ghost" 
+                    onClick={handleCancelSlugEdit} 
+                    disabled={isSavingSlug}
+                    className="h-11 px-6 rounded-xl text-[10px] font-black uppercase tracking-widest text-[#64748B] hover:text-white hover:bg-white/5 transition-all"
+                  >
                     Cancel
                   </Button>
                 )}
               </div>
-            </>
+            </div>
           ) : (
-            /* Display mode: slug is set */
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <code className="text-lg font-mono text-indigo-300 bg-indigo-500/10 px-3 py-1.5 rounded-md border border-indigo-500/20">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 p-6 rounded-3xl bg-[#050810]/60 border border-white/5 shadow-inner">
+              <div className="space-y-4 flex-1">
+                <div className="flex items-center gap-3">
+                  <code className="text-2xl font-black font-mono text-blue-400 bg-blue-500/10 px-4 py-2 rounded-xl border border-blue-500/20 shadow-lg">
                     @{savedSlug}
                   </code>
-                  <Badge variant="outline" className="border-green-500/50 text-green-400 text-xs">
-                    Active
-                  </Badge>
+                  <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[9px] font-black uppercase tracking-widest">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Active Node
+                  </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  URLs: <code className="text-indigo-400">/{savedSlug}/...</code>
-                </p>
+                
+                <div className="flex flex-col gap-3">
+                  <p className="text-[10px] text-[#475569] font-black uppercase tracking-[0.2em]">Active Routing Topologies:</p>
+                  <div className="space-y-2.5">
+                    <div className="flex items-center gap-3 group/url">
+                      <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shadow-sm">
+                        <Zap className="h-4 w-4 text-blue-400" />
+                      </div>
+                      <div className="flex flex-col">
+                        <code className="text-[11px] font-bold text-white group-hover/url:text-blue-400 transition-colors">
+                          /{savedSlug}/[gateway-path]/...
+                        </code>
+                        <span className="text-[8px] text-[#475569] font-black uppercase tracking-widest">Standard Mode URL (Direct Routing)</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 group/url">
+                      <div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20 shadow-sm">
+                        <Server className="h-4 w-4 text-purple-400" />
+                      </div>
+                      <div className="flex flex-col">
+                        <code className="text-[11px] font-bold text-white group-hover/url:text-purple-400 transition-colors">
+                          /{savedSlug}/[gateway-name]/[service-path]/...
+                        </code>
+                        <span className="text-[8px] text-[#475569] font-black uppercase tracking-widest">Professional Mode URL (Cluster Topology)</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <Button variant="outline" size="sm" onClick={() => setIsEditingSlug(true)} className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10">
-                Edit Slug
+              <Button 
+                onClick={() => setIsEditingSlug(true)}
+                variant="outline" 
+                className="h-11 px-6 border-white/5 bg-[#0B101B] hover:bg-white/5 text-[#94A3B8] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+              >
+                <Network className="w-4 h-4 mr-2" />
+                Migrate Hostname
               </Button>
             </div>
           )}

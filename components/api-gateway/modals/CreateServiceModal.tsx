@@ -47,10 +47,8 @@ export default function CreateServiceModal({ isOpen, onClose, onSuccess, gateway
   const handleSubmit = async (data: ServiceFormValues) => {
     try {
       if (isEditMode && editingService?.id) {
-        await apiClient.services.update(editingService.id, {
-          ...data,
-          gateway_id: gatewayId,
-        });
+        // Don't include gateway_id in updates, it's immutable
+        await apiClient.services.update(editingService.id, data);
         toast({ title: "Success", description: "Service updated successfully!" });
       } else {
         await apiClient.services.create({

@@ -14,13 +14,13 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ gatew
   const { gatewayId, serviceId } = use(params);
   const isNew = serviceId === 'new';
 
-  const [name, setName] = useState(isNew ? '' : 'users-service');
+  const [name, setName] = useState(isNew ? '' : 'Loading...');
   const [protocol, setProtocol] = useState<'http' | 'grpc'>(isNew ? 'http' : 'http');
   const [lbPolicy, setLbPolicy] = useState('round_robin');
   const [collection, setCollection] = useState('');
   const [showHealthCheck, setShowHealthCheck] = useState(false);
   
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(!isNew);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -30,6 +30,30 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ gatew
   const [hcTimeout, setHcTimeout] = useState('');
   const [hcFail, setHcFail] = useState(0);
   const [hcPass, setHcPass] = useState(0);
+
+  React.useEffect(() => {
+    if (!isNew && serviceId) {
+      const fetchService = async () => {
+        try {
+          const svc = await apiClient.services.getById(serviceId);
+          setName(svc.name);
+          setProtocol((svc.protocol as 'http' | 'grpc') || 'http');
+          setLbPolicy(svc.lb_policy || 'round_robin');
+          setHcPath(svc.health_check_path || '');
+          setHcInterval(svc.health_check_interval || '');
+          setHcTimeout(svc.health_check_timeout || '');
+          setHcFail(svc.health_check_fail_threshold || 0);
+          setHcPass(svc.health_check_pass_threshold || 0);
+        } catch (error) {
+          console.error("Failed to fetch service details:", error);
+          setName("Error Loading Service");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchService();
+    }
+  }, [serviceId, isNew]);
 
   const isProMode = true;
 
