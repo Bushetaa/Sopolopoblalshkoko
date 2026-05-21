@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { Workflow, Globe, Loader2, ChevronDown, RefreshCw } from "lucide-react";
+import { Workflow, Globe, Loader2, ChevronDown, RefreshCw, Maximize, Minimize } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   apiClient,
@@ -11,6 +11,13 @@ import {
   GatewayRoute,
   GatewayPlugin,
 } from "@/lib/api-client";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import WorkflowCanvas from "@/components/api-gateway/workflow/WorkflowCanvas";
 import {
   buildWorkflowGraph,
@@ -33,6 +40,8 @@ export default function WorkflowViewPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [selectedNode, setSelectedNode] = useState<WorkflowNodeData | null>(null);
 
   // Fetch all data
   const fetchAllData = async (showRefresh = false) => {
@@ -103,29 +112,9 @@ export default function WorkflowViewPage() {
     };
   }, [selectedGatewayId, services, serviceTargets, routes, plugins]);
 
-  // Handle node click → navigate to detail page
+  // Handle node click → show details side panel
   const handleNodeClick = (node: WorkflowNodeData) => {
-    const data = node.data;
-    switch (node.type) {
-      case "gateway":
-        if (data.id) router.push(`/api-gateway/${data.id}`);
-        break;
-      case "service":
-        if (data.gateway_id)
-          router.push(`/api-gateway/${data.gateway_id}/services`);
-        break;
-      case "serviceTarget":
-        router.push(`/api-gateway/service-targets`);
-        break;
-      case "route":
-        if (data.gateway_id)
-          router.push(`/api-gateway/${data.gateway_id}/routes`);
-        break;
-      case "plugin":
-        if (data.gateway_id)
-          router.push(`/api-gateway/${data.gateway_id}/plugins`);
-        break;
-    }
+    setSelectedNode(node);
   };
 
   if (isLoading) {
@@ -271,7 +260,21 @@ export default function WorkflowViewPage() {
       )}
 
       {/* Canvas area */}
-      <div className="flex-1 bg-[#0B101B] border border-white/5 rounded-[1.5rem] overflow-hidden shadow-2xl relative">
+      <div
+        className={cn(
+          "bg-[#0B101B] border border-white/5 overflow-hidden shadow-2xl relative transition-all duration-300",
+          isFullscreen ? "fixed inset-0 z-50 rounded-none" : "flex-1 rounded-[1.5rem]"
+        )}
+      >
+        {/* Fullscreen Toggle */}
+        <button
+          onClick={() => setIsFullscreen(!isFullscreen)}
+          className="absolute top-4 left-4 z-10 w-9 h-9 rounded-xl bg-[#0B101B]/80 backdrop-blur-sm border border-white/10 text-white/60 hover:text-white hover:border-white/20 flex items-center justify-center transition-all shadow-lg"
+          title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+        >
+          {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
+        </button>
+
         {graph && graph.nodes.length > 0 ? (
           <WorkflowCanvas graph={graph} onNodeClick={handleNodeClick} />
         ) : (
@@ -304,6 +307,57 @@ export default function WorkflowViewPage() {
           onClick={() => setIsDropdownOpen(false)}
         />
       )}
+
+      {/* Node Details Side Panel */}
+      <Sheet open={!!selectedNode} onOpenChange={(open) => !open && setSelectedNode(null)}>
+        <SheetContent className="bg-[#0B101B] border-white/10 text-white w-[400px] sm:w-[540px]">
+          <SheetHeader className="mb-6">
+            <SheetTitle className="text-xl font-bold">{selectedNode?.label}</SheetTitle>
+            <SheetDescription className="text-blue-400 font-medium">
+              {selectedNode?.subtitle}
+            </SheetDescription>
+          </SheetHeader>
+          
+          {selectedNode && (
+            <div className="flex flex-col gap-6 h-full pb-20">
+              <div className="bg-[#0F172A] rounded-xl p-4 border border-white/5">
+                <h3 className="text-xs font-black uppercase tracking-wider text-white/50 mb-3">
+                  Raw Configuration
+                </h3>
+                <pre className="text-[11px] font-mono text-emerald-400 overflow-auto max-h-[400px]">
+                  {JSON.stringify(selectedNode.data, null, 2)}
+                </pre>
+              </div>
+              
+              <button
+                onClick={() => {
+                  const data = selectedNode.data;
+                  switch (selectedNode.type) {
+                    case "gateway":
+                      if (data.id) router.push(`/api-gateway/${data.id}`);
+                      break;
+                    case "service":
+                      if (data.gateway_id) router.push(`/api-gateway/${data.gateway_id}/services`);
+                      break;
+                    case "serviceTarget":
+                      router.push(`/api-gateway/service-targets`);
+                      break;
+                    case "route":
+                      if (data.gateway_id) router.push(`/api-gateway/${data.gateway_id}/routes`);
+                      break;
+                    case "plugin":
+                      if (data.gateway_id) router.push(`/api-gateway/${data.gateway_id}/plugins`);
+                      break;
+                  }
+                }}
+                className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] active:scale-95 mt-auto"
+              >
+                Edit Full Configuration
+              </button>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

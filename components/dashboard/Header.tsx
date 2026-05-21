@@ -16,13 +16,13 @@ export default function Header() {
   return (
     <header className="h-16 sticky top-0 z-20 bg-gray-950 border-b border-gray-800 px-6 flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <button 
+        <button
           onClick={toggleMobileSidebar}
           className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
         >
           <Menu className="h-6 w-6" />
         </button>
-        
+
         <div className="flex flex-col">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-1.5 text-xs text-gray-500">
@@ -43,7 +43,7 @@ export default function Header() {
               </React.Fragment>
             ))}
           </nav>
-          
+
           {/* Page Title */}
           <h1 className="text-lg font-semibold text-gray-50">
             {lastBreadcrumb?.label || 'Overview'}
@@ -65,13 +65,13 @@ export default function Header() {
 
       {/* Actions Bar */}
       <div className="flex items-center gap-2 md:gap-4">
-        <Link 
-          href="/docs" 
+        <Link
+          href="/docs"
           className="hidden sm:block text-sm text-gray-400 hover:text-white transition-colors px-3 py-1.5"
         >
           Docs
         </Link>
-        
+
         <button className="relative p-2 text-gray-400 hover:text-white transition-colors">
           <Bell className="h-5 w-5" />
           <span className="absolute top-2 right-2 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center border-2 border-gray-950">
@@ -86,10 +86,10 @@ export default function Header() {
           </div>
           <Link href="/settings/general" className="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center text-gray-400 hover:text-white transition-colors border border-gray-800 overflow-hidden">
             {user?.avatarUrl ? (
-              <img 
-                src={user.avatarUrl} 
-                alt={user.displayName} 
-                className="w-full h-full object-cover" 
+              <img
+                src={user.avatarUrl}
+                alt={user.displayName}
+                className="w-full h-full object-cover"
               />
             ) : (
               <UserIcon className="w-4 h-4" />

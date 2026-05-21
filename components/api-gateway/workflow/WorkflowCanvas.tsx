@@ -279,6 +279,43 @@ export default function WorkflowCanvas({
         </button>
       </div>
 
+      {/* Minimap */}
+      <div className="absolute bottom-4 left-4 w-40 h-28 bg-[#0B101B]/90 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden shadow-2xl z-10 pointer-events-none">
+        <svg
+          viewBox={`0 0 ${Math.max(1000, bounds.width + 600)} ${Math.max(600, bounds.height + 600)}`}
+          className="w-full h-full p-2"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          {/* Nodes */}
+          {graph.nodes.map((n) => (
+            <rect
+              key={n.id}
+              x={n.x}
+              y={n.y}
+              width={240}
+              height={80}
+              rx="20"
+              fill={NODE_COLORS[n.type].border}
+              opacity="0.8"
+            />
+          ))}
+          {/* Viewport */}
+          {containerSize.w > 0 && (
+            <rect
+              x={-transform.x / transform.scale}
+              y={-transform.y / transform.scale}
+              width={containerSize.w / transform.scale}
+              height={containerSize.h / transform.scale}
+              fill="rgba(59, 130, 246, 0.1)"
+              stroke="#3B82F6"
+              strokeWidth={Math.max(20, bounds.width / 40)}
+              rx="30"
+              className="transition-all duration-75"
+            />
+          )}
+        </svg>
+      </div>
+
       {/* Legend */}
       <div className="absolute top-4 right-4 flex flex-wrap gap-3 bg-[#0B101B]/80 backdrop-blur-sm border border-white/5 rounded-xl px-4 py-3">
         {Object.entries(NODE_COLORS).map(([type, c]) => (

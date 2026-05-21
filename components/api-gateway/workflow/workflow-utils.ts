@@ -211,7 +211,7 @@ export function buildWorkflowGraph(
           id: pluginNodeId,
           type: "plugin",
           label: plugin.name,
-          subtitle: `Phase: ${plugin.phase}`,
+          subtitle: `Route Plugin • Phase: ${plugin.phase}`,
           status: plugin.enabled !== false && plugin.is_enabled !== false ? "active" : "idle",
           x: 0,
           y: 0,
@@ -238,7 +238,7 @@ export function buildWorkflowGraph(
           id: pluginNodeId,
           type: "plugin",
           label: plugin.name,
-          subtitle: `Phase: ${plugin.phase}`,
+          subtitle: `Service Plugin • Phase: ${plugin.phase}`,
           status: plugin.enabled !== false && plugin.is_enabled !== false ? "active" : "idle",
           x: 0,
           y: 0,
@@ -267,7 +267,7 @@ export function buildWorkflowGraph(
           id: pluginNodeId,
           type: "plugin",
           label: plugin.name,
-          subtitle: `Phase: ${plugin.phase}`,
+          subtitle: `Gateway Plugin • Phase: ${plugin.phase}`,
           status: plugin.enabled !== false && plugin.is_enabled !== false ? "active" : "idle",
           x: 0,
           y: 0,
@@ -493,24 +493,29 @@ function computeHierarchicalLayout(
     currentY += orphanBlockH + SERVICE_BAND_GAP;
   }
 
-  // Position gateway-level plugins below or near the gateway
+  // Position gateway (col 0) — vertically centered relative to all content
+  const totalContentHeight = currentY - SERVICE_BAND_GAP - CANVAS_PADDING;
+  
+  // Account for gateway plugins in the gateway block height
+  const gwTotalNodes = 1 + gwPluginIds.length;
+  const gwBlockHeight = gwTotalNodes * (NODE_HEIGHT + ROW_GAP) - ROW_GAP;
+  
+  // Vertically center the entire gateway block
+  const gwStartY = CANVAS_PADDING + Math.max(0, (totalContentHeight - gwBlockHeight) / 2);
+  
+  gwNode.x = COL_X[0];
+  gwNode.y = gwStartY;
+
+  // Position gateway-level plugins directly below the gateway in the same column
   if (gwPluginIds.length > 0) {
-    const gwPluginBlockH = gwPluginIds.length * (NODE_HEIGHT + ROW_GAP) - ROW_GAP;
-    const gwPluginStartY = currentY;
     gwPluginIds.forEach((pId, i) => {
       const pNode = nodeMap.get(pId);
       if (pNode) {
-        pNode.x = COL_X[1]; // Next to gateway
-        pNode.y = gwPluginStartY + i * (NODE_HEIGHT + ROW_GAP);
+        pNode.x = COL_X[0];
+        pNode.y = gwStartY + (i + 1) * (NODE_HEIGHT + ROW_GAP);
       }
     });
-    currentY += gwPluginBlockH + SERVICE_BAND_GAP;
   }
-
-  // Position gateway (col 0) — vertically centered relative to all content
-  const totalContentHeight = currentY - SERVICE_BAND_GAP - CANVAS_PADDING;
-  gwNode.x = COL_X[0];
-  gwNode.y = CANVAS_PADDING + Math.max(0, (totalContentHeight - NODE_HEIGHT) / 2);
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────
@@ -535,7 +540,17 @@ export function getEdgePath(
   sourceNode: WorkflowNodeData,
   targetNode: WorkflowNodeData
 ): string {
-  const isForward = targetNode.x >= sourceNode.x;
+  // If they are in the exact same column, draw an orthogonal bracket on the left side
+  if (sourceNode.x === targetNode.x) {
+    const sx = sourceNode.x;
+    const sy = sourceNode.y + NODE_HEIGHT / 2;
+    const tx = targetNode.x;
+    const ty = targetNode.y + NODE_HEIGHT / 2;
+    const offset = 32; // Rigid bracket offset to the left
+    return `M ${sx} ${sy} L ${sx - offset} ${sy} L ${tx - offset} ${ty} L ${tx} ${ty}`;
+  }
+
+  const isForward = targetNode.x > sourceNode.x;
 
   const sx = isForward ? sourceNode.x + NODE_WIDTH : sourceNode.x;
   const sy = sourceNode.y + NODE_HEIGHT / 2;

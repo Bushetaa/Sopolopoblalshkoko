@@ -44,21 +44,21 @@ export default function Sidebar({ className, onItemClick }: { className?: string
 
   const isSubItemActive = (path: string, item?: MenuItem): boolean => {
     if (!mounted) return false;
-    
+
     // Exact match
     if (pathname === path) return true;
-    
+
     // Sub-path match (e.g., /services/123 should highlight /services)
     if (pathname.startsWith(path + '/')) {
       // If we are checking "/api-gateway" but the path is actually something more specific like "/api-gateway/services"
       // we need to make sure this is the "best" match.
       const section = MENU_SECTIONS.find(s => s.items.some(i => i.name === 'Gateway Manager'));
       const gatewayManager = section?.items.find(i => i.name === 'Gateway Manager');
-      
+
       if (gatewayManager?.subItems) {
-        const betterMatch = gatewayManager.subItems.some(sub => 
-          sub.path !== path && 
-          pathname.startsWith(sub.path) && 
+        const betterMatch = gatewayManager.subItems.some(sub =>
+          sub.path !== path &&
+          pathname.startsWith(sub.path) &&
           sub.path.length > path.length
         );
         return !betterMatch;

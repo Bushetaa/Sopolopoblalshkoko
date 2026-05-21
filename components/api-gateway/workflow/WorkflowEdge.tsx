@@ -27,6 +27,8 @@ export default function WorkflowEdge({
   const gradientId = `edge-gradient-${edge.id}`;
   const glowId = `edge-glow-${edge.id}`;
   const animDelay = index * 0.15;
+  
+  const isGatewayPlugin = edge.sourceType === "gateway" && edge.targetType === "plugin";
 
   return (
     <g
@@ -43,7 +45,7 @@ export default function WorkflowEdge({
         </linearGradient>
         {/* Glow filter */}
         <filter id={glowId} x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feGaussianBlur stdDeviation={isGatewayPlugin ? "5" : "3"} result="blur" />
           <feMerge>
             <feMergeNode in="blur" />
             <feMergeNode in="SourceGraphic" />
@@ -56,8 +58,8 @@ export default function WorkflowEdge({
         d={path}
         fill="none"
         stroke={sourceColor}
-        strokeWidth="4"
-        strokeOpacity="0.15"
+        strokeWidth={isGatewayPlugin ? "6" : "4"}
+        strokeOpacity={isGatewayPlugin ? "0.3" : "0.15"}
         filter={`url(#${glowId})`}
       />
 
@@ -66,30 +68,35 @@ export default function WorkflowEdge({
         d={path}
         fill="none"
         stroke={`url(#${gradientId})`}
-        strokeWidth="2"
-        strokeDasharray="8 6"
+        strokeWidth={isGatewayPlugin ? "4" : "2"}
+        strokeDasharray={isGatewayPlugin ? "none" : "8 6"}
         strokeLinecap="round"
+        strokeLinejoin="round"
         style={{
-          animation: `dashFlow 1.5s linear infinite`,
+          animation: isGatewayPlugin ? "none" : `dashFlow 1.5s linear infinite`,
         }}
       />
 
       {/* Animated dot traveling along the path */}
-      <circle r="3" fill={targetColor} opacity="0.9">
-        <animateMotion
-          dur={`${2.5 + index * 0.3}s`}
-          repeatCount="indefinite"
-          path={path}
-        />
-      </circle>
-      {/* Dot glow */}
-      <circle r="6" fill={targetColor} opacity="0.2">
-        <animateMotion
-          dur={`${2.5 + index * 0.3}s`}
-          repeatCount="indefinite"
-          path={path}
-        />
-      </circle>
+      {!isGatewayPlugin && (
+        <>
+          <circle r="3" fill={targetColor} opacity="0.9">
+            <animateMotion
+              dur={`${2.5 + index * 0.3}s`}
+              repeatCount="indefinite"
+              path={path}
+            />
+          </circle>
+          {/* Dot glow */}
+          <circle r="6" fill={targetColor} opacity="0.2">
+            <animateMotion
+              dur={`${2.5 + index * 0.3}s`}
+              repeatCount="indefinite"
+              path={path}
+            />
+          </circle>
+        </>
+      )}
     </g>
   );
 }
