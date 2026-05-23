@@ -1,0 +1,204 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Get logs
+meta:
+  id: wrk_ac201facf3534f6dae4f9c6e7b67a4ef
+  created: 1779028828389
+  modified: 1779028884603
+  description: ""
+collection:
+  - name: Authentication
+    meta:
+      id: fld_aaeda8324ad24d568791a67c1d7b4775
+      created: 1777496922068
+      modified: 1779029814261
+      sortKey: -1779029709940
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/auth/signin/email-password"
+        name: Login (Email/Password)
+        meta:
+          id: req_5b0d6c424d3b49fca2397d58f17cf3b7
+          created: 1777496922068
+          modified: 1779029412216
+          isPrivate: false
+          description: ""
+          sortKey: -1777496922067
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "email": "abdalrahmantouny63@gmail.com",
+              "password": "123456789"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: get logs
+    meta:
+      id: fld_daf150b6e764438eb74236d715f922ab
+      created: 1779029709840
+      modified: 1779029709840
+      sortKey: -1779029709840
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/api/v1/logs/requests"
+        name: get requests logs
+        meta:
+          id: req_d9c378f094eb46e5bc30e16fc82c4cdb
+          created: 1779029820296
+          modified: 1779031906803
+          isPrivate: false
+          description: ""
+          sortKey: -1779029820296
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/logs/hourly-metrics"
+        name: hourly_gateway_metrics
+        meta:
+          id: req_c796896410594bf888256587c67a8c91
+          created: 1779030015488
+          modified: 1779031977107
+          isPrivate: false
+          description: ""
+          sortKey: -1778701619019
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/v1/logs/hourly-metrics-mv"
+        name: hourly_metrics_mv
+        meta:
+          id: req_18cb81f749b04c0793c40ea6694e61c7
+          created: 1779030195690
+          modified: 1779032144933
+          isPrivate: false
+          description: ""
+          sortKey: -1778537518380.5
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: N8n request
+    meta:
+      id: fld_78ea5faa0e224030bc3a75d215f3b4b1
+      created: 1779042580821
+      modified: 1779042580821
+      sortKey: -1779042580821
+      description: ""
+    children:
+      - url: ""
+        name: New Request
+        meta:
+          id: req_2ee004e565c641bb894a9d2b1108dd35
+          created: 1779042588083
+          modified: 1779042616071
+          isPrivate: false
+          description: ""
+          sortKey: -1779042592510
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+          - name: Authorization
+            value: Bearer {{ _.jwt }}
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_95e90b84bdff4bfd8ffffc88168b225f
+    created: 1778377079017
+    modified: 1779042551917
+  cookies:
+    - id: ecd27d7c-87cc-4cbd-b253-fe0b8b2b4694
+      key: sopo_refresh_token
+      value: e8d1d7de-f1a3-4044-98d4-be971f221bd4
+      domain: sopo-backend-165b270255e8.hosted.ghaymah.systems
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: true
+    - id: 52dc6b8d-61d7-4bae-9c37-d8e0432f2fd8
+      key: sopo_refresh_token
+      value: 50bbdf1a-4882-4485-948d-088023eb95f1
+      domain: sopo-backend-ebbe5030f148.hosted.ghaymah.systems
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: true
+environments:
+  name: Base Environment
+  meta:
+    id: env_ecdd99b019a34c03bd85e98338dfcb68
+    created: 1777496922068
+    modified: 1779042659204
+    isPrivate: false
+  data:
+    base_url: https://sopo-backend-ebbe5030f148.hosted.ghaymah.systems
+    jwt: "{% response 'body', 'req_5b0d6c424d3b49fca2397d58f17cf3b7',
+      'b64::JC5zZXNzaW9uLmFjY2Vzc1Rva2Vu::46b', 'always', 'no-history' %}"
+  color: "#5b42d6"
