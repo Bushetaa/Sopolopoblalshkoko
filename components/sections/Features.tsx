@@ -13,6 +13,15 @@ import {
   Zap,
   Code2,
   ArrowRight,
+  Puzzle,
+  Workflow,
+  BarChart3,
+  Key,
+  CloudUpload,
+  Check,
+  Settings,
+  Layout,
+  Globe,
 } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
@@ -26,154 +35,130 @@ const inter = Inter({
 
 const blocks = [
   {
-    title: "Intelligent Traffic Orchestration",
+    title: "Centralized Workspace Control",
     description:
-      "SOPO dynamically manages incoming traffic using advanced routing logic and adaptive load balancing strategies. It ensures optimal request distribution, reduced latency, and consistent performance—even under heavy load.",
-    icon: Share2,
+      "Manage all your API infrastructure from a unified workspace. Organize Gateways, Services, and Routes in a logical hierarchy designed for team collaboration and total visibility.",
+    icon: Layout,
     align: "left" as const,
+    tech: ["Unified Workspace", "Team RBAC", "Global View"]
   },
   {
-    title: "Enterprise-Grade Security Layer",
+    title: "Visual Workflow Orchestration",
     description:
-      "Security is enforced at the gateway layer with token validation, RBAC authorization, request validation, IP filtering, and intelligent rate limiting. SOPO implements a zero‑trust access model across all services.",
-    icon: ShieldCheck,
+      "Visualize your entire request pipeline as an interactive node graph. Track the flow from Gateway to Plugins, Routes, Services, and finally to your Upstream Targets with zero ambiguity.",
+    icon: Workflow,
     align: "right" as const,
+    tech: ["Interactive Graph", "Live Path Tracing", "Entity Mapping"]
   },
   {
-    title: "Real-time Observability & Analytics",
+    title: "Phase-Based Execution Engine",
     description:
-      "Gain full visibility into your traffic. Monitor latency, error rates, and throughput in real-time with built-in logging and metrics.",
-    icon: Activity,
+      "Inject powerful logic at any stage. Our 5-phase engine (Access, Auth, Rate-Limit, Transform, Log) allows you to attach global or route-specific plugins without dropping connections.",
+    icon: Puzzle,
     align: "left" as const,
+    tech: ["Access Phase", "Auth Phase", "Hot-Reload"]
   },
   {
-    title: "Microservices‑Native Design",
+    title: "Decoupled Service Architecture",
     description:
-      "Built for containerized and distributed environments, SOPO supports modular architecture and horizontal scaling without adding complexity.",
+      "Abstract your backends into reusable Services. Route traffic to multiple Upstream Targets with automated health checks and intelligent path-based discovery.",
     icon: Boxes,
-    align: "left" as const,
-  },
-  {
-    title: "High Availability & Fault Tolerance",
-    description:
-      "Integrated circuit breaker patterns and automated failover mechanisms provide resilience and uninterrupted service continuity.",
-    icon: Network,
     align: "right" as const,
+    tech: ["Service Abstraction", "Upstream Health", "Path Discovery"]
   },
   {
-    title: "Horizontal Scalability",
+    title: "Real-time Telemetry Dashboard",
     description:
-      "Engineered to handle exponential traffic growth while maintaining stability, responsiveness, and operational efficiency.",
-    icon: Share2,
+      "Instant visibility into your API performance. Monitor P99 latency, error rates, and live logs directly from the dashboard with sub-second telemetry updates.",
+    icon: BarChart3,
     align: "left" as const,
+    tech: ["Live Logs", "P99 Metrics", "Error Tracking"]
+  },
+  {
+    title: "Multi-Mode Gateway Nodes",
+    description:
+      "Deploy your data plane in 'Single Node' for simple setups or 'Pro Cluster' for high-availability production environments. Scale your infrastructure as your traffic grows.",
+    icon: Server,
+    align: "right" as const,
+    tech: ["Single Node", "Pro Cluster", "Auto-Scale"]
   },
 ];
 
 export function Features() {
   return (
-    <section className="py-12 sm:py-20 md:py-40 relative overflow-hidden overflow-x-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section className="pt-6 sm:pt-12 md:pt-14 pb-24 sm:pb-32 md:pb-48 relative overflow-hidden bg-background">
+      {/* Dynamic Background Elements */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[10%] right-[-10%] w-[600px] h-[600px] bg-blue-500/5 blur-[150px] rounded-full" />
+      </div>
+
+      <div className="container mx-auto px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-5xl mx-auto text-center mb-10 sm:mb-14 md:mb-24"
+          className="max-w-4xl mx-auto text-center mb-12 md:mb-16"
         >
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight mb-4 sm:mb-6 md:mb-7">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/80 to-blue-400">
-              SOPO
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-black mb-4 uppercase tracking-[0.3em]">
+            <Zap className="w-4 h-4" /> The Power of SOPO
+          </div>
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-display font-black tracking-tight mb-4 leading-[0.9]">
+            Next-Gen <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/80 to-blue-400 italic">
+              API Infrastructure
             </span>
-            : The Ultimate{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-500">
-              API Gateway
-            </span>{" "}
-            for Modern Backends
           </h1>
-          <h2 className="text-sm sm:text-xl md:text-2xl font-semibold text-foreground/90 mb-2 sm:mb-3">
-            An intelligent{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-              API Gateway
-            </span>{" "}
-            that orchestrates traffic, enforces security, and scales with your growth.
-          </h2>
-          <p className="text-xs sm:text-base md:text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-            SOPO centralizes, secures, and intelligently orchestrates service‑to‑service communication across distributed systems.
-            Designed with enterprise‑level reliability, it transforms complex microservices into a unified, high‑performance architecture.
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto font-medium">
+            Centralize, secure, and intelligently orchestrate your microservices with a deterministic control plane built for extreme scale.
           </p>
         </motion.div>
 
-        <div className="max-w-6xl mx-auto mb-8 sm:mb-12 md:mb-16">
-          <div className={`${inter.className} glass-panel rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10`}>
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center">
-              <div className="md:col-span-7">
-                <h3 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-foreground mb-3 sm:mb-4 tracking-tight">
-                  What is SOPO?
-                </h3>
-                <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
-                  SOPO is an intelligent API gateway that standardizes routing, security, and observability across microservices.
-                  It helps teams deliver reliable, secure, and observable services with consistent policies and predictable latency.
-                </p>
-                <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  {[
-                    { t: "Intelligent Routing", d: "Latency‑aware paths and adaptive load distribution." },
-                    { t: "Zero‑Trust Security", d: "API Key, RBAC, limits—enforced at the gateway." },
-                    { t: "Deep Observability", d: "Built‑in metrics, logs, and tracing." },
-                    { t: "Developer Friendly", d: "Fast iteration with safe, versioned changes." },
-                  ].map((c) => (
-                    <div
-                      key={c.t}
-                      className="rounded-xl border border-white/10 bg-white/5 p-3 sm:p-4 hover:border-primary/30 transition-colors"
-                    >
-                      <div className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 mt-0.5 text-primary" />
-                        <div>
-                          <div className="text-foreground/90 text-sm font-medium">{c.t}</div>
-                          <div className="text-xs text-muted-foreground mt-0.5">{c.d}</div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="md:col-span-5 flex items-center justify-center">
-                <ServerOrbit3D />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:gap-8">
+        {/* Feature Grid - Re-designed as modern bento-like rows */}
+        <div className="space-y-12 md:space-y-24">
           {blocks.map((b, i) => {
             const Icon = b.icon;
             return (
               <motion.div
                 key={b.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.05 }}
-                className={`group glass-panel p-5 sm:p-8 md:p-10 rounded-2xl md:rounded-[3rem] border-black/5 dark:border-white/5 relative overflow-hidden md:flex md:items-stretch md:justify-between gap-6 md:gap-8 ${
-                  i % 2 === 1 ? "md:flex-row-reverse" : ""
-                } hover:translate-y-[-2px] hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10 transition-all`}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className={`group relative grid grid-cols-1 lg:grid-cols-12 gap-12 items-center ${i % 2 === 1 ? "lg:flex-row-reverse" : ""
+                  }`}
               >
-                <div className="absolute top-0 right-0 p-12 opacity-5 group-hover:opacity-10 transition-opacity text-foreground hidden sm:block">
-                  <Icon className="w-48 md:w-64 h-48 md:h-64 rotate-12" />
-                </div>
-                <div className="relative z-10 md:w-7/12">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 sm:mb-6 border border-primary/20">
-                    <Icon
-                      className={`w-6 h-6 sm:w-7 sm:h-7 text-primary ${
-                        i === 1 || i === 3 ? "drop-shadow-[0_0_12px_hsl(var(--primary)/0.35)]" : ""
-                      }`}
-                    />
+                <div className={`lg:col-span-6 ${i % 2 === 1 ? "lg:order-2" : "lg:order-1"}`}>
+                  <div className="glass-panel p-8 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent hover:border-primary/30 transition-all duration-700 relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    <FeatureSketch kind={i} />
                   </div>
-                  <h3 className="text-xl sm:text-2xl md:text-4xl font-display font-black mb-2 sm:mb-3 md:mb-5 tracking-tight">
+                </div>
+
+                <div className={`lg:col-span-6 space-y-6 ${i % 2 === 1 ? "lg:order-1 lg:text-right" : "lg:order-2"}`}>
+                  <div className={`w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:scale-110 transition-transform duration-500 ${i % 2 === 1 ? "lg:ml-auto" : ""}`}>
+                    <Icon className="w-8 h-8 text-primary" />
+                  </div>
+                  <h3 className="text-3xl md:text-5xl font-display font-black tracking-tight text-foreground">
                     {b.title}
                   </h3>
-                  <p className="text-sm sm:text-base md:text-lg text-muted-foreground leading-relaxed">{b.description}</p>
-                </div>
-                <div className="relative md:w-5/12 flex items-center justify-center px-2 sm:px-0">
-                  <FeatureSketch kind={i} />
+                  <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                    {b.description}
+                  </p>
+
+                  {/* Tech Badges */}
+                  <div className={`flex flex-wrap gap-2 pt-2 ${i % 2 === 1 ? "justify-end" : ""}`}>
+                    {b.tech?.map((t) => (
+                      <span key={t} className="px-3 py-1 rounded-full bg-primary/5 border border-primary/10 text-[10px] font-black uppercase tracking-widest text-primary/70">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className={`flex items-center gap-4 pt-4 ${i % 2 === 1 ? "justify-end" : ""}`}>
+                    <div className="h-px w-12 bg-primary/30" />
+                    <span className="text-xs font-black uppercase tracking-widest text-primary/60">Enterprise Feature</span>
+                  </div>
                 </div>
               </motion.div>
             );
@@ -181,50 +166,48 @@ export function Features() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mt-20 md:mt-32">
+      <div className="container mx-auto px-6 lg:px-8 relative z-10 mt-32 md:mt-48">
         <div className="max-w-6xl mx-auto">
-          {/* Title and Description */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-24"
           >
-            <h3 className="text-3xl md:text-5xl font-display font-black tracking-tight mb-4">
-              SOPO <span className="text-primary italic">Architecture</span>
+            <h3 className="text-4xl md:text-7xl font-display font-black tracking-tight mb-6">
+              Deterministic <br />
+              <span className="text-primary italic">Architecture</span>
             </h3>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
-              A high-performance, deterministic pipeline designed for zero-trust microservice communication and global scale.
+            <p className="text-muted-foreground text-xl max-w-2xl mx-auto leading-relaxed font-medium">
+              A high-performance pipeline designed for zero-trust microservice communication at global scale.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Visual Diagram Display */}
-            <div className="lg:col-span-7 order-2 lg:order-1 hidden lg:flex items-center justify-center">
-              <div className="glass-panel p-6 sm:p-8 rounded-[2rem] border-white/5 bg-gradient-to-br from-white/5 to-transparent backdrop-blur-md relative overflow-hidden group w-full max-w-[500px]">
-                <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            <div className="lg:col-span-7 hidden lg:block">
+              <div className="glass-panel p-12 rounded-[3.5rem] border-white/5 bg-gradient-to-br from-white/[0.05] to-transparent backdrop-blur-2xl relative overflow-hidden group">
+                <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
                 <ArchitectureDiagram />
               </div>
             </div>
 
-            {/* Feature Cards */}
-            <div className="lg:col-span-5 order-1 lg:order-2 flex flex-col gap-4">
+            <div className="lg:col-span-5 flex flex-col gap-6">
               {[
                 {
-                  t: "Performance",
-                  d: "Global edge routing, low-latency pipelines, and scalable throughput tuned for production.",
+                  t: "Hyper-Performance",
+                  d: "Global edge routing with sub-millisecond execution overhead.",
                   icon: Zap,
                   color: "from-amber-400 to-orange-500",
                 },
                 {
-                  t: "Security",
-                  d: "Policy enforcement at the gateway: auth, rate limits, and zero‑trust patterns.",
+                  t: "Military-Grade Security",
+                  d: "Native OIDC/JWT enforcement and automated mTLS rotation.",
                   icon: ShieldCheck,
                   color: "from-blue-400 to-cyan-500",
                 },
                 {
-                  t: "Developer Experience",
-                  d: "Clear policies, fast iteration, and deep visibility—built for modern teams.",
+                  t: "Advanced Governance",
+                  d: "Visual policy auditing and versioned environment promotion.",
                   icon: Code2,
                   color: "from-emerald-400 to-teal-500",
                 },
@@ -235,21 +218,17 @@ export function Features() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.15 }}
-                  whileHover={{ scale: 1.02, x: 5 }}
-                  className="glass-panel p-6 rounded-2xl border-white/5 hover:border-primary/40 hover:bg-white/[0.02] transition-all group cursor-default"
+                  className="glass-panel p-8 rounded-3xl border-white/5 hover:border-primary/40 hover:bg-white/[0.02] transition-all group"
                 >
-                  <div className="flex gap-4">
-                    <motion.div 
-                      whileHover={{ rotate: 15, scale: 1.1 }}
-                      className={`w-12 h-12 rounded-xl bg-gradient-to-br ${c.color} p-0.5 shrink-0 shadow-lg shadow-black/20`}
-                    >
-                      <div className="w-full h-full bg-white dark:bg-background rounded-[10px] flex items-center justify-center">
-                        <c.icon className={`w-6 h-6 ${idx === 0 ? "text-amber-500" : idx === 1 ? "text-blue-500" : "text-emerald-500"} dark:text-white`} />
+                  <div className="flex gap-6 items-center">
+                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${c.color} p-0.5 shrink-0 shadow-lg shadow-black/40`}>
+                      <div className="w-full h-full bg-background rounded-[14px] flex items-center justify-center">
+                        <c.icon className="w-7 h-7 text-white" />
                       </div>
-                    </motion.div>
+                    </div>
                     <div>
-                      <h5 className="text-xl font-display font-bold mb-1 text-foreground group-hover:text-primary transition-colors">{c.t}</h5>
-                      <p className="text-sm text-muted-foreground leading-relaxed group-hover:text-muted-foreground/80 transition-colors">{c.d}</p>
+                      <h5 className="text-2xl font-display font-black mb-1 text-foreground group-hover:text-primary transition-colors">{c.t}</h5>
+                      <p className="text-muted-foreground leading-relaxed">{c.d}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -259,51 +238,42 @@ export function Features() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mt-20 md:mt-32 mb-20">
+      {/* Epic CTA Section */}
+      <div className="container mx-auto px-6 lg:px-8 relative z-10 mt-32 md:mt-48 mb-24">
         <div className="max-w-5xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="glass-panel p-10 md:p-20 rounded-[3rem] border-white/5 bg-gradient-to-br from-primary/10 via-transparent to-transparent backdrop-blur-xl relative overflow-hidden text-center"
+            className="glass-panel p-12 md:p-24 rounded-[4rem] border-primary/20 bg-gradient-to-br from-primary/10 via-transparent to-transparent backdrop-blur-3xl relative overflow-hidden text-center"
           >
-            {/* Background decorative glow */}
-            <div className="absolute -top-24 -left-24 w-64 h-64 bg-primary/20 blur-[100px] rounded-full" />
-            <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-blue-500/10 blur-[100px] rounded-full" />
-            
+            <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary/20 blur-[120px] rounded-full animate-pulse" />
+            <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full" />
+
             <div className="relative z-10">
-              <p className="text-2xl sm:text-4xl md:text-5xl font-display font-black leading-tight tracking-tight mx-auto max-w-4xl">
-                SOPO is not just an{" "}
-                <span className="text-muted-foreground/40 italic">API Gateway</span>. 
-                <br className="hidden md:block" />
-                It is the{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
-                  intelligent control layer
-                </span>{" "}
-                that <span className="text-primary font-semibold">governs</span>,{" "}
-                <span className="text-primary font-semibold">protects</span>, and{" "}
-                <span className="text-primary font-semibold">accelerates</span> modern backend systems.
-              </p>
-              
-              <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6">
+              <h2 className="text-4xl md:text-7xl font-display font-black leading-[0.9] tracking-tight mb-12">
+                Orchestrate your <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400 italic">API Future</span>
+              </h2>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
                 <Link href="/signup">
-                  <Button className="group h-16 px-10 md:px-14 text-xl font-bold bg-primary text-primary-foreground shadow-[0_0_40px_rgba(var(--primary-rgb),0.3)] hover:shadow-[0_0_60px_rgba(var(--primary-rgb),0.5)] hover:scale-105 transition-all duration-300 rounded-2xl relative overflow-hidden">
-                    <span className="relative z-10 flex items-center gap-2">
-                      Get Started with SOPO
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  <Button className="group h-20 px-12 text-2xl font-black bg-primary text-primary-foreground shadow-[0_20px_50px_rgba(var(--primary-rgb),0.3)] hover:scale-105 transition-all duration-500 rounded-2xl">
+                    GET STARTED NOW
+                    <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" />
                   </Button>
                 </Link>
-                
-                <div className="flex -space-x-3">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="w-10 h-10 rounded-full border-2 border-background bg-muted flex items-center justify-center overflow-hidden ring-2 ring-white/5">
-                      <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="User" />
-                    </div>
-                  ))}
-                  <div className="pl-6 text-sm text-muted-foreground font-medium">
-                    <span className="text-foreground font-bold">500+</span> teams joined
+
+                <div className="flex flex-col items-center sm:items-start gap-3">
+                  <div className="flex -space-x-3">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="w-12 h-12 rounded-full border-2 border-background bg-muted flex items-center justify-center overflow-hidden ring-4 ring-primary/10">
+                        <img src={`https://i.pravatar.cc/150?u=${i + 10}`} alt="User" />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-sm text-muted-foreground font-bold uppercase tracking-widest">
+                    <span className="text-foreground">500+</span> enterprise teams
                   </div>
                 </div>
               </div>
@@ -316,339 +286,275 @@ export function Features() {
 }
 
 function ServerOrbit3D() {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const inView = useInView(ref, { margin: "-10% 0px -10% 0px" });
-  return (
-    <div ref={ref} className="relative w-40 h-40 sm:w-56 sm:h-56 md:w-64 md:h-64 will-change-transform gpu-hint">
-      <motion.div
-        className="absolute inset-0 rounded-3xl border border-primary/30 bg-primary/5"
-        animate={
-          inView
-            ? {
-                boxShadow: [
-                  "0 0 0px rgba(0,0,0,0)",
-                  "0 0 50px rgba(34,211,238,0.18)",
-                  "0 0 0px rgba(0,0,0,0)",
-                ],
-                y: [0, -6, 0],
-              }
-            : undefined
-        }
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <svg viewBox="0 0 300 300" className="absolute inset-0 w-full h-full will-change-transform" aria-hidden="true">
-        <defs>
-          <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="hsl(199 89% 60%)" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="hsl(199 89% 40%)" stopOpacity="0" />
-          </radialGradient>
-          <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
-          </filter>
-        </defs>
-        <circle cx="150" cy="150" r="90" fill="url(#glow)" />
-        <g filter="url(#soft)">
-          <rect x="118" y="108" width="64" height="22" rx="8" fill="none" stroke="hsl(199 89% 58%)" strokeWidth="2" />
-          <rect x="112" y="138" width="76" height="26" rx="10" fill="none" stroke="hsl(199 89% 58%)" strokeWidth="2" />
-          <rect x="118" y="172" width="64" height="22" rx="8" fill="none" stroke="hsl(199 89% 58%)" strokeWidth="2" />
-        </g>
-        {[0, 1, 2, 3, 4, 5].map((i) => {
-          const r = 120;
-          const a = (i / 6) * Math.PI * 2;
-          const cx = 150 + r * Math.cos(a);
-          const cy = 150 + r * Math.sin(a);
-          return (
-            <g key={i}>
-              <motion.line
-                x1={cx}
-                y1={cy}
-                x2={150}
-                y2={150}
-                stroke="hsl(199 89% 55%)"
-                strokeOpacity="0.35"
-                strokeWidth="1.5"
-                strokeDasharray="4 6"
-                animate={inView ? { strokeDashoffset: [0, -20] } : undefined}
-                transition={{ duration: 2 + i * 0.2, repeat: Infinity, ease: "linear" }}
-              />
-              <motion.circle
-                r="6"
-                fill="hsl(199 89% 55%)"
-                filter="url(#soft)"
-                animate={
-                  inView
-                    ? {
-                        cx: [cx, 150 + (r - 8) * Math.cos(a + Math.PI / 8), cx],
-                        cy: [cy, 150 + (r - 8) * Math.sin(a + Math.PI / 8), cy],
-                        opacity: [0.6, 1, 0.6],
-                      }
-                    : undefined
-                }
-                transition={{ duration: 6 + i, repeat: Infinity, ease: "easeInOut" }}
-              />
-            </g>
-          );
-        })}
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <motion.div
-          className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border border-primary/40 bg-primary/10 flex items-center justify-center"
-          animate={inView ? { scale: [1, 1.06, 1] } : undefined}
-          transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Server className="w-6 h-6 text-primary" />
-        </motion.div>
-      </div>
-    </div>
-  );
+  // Unused, but kept for internal reference if needed, or can be removed.
+  return null;
 }
 
 function FeatureSketch({ kind }: { kind: number }) {
   if (kind === 0) {
+    // Centralized Workspace Control - Showing a unified dashboard view
     return (
-      <svg viewBox="0 0 360 220" className="w-full max-w-md" aria-hidden="true">
-        <defs>
-          <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L0,6 L6,3 z" fill="currentColor" className="text-primary" />
-          </marker>
-        </defs>
-        <motion.rect
-          x="150"
-          y="80"
-          width="60"
-          height="60"
-          rx="14"
-          className="fill-primary/10 stroke-primary/30"
-          strokeWidth="2"
-          animate={{ opacity: [0.8, 1, 0.8] }}
-          transition={{ duration: 3, repeat: Infinity }}
-        />
-        {[30, 180, 330].map((x, i) => (
-          <motion.circle
-            key={x}
-            cx={x}
-            cy={30}
-            r="10"
-            className="fill-primary/20"
-            animate={{ cy: [26, 34, 26] }}
-            transition={{ duration: 4 + i, repeat: Infinity, ease: "easeInOut" }}
-          />
-        ))}
-        {[30, 180, 330].map((x, i) => (
-          <motion.line
-            key={`t${x}`}
-            x1={x}
-            y1={40}
-            x2={180}
-            y2={80}
-            stroke="currentColor"
-            className="text-primary/40"
-            strokeWidth="2"
-            markerEnd="url(#arrow)"
-            strokeDasharray="4 6"
-            animate={{ strokeDashoffset: [0, -20] }}
-            transition={{ duration: 2.2 + i * 0.2, repeat: Infinity }}
-          />
-        ))}
-        {[60, 150, 300].map((x, i) => (
-          <motion.circle
-            key={`b${x}`}
-            cx={x}
-            cy={190}
-            r="10"
-            className="fill-primary/20"
-            animate={{ cy: [186, 194, 186] }}
-            transition={{ duration: 4.5 + i, repeat: Infinity, ease: "easeInOut" }}
-          />
-        ))}
-        {[60, 150, 300].map((x, i) => (
-          <motion.line
-            key={`d${x}`}
-            x1={180}
-            y1={140}
-            x2={x}
-            y2={180}
-            stroke="currentColor"
-            className="text-primary/40"
-            strokeWidth="2"
-            markerEnd="url(#arrow)"
-            strokeDasharray="4 6"
-            animate={{ strokeDashoffset: [0, -20] }}
-            transition={{ duration: 2.4 + i * 0.2, repeat: Infinity }}
-          />
-        ))}
-      </svg>
+      <div className="relative w-full h-full min-h-[240px] flex items-center justify-center p-6 bg-primary/5 rounded-3xl overflow-hidden">
+        <div className="w-full max-w-[280px] bg-background/60 backdrop-blur-md rounded-2xl border border-white/10 p-4 shadow-2xl">
+          <div className="flex items-center gap-2 mb-4 border-b border-white/5 pb-3">
+            <div className="w-3 h-3 rounded-full bg-red-500/50" />
+            <div className="w-3 h-3 rounded-full bg-amber-500/50" />
+            <div className="w-3 h-3 rounded-full bg-green-500/50" />
+            <div className="ml-auto text-[8px] font-mono text-muted-foreground uppercase">Workspace: Main</div>
+          </div>
+          <div className="space-y-3">
+            {[
+              { label: "Gateways", count: 4, icon: Globe },
+              { label: "Services", count: 12, icon: Boxes },
+              { label: "Routes", count: 24, icon: Share2 }
+            ].map((item, i) => (
+              <motion.div
+                key={item.label}
+                initial={{ x: -20, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                transition={{ delay: i * 0.1 }}
+                className="flex items-center gap-3 p-2 rounded-lg bg-white/5 border border-white/5"
+              >
+                <item.icon className="w-3 h-3 text-primary" />
+                <span className="text-[10px] font-bold text-foreground/80">{item.label}</span>
+                <span className="ml-auto text-[10px] font-mono text-primary">{item.count}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
     );
   }
   if (kind === 1) {
+    // Visual Workflow Orchestration - High Fidelity Node Graph
     return (
-      <div className="relative w-full max-w-sm h-56 flex items-center justify-center">
-        <motion.div className="absolute inset-0 rounded-2xl border border-primary/20" />
-        <motion.div
-          className="absolute w-40 h-40 rounded-full border-2 border-primary/30"
-          animate={{ scale: [1, 1.06, 1], opacity: [0.6, 1, 0.6] }}
-          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <Shield className="w-12 h-12 text-primary relative" />
+      <div className="relative w-full h-full min-h-[280px] flex items-center justify-center p-6 bg-primary/5 rounded-[2.5rem] overflow-hidden group">
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.15)_0%,transparent_70%)]" />
+        <svg viewBox="0 0 400 300" className="w-full h-full max-w-[340px] drop-shadow-2xl">
+          <defs>
+            <filter id="node-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+            <linearGradient id="line-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.1" />
+              <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.1" />
+            </linearGradient>
+          </defs>
+
+          {/* Connection Lines with animated dash */}
+          {[
+            { x1: 60, y1: 150, x2: 140, y2: 80 },
+            { x1: 60, y1: 150, x2: 140, y2: 220 },
+            { x1: 140, y1: 80, x2: 260, y2: 150 },
+            { x1: 140, y1: 220, x2: 260, y2: 150 },
+            { x1: 260, y1: 150, x2: 340, y2: 150 }
+          ].map((line, i) => (
+            <g key={`line-${i}`}>
+              <line
+                x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2}
+                stroke="hsl(var(--primary))" strokeWidth="1" strokeOpacity="0.2"
+              />
+              <motion.line
+                x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2}
+                stroke="url(#line-grad)" strokeWidth="2" strokeDasharray="10 20"
+                animate={{ strokeDashoffset: [0, -30] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              />
+            </g>
+          ))}
+
+          {/* Nodes */}
+          {[
+            { x: 60, y: 150, label: "GW", icon: Globe, color: "text-primary", bg: "fill-primary/10", stroke: "stroke-primary/40" },
+            { x: 140, y: 80, label: "RT", icon: Share2, color: "text-blue-400", bg: "fill-blue-400/10", stroke: "stroke-blue-400/40" },
+            { x: 140, y: 220, label: "PLG", icon: Puzzle, color: "text-purple-400", bg: "fill-purple-400/10", stroke: "stroke-purple-400/40" },
+            { x: 260, y: 150, label: "SVC", icon: Boxes, color: "text-emerald-400", bg: "fill-emerald-400/10", stroke: "stroke-emerald-400/40" },
+            { x: 340, y: 150, label: "TGT", icon: Network, color: "text-amber-400", bg: "fill-amber-400/10", stroke: "stroke-amber-400/40" }
+          ].map((node, i) => (
+            <motion.g
+              key={node.label}
+              initial={{ scale: 0, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ delay: i * 0.1, type: "spring", stiffness: 200 }}
+              whileHover={{ scale: 1.1 }}
+            >
+              <circle
+                cx={node.x} cy={node.y} r="22"
+                className="fill-background stroke-white/10"
+                strokeWidth="1"
+              />
+              <circle
+                cx={node.x} cy={node.y} r="18"
+                className={`${node.bg} ${node.stroke}`}
+                strokeWidth="1.5"
+                style={{ filter: "url(#node-glow)" }}
+              />
+              <foreignObject x={node.x - 10} y={node.y - 10} width="20" height="20">
+                <div className="w-full h-full flex items-center justify-center">
+                  <node.icon className={`w-3.5 h-3.5 ${node.color}`} />
+                </div>
+              </foreignObject>
+              <text
+                x={node.x} y={node.y + 35}
+                textAnchor="middle"
+                className="fill-white/40 text-[9px] font-black uppercase tracking-widest"
+              >
+                {node.label}
+              </text>
+            </motion.g>
+          ))}
+        </svg>
       </div>
     );
   }
   if (kind === 2) {
+    // Phase-Based Execution Engine - Ultra-Rich Pipeline
+    const phases = [
+      { id: "ACCESS", color: "text-blue-400", bg: "bg-blue-400/10", icon: Shield },
+      { id: "AUTH", color: "text-primary", bg: "bg-primary/10", icon: Key },
+      { id: "RATE", color: "text-amber-400", bg: "bg-amber-400/10", icon: Zap },
+      { id: "TRANS", color: "text-emerald-400", bg: "bg-emerald-400/10", icon: Code2 },
+      { id: "LOG", color: "text-purple-400", bg: "bg-purple-400/10", icon: Activity }
+    ];
     return (
-      <svg viewBox="0 0 360 200" className="w-full max-w-md" aria-hidden="true">
-        <defs>
-          <filter id="cyan-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
-            <feMerge>
-              <feMergeNode in="blur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-        <rect
-          x="20"
-          y="20"
-          width="320"
-          height="160"
-          rx="14"
-          className="fill-primary/5 stroke-primary/20"
-          strokeWidth="2"
-        />
-        {[40, 80, 120, 160, 200, 240, 280, 320].map((x) => (
-          <line key={x} x1={x} y1={30} x2={x} y2={170} className="stroke-primary/10" strokeWidth="1" />
-        ))}
-        <motion.path
-          d="M 40 150 L 80 120 L 120 130 L 160 90 L 200 110 L 240 80 L 280 95 L 320 60"
-          fill="none"
-          stroke="currentColor"
-          className="text-primary"
-          strokeWidth="2"
-          style={{ filter: "url(#cyan-glow)" }}
-          animate={{ pathLength: [0, 1] }}
-          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 1 }}
-        />
-      </svg>
+      <div className="relative w-full h-full min-h-[280px] flex items-center justify-center p-8 bg-primary/5 rounded-[2.5rem] overflow-hidden">
+        <div className="flex flex-col gap-4 w-full max-w-[240px]">
+          <div className="flex justify-between items-center mb-2">
+            <div className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Pipeline Execution</div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-[8px] font-mono text-green-500 font-bold uppercase">Streaming</span>
+            </div>
+          </div>
+
+          <div className="space-y-3 relative">
+            {/* Background connection line */}
+            <div className="absolute left-6 top-0 bottom-0 w-px bg-white/5 z-0" />
+
+            {phases.map((phase, i) => (
+              <motion.div
+                key={phase.id}
+                initial={{ x: -20, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                transition={{ delay: i * 0.1 }}
+                className="relative z-10 flex items-center gap-4 group"
+              >
+                <div className={`w-12 h-12 rounded-2xl ${phase.bg} border border-white/10 flex items-center justify-center group-hover:border-white/30 transition-all shadow-xl backdrop-blur-sm`}>
+                  <phase.icon className={`w-5 h-5 ${phase.color}`} />
+                </div>
+                <div className="flex-1 p-3 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-between group-hover:bg-white/[0.06] transition-all">
+                  <span className="text-xs font-black text-foreground/80 tracking-tight">{phase.id}</span>
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3].map(dot => (
+                      <motion.div
+                        key={dot}
+                        className={`w-1 h-1 rounded-full ${phase.color.replace('text-', 'bg-')}`}
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ duration: 1.5, delay: dot * 0.2 + i * 0.2, repeat: Infinity }}
+                      />
+                    ))}
+                  </div>
+                </div>
+                {/* Flow particle */}
+                <motion.div
+                  className={`absolute left-6 w-2 h-2 rounded-full ${phase.color.replace('text-', 'bg-')} shadow-[0_0_10px_rgba(59,130,246,0.5)]`}
+                  initial={{ top: -20, opacity: 0 }}
+                  animate={{ top: [0, 60], opacity: [0, 1, 0] }}
+                  transition={{ duration: 1.5, delay: i * 0.3, repeat: Infinity, ease: "linear" }}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+        <div className="absolute inset-0 pointer-events-none border-[1px] border-white/5 rounded-[2.5rem]" />
+      </div>
     );
   }
   if (kind === 3) {
+    // Decoupled Service Architecture - Services & Targets
     return (
-      <svg viewBox="0 0 360 180" className="w-full max-w-md" aria-hidden="true">    
-        <defs>
-          <filter id="ms-glow" x="-50%" y="-50%" width="200%" height="200%">        
-            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/>   
-            <feMerge>
-              <feMergeNode in="blur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-        <motion.rect
-          x="150"
-          y="60"
-          width="60"
-          height="60"
-          rx="14"
-          className="fill-primary/10 stroke-primary/30"
-          strokeWidth="2"
-          animate={{ opacity: [0.85, 1, 0.85], y: [60, 58, 60] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        />
-        {[
-          { x: 60, y: 35, d: 3.8 },
-          { x: 300, y: 35, d: 4.2 },
-          { x: 60, y: 145, d: 4.5 },
-          { x: 300, y: 145, d: 3.6 },
-        ].map((n, i) => (
-          <g key={i}>
-            <motion.line
-              x1={180}
-              y1={90}
-              x2={n.x}
-              y2={n.y}
-              stroke="currentColor"
-              className="text-primary/35"
-              strokeWidth="2"
-              strokeDasharray="6 6"
-              animate={{ strokeDashoffset: [0, -12] }}
-              transition={{ duration: 2.2 + i * 0.2, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.rect
-              x={n.x - 10}
-              y={n.y - 10}
-              width="20"
-              height="20"
-              rx="6"
-              className="fill-primary/10 stroke-primary/40"
-              strokeWidth="2"
-              filter="url(#ms-glow)"
-              animate={{ scale: [1, 1.06, 1], opacity: [0.7, 1, 0.7] }}
-              transition={{ duration: n.d, repeat: Infinity, ease: "easeInOut" }}   
-            />
-          </g>
-        ))}
-        {[0, 1, 2].map((i) => (
-          <motion.circle
-            key={i}
-            r="2"
-            className="fill-primary"
-            filter="url(#ms-glow)"
-            animate={{
-              cx: [60, 180, 300, 180, 60][i],
-              cy: [90, 35, 90, 145, 90][i],
-              opacity: [0.2, 0.8, 0.2],
-            }}
-            transition={{ duration: 6 + i, repeat: Infinity, ease: "linear" }}      
-          />
-        ))}
-      </svg>
+      <div className="relative w-full h-full min-h-[240px] flex items-center justify-center p-6 bg-primary/5 rounded-3xl">
+        <div className="w-full max-w-[280px] space-y-4">
+          <div className="p-3 rounded-xl border border-primary/30 bg-primary/10 flex items-center gap-3">
+            <Boxes className="w-5 h-5 text-primary" />
+            <div>
+              <div className="text-[10px] font-black text-foreground">Order Service</div>
+              <div className="text-[8px] text-muted-foreground uppercase">ID: svc_9283</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { label: "Target A", status: "Healthy" },
+              { label: "Target B", status: "Healthy" }
+            ].map((t, i) => (
+              <motion.div
+                key={t.label}
+                initial={{ y: 10, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                transition={{ delay: i * 0.2 }}
+                className="p-2 rounded-lg border border-white/5 bg-background/40 flex flex-col gap-1"
+              >
+                <div className="text-[8px] font-bold text-muted-foreground uppercase">{t.label}</div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                  <span className="text-[8px] text-green-500 font-bold uppercase">Online</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
     );
   }
   if (kind === 4) {
+    // Real-time Telemetry Dashboard - Mini Metrics
     return (
-      <svg viewBox="0 0 360 180" className="w-full max-w-md" aria-hidden="true">
-        <rect
-          x="60"
-          y="50"
-          width="80"
-          height="80"
-          rx="14"
-          className="fill-primary/10 stroke-primary/30"
-          strokeWidth="2"
-        />
-        <rect
-          x="220"
-          y="50"
-          width="80"
-          height="80"
-          rx="14"
-          className="fill-primary/10 stroke-primary/30"
-          strokeWidth="2"
-        />
-        <motion.line
-          x1="140"
-          y1="90"
-          x2="220"
-          y2="90"
-          stroke="currentColor"
-          className="text-primary/40"
-          strokeWidth="3"
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 1.2, repeat: Infinity }}
-        />
-      </svg>
+      <div className="relative w-full h-full min-h-[240px] flex items-center justify-center p-6 bg-primary/5 rounded-3xl overflow-hidden">
+        <div className="w-full max-w-[300px] h-[160px] bg-background/60 backdrop-blur-md rounded-2xl border border-white/10 p-4 flex flex-col gap-4 relative">
+          <div className="flex justify-between items-start">
+            <div>
+              <div className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Global P99</div>
+              <div className="text-xl font-display font-black text-primary">18ms</div>
+            </div>
+            <div className="text-[8px] font-mono text-green-500 animate-pulse uppercase font-black tracking-widest">Live Streaming</div>
+          </div>
+          <div className="flex-1 flex items-end gap-1 pt-2">
+            {[40, 60, 35, 80, 50, 75, 45, 95, 65, 85, 55, 70].map((h, i) => (
+              <motion.div
+                key={i}
+                className="flex-1 bg-primary rounded-t-[2px]"
+                animate={{ height: [`${h}%`, `${h - 15}%`, `${h}%`] }}
+                transition={{ duration: 2, delay: i * 0.1, repeat: Infinity }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
     );
   }
+  // Multi-Mode Gateway Nodes - Single vs Pro
   return (
-    <div className="flex items-end gap-2 w-full max-w-xs h-40">
-      {[10, 18, 26, 34, 42].map((h, i) => (
-        <motion.div
-          key={i}
-          className="flex-1 rounded-md bg-primary/30"
-          style={{ height: h }}
-          animate={{ height: [h, h + 20, h] }}
-          transition={{ duration: 2 + i * 0.2, repeat: Infinity, ease: "easeInOut" }}
-        />
-      ))}
+    <div className="relative w-full h-full min-h-[240px] flex items-center justify-center p-6 bg-primary/5 rounded-3xl">
+      <div className="grid grid-cols-2 gap-4 w-full max-w-[320px]">
+        {[
+          { mode: "SINGLE", desc: "Lightweight", color: "border-white/10" },
+          { mode: "PRO", desc: "High Availability", color: "border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] bg-primary/5" }
+        ].map((node, i) => (
+          <motion.div
+            key={node.mode}
+            whileHover={{ y: -5 }}
+            className={`p-4 rounded-2xl border ${node.color} flex flex-col items-center gap-3 text-center`}
+          >
+            <Server className={`w-8 h-8 ${i === 1 ? 'text-primary' : 'text-muted-foreground'}`} />
+            <div>
+              <div className={`text-[10px] font-black tracking-widest ${i === 1 ? 'text-primary' : 'text-foreground'}`}>{node.mode}</div>
+              <div className="text-[8px] text-muted-foreground uppercase mt-0.5">{node.desc}</div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -657,10 +563,10 @@ function ArchitectureDiagram() {
   const ref = useRef<HTMLDivElement | null>(null);
   const inView = useInView(ref, { margin: "-10% 0px -10% 0px" });
   const orbitIcons = [Shield, Zap, Activity, Network, Boxes, Share2];
-  
-  const steps = 60; 
-  const duration = 40; 
-  
+
+  const steps = 60;
+  const duration = 40;
+
   // Define precise dimensions
   // Desktop: container 240px, radius 120px
   // Mobile: container 200px, radius 100px
@@ -681,25 +587,25 @@ function ArchitectureDiagram() {
 
   return (
     <div ref={ref} className="relative mx-auto flex items-center justify-center w-full max-w-[400px] md:max-w-[600px] aspect-square overflow-visible">
-      
+
       {/* 1. Combined Diagram (SVG) - Centralized Coordinate System */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-        <svg 
-          className="w-full h-full overflow-visible" 
-          viewBox="0 0 600 600" 
-          fill="none" 
+        <svg
+          className="w-full h-full overflow-visible"
+          viewBox="0 0 600 600"
+          fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
           <g transform="translate(300, 300)">
             {/* The Main Orbit Path (Dashed Circle) */}
-            <circle 
-              r={dim.r} 
-              stroke="currentColor" 
-              className="text-primary/20" 
-              strokeWidth="1" 
-              strokeDasharray="4 4" 
+            <circle
+              r={dim.r}
+              stroke="currentColor"
+              className="text-primary/20"
+              strokeWidth="1"
+              strokeDasharray="4 4"
             />
-            
+
             {[0, 1, 2, 3, 4, 5].map((idx) => {
               const Icon = orbitIcons[idx];
               const angle = (idx * Math.PI * 2) / 6;
@@ -715,10 +621,10 @@ function ArchitectureDiagram() {
                     animate={inView ? { x2: xKeys, y2: yKeys } : undefined}
                     transition={{ duration: duration, repeat: Infinity, ease: "linear" }}
                   />
-                  
+
                   {/* Orbiting Icons using foreignObject to keep them in SVG space */}
                   <motion.g
-                    animate={inView ? { 
+                    animate={inView ? {
                       x: xKeys,
                       y: yKeys
                     } : undefined}
@@ -745,7 +651,7 @@ function ArchitectureDiagram() {
       </div>
 
       {/* 2. Central Logo - Exactly at the center */}
-      <div 
+      <div
         className="relative z-10 flex items-center justify-center"
         style={{ width: dim.size, height: dim.size }}
       >
@@ -757,13 +663,13 @@ function ArchitectureDiagram() {
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         >
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-50" />
-          <img 
-            src="/assets/sopo_logo.gif" 
-            alt="SOPO Logo" 
-            className="w-1/2 h-1/2 object-contain relative z-10" 
+          <img
+            src="/assets/sopo_logo.gif"
+            alt="SOPO Logo"
+            className="w-1/2 h-1/2 object-contain relative z-10"
           />
           {/* Inner pulse */}
-          <motion.div 
+          <motion.div
             className="absolute inset-0 bg-primary/5 rounded-full"
             animate={{ scale: [0.8, 1.1, 0.8], opacity: [0.1, 0.3, 0.1] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}

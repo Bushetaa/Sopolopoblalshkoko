@@ -11,22 +11,23 @@ export function ConditionalFooter() {
   useEffect(() => {
     setMounted(true);
   }, []);
-  
+
   // Hide footer on signin, signup, verification and dashboard pages
   const dashboardRoutes = [
-    "/dashboard", 
-    "/api-manager", 
-    "/api-gateway", 
-    "/workspaces", 
-    "/analytics", 
-    "/rate-limiting", 
+    "/dashboard",
+    "/api-manager",
+    "/api-gateway",
+    "/workspaces",
+    "/analytics",
+    "/rate-limiting",
     "/settings",
-    "/collections"
+    "/collections",
+    "/logs"
   ];
   const isDashboard = dashboardRoutes.some(route => pathname?.startsWith(route));
   const hideFooterRoutes = ["/signin", "/signup", "/auth/v-auth-721", "/docs"];
   const isInternalVerify = pathname?.startsWith("/_internal/verify") || pathname?.startsWith("/internal/verify");
-  
+
   if (!mounted || hideFooterRoutes.includes(pathname) || isInternalVerify || isDashboard) {
     return null;
   }

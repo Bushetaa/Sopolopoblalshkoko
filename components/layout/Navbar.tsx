@@ -40,31 +40,31 @@ export function Navbar() {
   ];
 
   const dashboardRoutes = [
-    "/dashboard", 
-    "/api-manager", 
-    "/api-gateway", 
-    "/workspaces", 
-    "/analytics", 
-    "/rate-limiting", 
+    "/dashboard",
+    "/api-manager",
+    "/api-gateway",
+    "/workspaces",
+    "/analytics",
+    "/rate-limiting",
     "/settings",
     "/collections",
     "/logs"
   ];
   const isDashboard = dashboardRoutes.some(route => pathname?.startsWith(route));
 
-  if (!mounted || pathname === "/auth/v-auth-721" || pathname?.startsWith("/_internal/verify") || pathname?.startsWith("/internal/verify") || isDashboard) {
+  if (!mounted || pathname === "/auth/v-auth-721" || pathname?.startsWith("/_internal/verify") || pathname?.startsWith("/internal/verify") || pathname?.startsWith("/docs") || isDashboard) {
     return null;
   }
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-[100] glass-panel border-b-white/5 border-x-0 border-t-0 bg-background/60 backdrop-blur-xl">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
-        
+
         <Link href="/" className="flex items-center gap-3 group relative z-[101]">
-          <img 
-            src="/assets/sopo_logo.gif" 
-            alt="Sopo Logo" 
-            className="w-16 h-16 md:w-20 md:h-20 object-contain group-hover:drop-shadow-[0_0_8px_rgba(0,183,255,0.5)] transition-all" 
+          <img
+            src="/assets/sopo_logo.gif"
+            alt="Sopo Logo"
+            className="w-16 h-16 md:w-20 md:h-20 object-contain group-hover:drop-shadow-[0_0_8px_rgba(0,183,255,0.5)] transition-all"
           />
           <span className="font-display font-bold text-lg md:text-xl tracking-wider text-foreground uppercase">SOPO</span>
         </Link>
@@ -72,9 +72,9 @@ export function Navbar() {
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link 
-              key={link.href} 
-              href={link.href} 
+            <Link
+              key={link.href}
+              href={link.href}
               className={`text-sm font-medium transition-colors hover:text-primary ${pathname === link.href ? "text-primary" : "text-muted-foreground"}`}
             >
               {link.label}
@@ -113,8 +113,8 @@ export function Navbar() {
             <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
             <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           </Button>
-          
-          <button 
+
+          <button
             onClick={() => setIsOpen(!isOpen)}
             className="text-foreground p-2 hover:bg-white/5 rounded-lg transition-colors"
           >
@@ -140,7 +140,7 @@ export function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 }}
                 >
-                  <Link 
+                  <Link
                     href={link.href}
                     className={`text-3xl font-display font-black tracking-tighter transition-colors hover:text-primary ${pathname === link.href ? "text-primary" : "text-foreground"}`}
                   >
@@ -148,15 +148,15 @@ export function Navbar() {
                   </Link>
                 </motion.div>
               ))}
-              
-              <motion.div 
+
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: navLinks.length * 0.1 }}
                 className="w-full max-w-xs h-[1px] bg-white/10 my-4"
               />
-              
-              <motion.div 
+
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: (navLinks.length + 1) * 0.1 }}
