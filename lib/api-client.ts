@@ -159,7 +159,7 @@ class APIClient {
       // Server-side (SSR): explicitly route to the correct service
       url = `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${endpoint}`;
     }
-    
+
     // Default headers
     const headers = new Headers(options.headers as HeadersInit);
     if (!headers.has("Content-Type") && !(options.body instanceof FormData)) {
@@ -213,7 +213,7 @@ class APIClient {
 
       const isJson = response.headers.get("content-type")?.includes("application/json");
       let data = null;
-      
+
       if (response.status !== 204) {
         data = isJson ? await response.json() : await response.text();
       }
@@ -245,7 +245,7 @@ class APIClient {
 
       const session: AuthSession = response.session || response;
       if (session && session.accessToken) {
-         this.storeAccessToken(session.accessToken, session.refreshToken);
+        this.storeAccessToken(session.accessToken, session.refreshToken);
       }
       return session;
     } catch (error: any) {
@@ -302,7 +302,7 @@ class APIClient {
       const response = await this.post<any>("/auth/signin/otp/email/verify", { email, otp });
       const session: AuthSession = response.session || response;
       if (session && session.accessToken) {
-         this.storeAccessToken(session.accessToken, session.refreshToken);
+        this.storeAccessToken(session.accessToken, session.refreshToken);
       }
       return session;
     } catch (error: any) {
@@ -428,7 +428,7 @@ class APIClient {
       if (!rToken && typeof window !== "undefined") {
         rToken = localStorage.getItem("sopo_refresh_token") || undefined;
       }
-      
+
       // If we don't have a refresh token, we can't refresh
       if (!rToken) {
         this.clearAccessToken();
@@ -459,7 +459,7 @@ class APIClient {
       const data = await response.json();
       const session = data.session || data;
       const newToken = session?.accessToken;
-      
+
       if (newToken) {
         this.storeAccessToken(newToken, session?.refreshToken);
         return newToken;
@@ -540,10 +540,10 @@ class APIClient {
       collection_id,
       ...rest
     } = data;
-    
+
     return {
       ...rest,
-      ...(collection_id && collection_id !== "" && { collection_id }),
+      collection_id: (collection_id && collection_id !== "") ? collection_id : null,
       ...(health_check_path && health_check_path !== "" && { hc_path: health_check_path }),
       ...(health_check_interval && health_check_interval !== "" && { hc_interval: health_check_interval }),
       ...(health_check_timeout && health_check_timeout !== "" && { hc_timeout: health_check_timeout }),
@@ -563,7 +563,7 @@ class APIClient {
     };
   }
   public readonly serviceTargets = this.createCrudClient<ServiceTarget>('/api/v1/service-targets');
-  
+
   public readonly gatewayRoutes = {
     getAll: async () => {
       const items = await this.get<any[]>('/api/v1/gateway-routes');
@@ -589,11 +589,11 @@ class APIClient {
       service_id, collection_id, allow_partial_failure,
       ...rest
     } = data;
-    
+
     return {
       ...rest,
       ...(service_id && service_id !== "" && { service_id }),
-      ...(collection_id && collection_id !== "" && { collection_id }),
+      collection_id: (collection_id && collection_id !== "") ? collection_id : null,
       aggregate_allow_partial_failure: allow_partial_failure
     };
   }
@@ -606,7 +606,7 @@ class APIClient {
   }
   public readonly routeSubRequests = this.createCrudClient<RouteSubRequest>('/api/v1/route-sub-requests');
   public readonly gatewayPlugins = this.createCrudClient<GatewayPlugin>('/api/v1/gateway-plugins');
-  
+
   public readonly userProfiles = {
     getAll: () => this.get<any[]>('/api/v1/user-profiles'),
     create: (data: { slug: string }) => this.post<any>('/api/v1/user-profiles', data),

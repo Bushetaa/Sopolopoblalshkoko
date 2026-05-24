@@ -4,7 +4,7 @@ import React from 'react';
 import { LineChart, Line, ResponsiveContainer, YAxis } from 'recharts';
 import { cn } from '@/lib/utils';
 import { KPIMetric } from '@/types/layout';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Activity } from 'lucide-react';
 
 interface SLATrackerProps {
   metrics: KPIMetric[];
@@ -14,117 +14,137 @@ interface SLATrackerProps {
 export default function SLATracker({ metrics, isLoading }: SLATrackerProps) {
   if (isLoading) {
     return (
-      <div className="bg-gray-900/20 border border-gray-800/50 rounded-[2.5rem] p-10 h-[500px] animate-pulse">
-        <div className="flex justify-between items-center mb-12">
-          <div className="space-y-3">
-            <div className="w-40 h-8 bg-gray-800/50 rounded-xl" />
-            <div className="w-64 h-4 bg-gray-800/50 rounded-full" />
+      <div className="bg-[#0B101B]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-8 h-[400px] animate-pulse">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-12 h-12 bg-gray-800/50 rounded-2xl" />
+          <div className="space-y-2">
+            <div className="w-32 h-6 bg-gray-800/50 rounded-lg" />
+            <div className="w-48 h-3 bg-gray-800/50 rounded-full" />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-6">
-          {[1,2,3,4].map(i => <div key={i} className="h-40 bg-gray-800/20 rounded-3xl" />)}
+        <div className="space-y-4">
+          {[1, 2, 3].map(i => <div key={i} className="h-16 bg-gray-800/30 rounded-xl" />)}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-900/40 border border-gray-800/60 rounded-[2.5rem] p-10 hover:border-blue-500/20 transition-all duration-700 group/sla relative overflow-hidden shadow-2xl">
-      {/* Decorative Elements */}
-      <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full pointer-events-none group-hover/sla:bg-blue-600/15 transition-colors duration-1000" />
-      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-indigo-600/5 blur-[120px] rounded-full pointer-events-none" />
+    <div className="bg-[#0B101B] border border-white/5 rounded-3xl overflow-hidden shadow-2xl relative group">
+      {/* Top subtle gradient line */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
       
-      <div className="relative flex items-center justify-between mb-12">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gray-950 rounded-xl ring-1 ring-blue-500/30 shadow-2xl shadow-blue-500/20">
-              <ShieldCheck className="h-5 w-5 text-blue-400" />
-            </div>
-            <span className="text-[10px] font-black text-blue-500 uppercase tracking-[0.4em]">Service Level Indicators</span>
+      {/* Background ambient light */}
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-600/5 blur-[120px] rounded-full pointer-events-none" />
+      
+      {/* Header */}
+      <div className="p-8 border-b border-white/5 flex items-center justify-between relative z-10">
+        <div className="flex items-center gap-5">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/20 flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.15)]">
+            <ShieldCheck className="w-7 h-7 text-blue-400" />
           </div>
           <div>
-            <h3 className="text-4xl font-black text-white tracking-tighter leading-none mb-2">SLA Tracker</h3>
-            <p className="text-sm text-gray-500 font-bold tracking-wide opacity-70">Compliance monitoring against predefined service goals</p>
+            <h3 className="text-2xl font-black font-display text-white tracking-tight">SLA Tracker</h3>
+            <p className="text-sm text-[#64748B] font-medium mt-1">Compliance monitoring against predefined service goals</p>
           </div>
         </div>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
-        {metrics.map((metric) => (
-          <div 
-            key={metric.id} 
-            className="p-8 rounded-[2rem] bg-gray-950/40 border border-white/5 hover:border-white/10 hover:bg-gray-950/60 transition-all duration-500 group/item relative overflow-hidden"
-          >
-            {/* Status Background Glow */}
-            <div className={cn(
-              "absolute top-0 right-0 w-32 h-32 blur-[60px] rounded-full -mr-16 -mt-16 opacity-20 transition-opacity group-hover/item:opacity-40",
-              metric.status === 'healthy' ? "bg-emerald-500" : 
-              metric.status === 'warning' ? "bg-amber-500" : "bg-rose-500"
-            )} />
 
-            <div className="relative z-10 flex flex-col gap-8">
-              <div className="flex items-start justify-between">
-                <div className="space-y-1.5">
-                  <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">{metric.name}</span>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-black text-white tracking-tighter">
-                      {metric.current}{metric.unit}
-                    </span>
-                    <div className={cn(
-                      "px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border backdrop-blur-md",
-                      metric.status === 'healthy' ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : 
-                      metric.status === 'warning' ? "bg-amber-500/10 text-amber-400 border-amber-500/20" : 
-                      "bg-rose-500/10 text-rose-400 border-rose-500/20"
-                    )}>
+      {/* Table View */}
+      <div className="w-full overflow-x-auto relative z-10">
+        <table className="w-full text-left border-collapse min-w-[700px]">
+          <thead>
+            <tr className="border-b border-white/5 bg-[#0F172A]/50">
+              <th className="py-4 px-8 text-[10px] font-black uppercase tracking-widest text-[#64748B] w-1/4">Metric Name</th>
+              <th className="py-4 px-8 text-[10px] font-black uppercase tracking-widest text-[#64748B] w-1/4">Status</th>
+              <th className="py-4 px-8 text-[10px] font-black uppercase tracking-widest text-[#64748B] w-1/4">Performance vs Target</th>
+              <th className="py-4 px-8 text-[10px] font-black uppercase tracking-widest text-[#64748B] w-1/4 text-right">30d Trend</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/5">
+            {metrics.map((metric) => {
+              const isHealthy = metric.status === 'healthy';
+              const isWarning = metric.status === 'warning';
+              
+              const statusColor = isHealthy ? 'text-emerald-400' : isWarning ? 'text-amber-400' : 'text-rose-400';
+              const statusBg = isHealthy ? 'bg-emerald-500/10 border-emerald-500/20' : isWarning ? 'bg-amber-500/10 border-amber-500/20' : 'bg-rose-500/10 border-rose-500/20';
+              const statusGlow = isHealthy ? 'shadow-[0_0_15px_rgba(16,185,129,0.15)]' : isWarning ? 'shadow-[0_0_15px_rgba(245,158,11,0.15)]' : 'shadow-[0_0_15px_rgba(225,29,72,0.15)]';
+              const chartColor = isHealthy ? '#10b981' : isWarning ? '#f59e0b' : '#ef4444';
+
+              // Calculate progress percentage for visual bar
+              const targetVal = parseFloat(metric.target.toString());
+              const currentVal = parseFloat(metric.current.toString());
+              let percent = 100;
+              if (targetVal > 0) {
+                if (metric.name.toLowerCase().includes('latency') || metric.name.toLowerCase().includes('error')) {
+                  // Lower is better (e.g. latency)
+                  // If current is 0, percent is 100%. If current == target, percent is 50%.
+                  // If current > target, percent goes down towards 0.
+                  percent = Math.max(0, Math.min(100, 100 - ((currentVal / targetVal) * 50)));
+                  // Alternative simpler logic:
+                  // percent = Math.max(5, Math.min(100, (targetVal / Math.max(0.1, currentVal)) * 100));
+                } else {
+                  // Higher is better (e.g. uptime)
+                  percent = Math.max(0, Math.min(100, (currentVal / targetVal) * 100));
+                }
+              }
+
+              return (
+                <tr key={metric.id} className="group/row hover:bg-white/[0.02] transition-colors duration-300">
+                  <td className="py-6 px-8">
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        "w-2 h-2 rounded-full ring-4 ring-opacity-20", 
+                        isHealthy ? "bg-emerald-500 ring-emerald-500 shadow-[0_0_10px_#10b981]" : 
+                        isWarning ? "bg-amber-500 ring-amber-500 shadow-[0_0_10px_#f59e0b]" : 
+                        "bg-rose-500 ring-rose-500 shadow-[0_0_10px_#ef4444]"
+                      )} />
+                      <span className="font-bold text-gray-200 group-hover/row:text-white transition-colors">{metric.name}</span>
+                    </div>
+                  </td>
+                  <td className="py-6 px-8">
+                    <div className={cn("inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border backdrop-blur-md", statusBg, statusColor, statusGlow)}>
                       {metric.status}
                     </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-end justify-between gap-6">
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-gray-600 font-black uppercase tracking-widest">Performance Goal</span>
-                  <span className="text-sm font-black text-gray-400 tabular-nums">
-                    Target: {metric.target}{metric.unit}
-                  </span>
-                </div>
-                
-                <div className="h-12 w-32 flex-shrink-0">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={metric.history.map(v => ({ v }))}>
-                      <defs>
-                        <linearGradient id={`sparkline-${metric.id}`} x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor={
-                            metric.status === 'healthy' ? '#10b981' : 
-                            metric.status === 'warning' ? '#f59e0b' : '#ef4444'
-                          } stopOpacity={0.2} />
-                          <stop offset="100%" stopColor={
-                            metric.status === 'healthy' ? '#10b981' : 
-                            metric.status === 'warning' ? '#f59e0b' : '#ef4444'
-                          } stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <Line 
-                        type="monotone" 
-                        dataKey="v" 
-                        stroke={
-                          metric.status === 'healthy' ? '#10b981' : 
-                          metric.status === 'warning' ? '#f59e0b' : '#ef4444'
-                        } 
-                        strokeWidth={3} 
-                        dot={false}
-                        isAnimationActive={true}
-                        animationDuration={1500}
-                      />
-                      <YAxis domain={['dataMin', 'dataMax']} hide />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+                  </td>
+                  <td className="py-6 px-8">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-xl font-bold text-white tabular-nums tracking-tight">{metric.current}{metric.unit}</span>
+                        <span className="text-xs font-medium text-[#64748B]">/ {metric.target}{metric.unit}</span>
+                      </div>
+                      {/* Progress Bar */}
+                      <div className="w-full max-w-[160px] h-1.5 bg-[#1E293B] rounded-full overflow-hidden">
+                        <div 
+                          className={cn("h-full rounded-full transition-all duration-1000 ease-out", isHealthy ? "bg-emerald-500" : isWarning ? "bg-amber-500" : "bg-rose-500")} 
+                          style={{ width: `${percent}%` }}
+                        />
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-6 px-8">
+                    <div className="h-10 w-28 ml-auto opacity-70 group-hover/row:opacity-100 transition-opacity duration-300">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={metric.history.map((v, i) => ({ v, i }))}>
+                          <Line 
+                            type="monotone" 
+                            dataKey="v" 
+                            stroke={chartColor} 
+                            strokeWidth={2.5} 
+                            dot={false}
+                            isAnimationActive={true}
+                            animationDuration={1500}
+                          />
+                          <YAxis domain={['dataMin', 'dataMax']} hide />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );

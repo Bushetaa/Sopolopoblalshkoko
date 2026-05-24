@@ -10,11 +10,13 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 interface RouteWithGateway extends GatewayRoute {
   gatewayName: string;
+  gatewayMode?: string;
+  serviceName?: string;
 }
 
 const PythonIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" className={className}>
-    <linearGradient id="python-original-a" gradientUnits="userSpaceOnUse" x1="70.252" y1="1237.476" x2="170.659" y2="1151.089" gradientTransform="matrix(.563 0 0 -.568 -29.215 707.817)"><stop offset="0" stopColor="#5A9FD4"/><stop offset="1" stopColor="#306998"/></linearGradient><linearGradient id="python-original-b" gradientUnits="userSpaceOnUse" x1="209.474" y1="1098.811" x2="173.62" y2="1149.537" gradientTransform="matrix(.563 0 0 -.568 -29.215 707.817)"><stop offset="0" stopColor="#FFD43B"/><stop offset="1" stopColor="#FFE873"/></linearGradient><path fill="url(#python-original-a)" d="M63.391 1.988c-4.222.02-8.252.379-11.8 1.007-10.45 1.846-12.346 5.71-12.346 12.837v9.411h24.693v3.137H29.977c-7.176 0-13.46 4.313-15.426 12.521-2.268 9.405-2.368 15.275 0 25.096 1.755 7.311 5.947 12.519 13.124 12.519h8.491V67.234c0-8.151 7.051-15.34 15.426-15.34h24.665c6.866 0 12.346-5.654 12.346-12.548V15.833c0-6.693-5.646-11.72-12.346-12.837-4.244-.706-8.645-1.027-12.866-1.008zM50.037 9.557c2.55 0 4.634 2.117 4.634 4.721 0 2.593-2.083 4.69-4.634 4.69-2.56 0-4.633-2.097-4.633-4.69-.001-2.604 2.073-4.721 4.633-4.721z" transform="translate(0 10.26)"/><path fill="url(#python-original-b)" d="M91.682 28.38v10.966c0 8.5-7.208 15.655-15.426 15.655H51.591c-6.756 0-12.346 5.783-12.346 12.549v23.515c0 6.691 5.818 10.628 12.346 12.547 7.816 2.297 15.312 2.713 24.665 0 6.216-1.801 12.346-5.423 12.346-12.547v-9.412H63.938v-3.138h37.012c7.176 0 9.852-5.005 12.348-12.519 2.578-7.735 2.467-15.174 0-25.096-1.774-7.145-5.161-12.521-12.348-12.521h-9.268zM77.809 87.927c2.561 0 4.634 2.097 4.634 4.692 0 2.602-2.074 4.719-4.634 4.719-2.55 0-4.633-2.117-4.633-4.719 0-2.595 2.083-4.692 4.633-4.692z" transform="translate(0 10.26)"/><radialGradient id="python-original-c" cx="1825.678" cy="444.45" r="26.743" gradientTransform="matrix(0 -.24 -1.055 0 532.979 557.576)" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#B8B8B8" stopOpacity=".498"/><stop offset="1" stopColor="#7F7F7F" stopOpacity="0"/></radialGradient><path opacity=".444" fill="url(#python-original-c)" d="M97.309 119.597c0 3.543-14.816 6.416-33.091 6.416-18.276 0-33.092-2.873-33.092-6.416 0-3.544 14.815-6.417 33.092-6.417 18.275 0 33.091 2.872 33.091 6.417z"/>
+    <linearGradient id="python-original-a" gradientUnits="userSpaceOnUse" x1="70.252" y1="1237.476" x2="170.659" y2="1151.089" gradientTransform="matrix(.563 0 0 -.568 -29.215 707.817)"><stop offset="0" stopColor="#5A9FD4" /><stop offset="1" stopColor="#306998" /></linearGradient><linearGradient id="python-original-b" gradientUnits="userSpaceOnUse" x1="209.474" y1="1098.811" x2="173.62" y2="1149.537" gradientTransform="matrix(.563 0 0 -.568 -29.215 707.817)"><stop offset="0" stopColor="#FFD43B" /><stop offset="1" stopColor="#FFE873" /></linearGradient><path fill="url(#python-original-a)" d="M63.391 1.988c-4.222.02-8.252.379-11.8 1.007-10.45 1.846-12.346 5.71-12.346 12.837v9.411h24.693v3.137H29.977c-7.176 0-13.46 4.313-15.426 12.521-2.268 9.405-2.368 15.275 0 25.096 1.755 7.311 5.947 12.519 13.124 12.519h8.491V67.234c0-8.151 7.051-15.34 15.426-15.34h24.665c6.866 0 12.346-5.654 12.346-12.548V15.833c0-6.693-5.646-11.72-12.346-12.837-4.244-.706-8.645-1.027-12.866-1.008zM50.037 9.557c2.55 0 4.634 2.117 4.634 4.721 0 2.593-2.083 4.69-4.634 4.69-2.56 0-4.633-2.097-4.633-4.69-.001-2.604 2.073-4.721 4.633-4.721z" transform="translate(0 10.26)" /><path fill="url(#python-original-b)" d="M91.682 28.38v10.966c0 8.5-7.208 15.655-15.426 15.655H51.591c-6.756 0-12.346 5.783-12.346 12.549v23.515c0 6.691 5.818 10.628 12.346 12.547 7.816 2.297 15.312 2.713 24.665 0 6.216-1.801 12.346-5.423 12.346-12.547v-9.412H63.938v-3.138h37.012c7.176 0 9.852-5.005 12.348-12.519 2.578-7.735 2.467-15.174 0-25.096-1.774-7.145-5.161-12.521-12.348-12.521h-9.268zM77.809 87.927c2.561 0 4.634 2.097 4.634 4.692 0 2.602-2.074 4.719-4.634 4.719-2.55 0-4.633-2.117-4.633-4.719 0-2.595 2.083-4.692 4.633-4.692z" transform="translate(0 10.26)" /><radialGradient id="python-original-c" cx="1825.678" cy="444.45" r="26.743" gradientTransform="matrix(0 -.24 -1.055 0 532.979 557.576)" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#B8B8B8" stopOpacity=".498" /><stop offset="1" stopColor="#7F7F7F" stopOpacity="0" /></radialGradient><path opacity=".444" fill="url(#python-original-c)" d="M97.309 119.597c0 3.543-14.816 6.416-33.091 6.416-18.276 0-33.092-2.873-33.092-6.416 0-3.544 14.815-6.417 33.092-6.417 18.275 0 33.091 2.872 33.091 6.417z" />
   </svg>
 );
 
@@ -24,7 +26,7 @@ export default function DeveloperHubPage() {
   const [userSlug, setUserSlug] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   const [selectedRoute, setSelectedRoute] = useState<RouteWithGateway | null>(null);
   const [activeTab, setActiveTab] = useState<'curl' | 'python' | 'node' | 'go'>('curl');
   const [copied, setCopied] = useState(false);
@@ -40,9 +42,10 @@ export default function DeveloperHubPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [fetchedGateways, fetchedRoutes, profiles] = await Promise.all([
+        const [fetchedGateways, fetchedRoutes, fetchedServices, profiles] = await Promise.all([
           apiClient.gateways.getAll(),
           apiClient.gatewayRoutes.getAll(),
+          apiClient.services.getAll(),
           apiClient.userProfiles.getAll().catch(() => [])
         ]);
 
@@ -55,9 +58,12 @@ export default function DeveloperHubPage() {
 
         const formattedRoutes = fetchedRoutes.map(rt => {
           const gw = activeGateways.find(g => g.id === rt.gateway_id);
+          const svc = fetchedServices.find(s => s.id === rt.service_id);
           return {
             ...rt,
-            gatewayName: gw?.name || 'Unknown Gateway'
+            gatewayName: gw?.name || 'Unknown Gateway',
+            gatewayMode: gw?.mode,
+            serviceName: svc?.name
           };
         }).filter(rt => rt.gatewayName !== 'Unknown Gateway'); // Only routes belonging to active gateways
 
@@ -75,7 +81,7 @@ export default function DeveloperHubPage() {
   }, []);
 
   // Filter routes based on search
-  const filteredRoutes = routes.filter(rt => 
+  const filteredRoutes = routes.filter(rt =>
     rt.path.toLowerCase().includes(searchQuery.toLowerCase()) ||
     rt.gatewayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     rt.method.toLowerCase().includes(searchQuery.toLowerCase())
@@ -92,9 +98,26 @@ export default function DeveloperHubPage() {
 
   const getFullUrl = (route: RouteWithGateway) => {
     const baseUrl = process.env.NEXT_PUBLIC_GATEWAY_URL || 'http://localhost:5000';
-    const path = route.path.startsWith('/') ? route.path : `/${route.path}`;
-    const slugStr = userSlug ? `/${userSlug}` : '';
-    return `${baseUrl}${slugStr}${path}`;
+    const cleanRoute = route.path.startsWith('/') ? route.path.slice(1) : route.path;
+    
+    if (!userSlug) {
+      return `${baseUrl}/${cleanRoute}`;
+    }
+
+    const isPro = route.gatewayMode?.toLowerCase() === 'pro';
+    
+    let fullPath = '';
+    if (isPro && route.gatewayName) {
+      if (route.serviceName) {
+        fullPath = `/${userSlug}/${route.gatewayName}/${route.serviceName}/${cleanRoute}`;
+      } else {
+        fullPath = `/${userSlug}/${route.gatewayName}/${cleanRoute}`;
+      }
+    } else {
+      fullPath = `/${userSlug}/${cleanRoute}`;
+    }
+    
+    return `${baseUrl}${fullPath}`;
   };
 
   const getSnippets = (route: RouteWithGateway) => {
@@ -147,7 +170,7 @@ export default function DeveloperHubPage() {
             />
           </div>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
           {Object.keys(groupedRoutes).length === 0 ? (
             <div className="text-center py-10 text-gray-500 text-sm">
@@ -159,7 +182,7 @@ export default function DeveloperHubPage() {
               const isCollapsed = collapsedGateways[gatewayName];
               return (
                 <div key={gatewayName} className="bg-gray-900/20 rounded-xl border border-gray-800/40 p-2 transition-all hover:bg-gray-900/40">
-                  <button 
+                  <button
                     onClick={() => toggleGateway(gatewayName)}
                     className="w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-bold text-gray-400 uppercase tracking-widest hover:text-gray-200 transition-colors group/header rounded-lg hover:bg-gray-800/50"
                   >
@@ -177,7 +200,7 @@ export default function DeveloperHubPage() {
                       )}
                     </div>
                   </button>
-                  
+
                   <div className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out px-1",
                     isCollapsed ? "max-h-0 opacity-0" : "max-h-[1000px] opacity-100 mt-2"
@@ -191,26 +214,26 @@ export default function DeveloperHubPage() {
                             onClick={() => setSelectedRoute(rt)}
                             className={cn(
                               "group relative w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-all duration-200",
-                              isSelected 
-                                ? "bg-blue-600/10 border border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.1)]" 
+                              isSelected
+                                ? "bg-blue-600/10 border border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.1)]"
                                 : "hover:bg-gray-800/40 border border-transparent hover:border-gray-700/50"
                             )}
                           >
                             {isSelected && (
                               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent rounded-lg pointer-events-none" />
                             )}
-                            
+
                             <span className={cn(
                               "text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center justify-center min-w-[52px] transition-all relative z-10 shrink-0",
                               rt.method === 'GET' ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 group-hover:border-emerald-500/40" :
-                              rt.method === 'POST' ? "bg-blue-500/10 text-blue-400 border border-blue-500/20 group-hover:border-blue-500/40" :
-                              rt.method === 'PUT' ? "bg-orange-500/10 text-orange-400 border border-orange-500/20 group-hover:border-orange-500/40" :
-                              rt.method === 'DELETE' ? "bg-red-500/10 text-red-400 border border-red-500/20 group-hover:border-red-500/40" :
-                              "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 group-hover:border-yellow-500/40"
+                                rt.method === 'POST' ? "bg-blue-500/10 text-blue-400 border border-blue-500/20 group-hover:border-blue-500/40" :
+                                  rt.method === 'PUT' ? "bg-orange-500/10 text-orange-400 border border-orange-500/20 group-hover:border-orange-500/40" :
+                                    rt.method === 'DELETE' ? "bg-red-500/10 text-red-400 border border-red-500/20 group-hover:border-red-500/40" :
+                                      "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 group-hover:border-yellow-500/40"
                             )}>
                               {rt.method}
                             </span>
-                            
+
                             <span className={cn(
                               "text-[12px] font-mono truncate w-full relative z-10 transition-colors",
                               isSelected ? "text-blue-300 font-medium" : "text-gray-400 group-hover:text-gray-200"
@@ -236,19 +259,19 @@ export default function DeveloperHubPage() {
           <>
             <div className="p-6 border-b border-gray-800/60 bg-gradient-to-b from-gray-900/40 to-transparent relative overflow-hidden flex items-center justify-between">
               <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
-              
+
               <div className="flex items-center gap-4">
                 <span className={cn(
                   "text-xs font-bold px-3 py-1.5 rounded-md border shrink-0",
                   selectedRoute.method === 'GET' ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]" :
-                  selectedRoute.method === 'POST' ? "bg-blue-500/10 text-blue-400 border-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.1)]" :
-                  selectedRoute.method === 'PUT' ? "bg-orange-500/10 text-orange-400 border-orange-500/20 shadow-[0_0_10px_rgba(249,115,22,0.1)]" :
-                  selectedRoute.method === 'DELETE' ? "bg-red-500/10 text-red-400 border-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.1)]" :
-                  "bg-yellow-500/10 text-yellow-400 border-yellow-500/20 shadow-[0_0_10px_rgba(234,179,8,0.1)]"
+                    selectedRoute.method === 'POST' ? "bg-blue-500/10 text-blue-400 border-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.1)]" :
+                      selectedRoute.method === 'PUT' ? "bg-orange-500/10 text-orange-400 border-orange-500/20 shadow-[0_0_10px_rgba(249,115,22,0.1)]" :
+                        selectedRoute.method === 'DELETE' ? "bg-red-500/10 text-red-400 border-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.1)]" :
+                          "bg-yellow-500/10 text-yellow-400 border-yellow-500/20 shadow-[0_0_10px_rgba(234,179,8,0.1)]"
                 )}>
                   {selectedRoute.method}
                 </span>
-                
+
                 <div className="flex flex-col">
                   <span className="text-gray-500 font-mono text-xs mb-1">Route Path</span>
                   <h1 className="text-xl font-mono text-gray-100 break-all tracking-tight drop-shadow-sm leading-none">
@@ -258,8 +281,8 @@ export default function DeveloperHubPage() {
               </div>
 
               <div className="flex items-center gap-2 text-sm text-gray-400 bg-gray-900/50 px-4 py-2 rounded-lg border border-gray-800/60 shadow-sm shrink-0">
-                <Globe className="w-4 h-4 text-blue-400" /> 
-                <span className="hidden sm:inline">Gateway:</span> 
+                <Globe className="w-4 h-4 text-blue-400" />
+                <span className="hidden sm:inline">Gateway:</span>
                 <span className="text-gray-200 font-medium">{selectedRoute.gatewayName}</span>
               </div>
             </div>
@@ -274,14 +297,14 @@ export default function DeveloperHubPage() {
                     Integration Code
                   </h3>
                 </div>
-                
+
                 <div className="bg-[#0c0d14] border border-gray-800/80 rounded-2xl overflow-hidden shadow-2xl relative group/code transition-all duration-500 hover:border-gray-700/80 hover:shadow-[0_8px_30px_rgba(0,0,0,0.6)]">
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 group-hover/code:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                  
+
                   <div className="flex items-center gap-1 border-b border-gray-800/80 bg-[#12141c] px-3 pt-3">
                     {(['curl', 'python', 'node', 'go'] as const).map((tab) => {
                       const isActive = activeTab === tab;
-                      
+
                       let IconComponent: React.ReactNode;
                       if (tab === 'curl') {
                         IconComponent = <Terminal className={cn("w-4 h-4 relative z-10 transition-colors", isActive ? "text-blue-400" : "text-gray-500 group-hover:text-gray-300")} />;
@@ -320,8 +343,8 @@ export default function DeveloperHubPage() {
                         onClick={handleCopy}
                         className={cn(
                           "flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 border shadow-lg backdrop-blur-md group/copy",
-                          copied 
-                            ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)]" 
+                          copied
+                            ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)]"
                             : "bg-gray-800/60 hover:bg-gray-700/80 border-gray-700/60 text-gray-400 hover:text-gray-200 hover:border-gray-600"
                         )}
                         title="Copy to clipboard"

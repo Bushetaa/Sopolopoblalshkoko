@@ -55,44 +55,93 @@ export default function WorkflowNode({
       style={{ cursor: "pointer" }}
       onClick={() => onClick?.(node)}
     >
-      {/* Outer glow */}
-      <rect
-        x={node.x - 4}
-        y={node.y - 4}
-        width={NODE_WIDTH + 8}
-        height={NODE_HEIGHT + 8}
-        rx={20}
-        fill="none"
-        stroke={colors.border}
-        strokeWidth="1"
-        strokeOpacity="0.15"
-        filter={`url(#node-glow-${node.type})`}
-      />
+      {/* Shape Background & Glow */}
+      {(() => {
+        if (node.type === "gateway") {
+          const hexPoints = `
+            ${node.x + 20},${node.y}
+            ${node.x + NODE_WIDTH - 20},${node.y}
+            ${node.x + NODE_WIDTH},${node.y + NODE_HEIGHT / 2}
+            ${node.x + NODE_WIDTH - 20},${node.y + NODE_HEIGHT}
+            ${node.x + 20},${node.y + NODE_HEIGHT}
+            ${node.x},${node.y + NODE_HEIGHT / 2}
+          `;
+          const hexGlowPoints = `
+            ${node.x + 20 - 2},${node.y - 4}
+            ${node.x + NODE_WIDTH - 20 + 2},${node.y - 4}
+            ${node.x + NODE_WIDTH + 4},${node.y + NODE_HEIGHT / 2}
+            ${node.x + NODE_WIDTH - 20 + 2},${node.y + NODE_HEIGHT + 4}
+            ${node.x + 20 - 2},${node.y + NODE_HEIGHT + 4}
+            ${node.x - 4},${node.y + NODE_HEIGHT / 2}
+          `;
+          return (
+            <>
+              <polygon
+                points={hexGlowPoints}
+                fill="none"
+                stroke={colors.border}
+                strokeWidth="1"
+                strokeOpacity="0.15"
+                filter={`url(#node-glow-${node.type})`}
+              />
+              <polygon
+                points={hexPoints}
+                fill="#0B101B"
+                stroke={colors.border}
+                strokeWidth="1"
+                strokeOpacity="0.3"
+                className="workflow-node-bg"
+              />
+            </>
+          );
+        }
 
-      {/* Main card background */}
-      <rect
-        x={node.x}
-        y={node.y}
-        width={NODE_WIDTH}
-        height={NODE_HEIGHT}
-        rx={16}
-        fill="#0B101B"
-        stroke={colors.border}
-        strokeWidth="1"
-        strokeOpacity="0.3"
-        className="workflow-node-bg"
-      />
+        const rx = node.type === "plugin" ? NODE_HEIGHT / 2 : 16;
+        const isTarget = node.type === "serviceTarget";
+
+        return (
+          <>
+            <rect
+              x={node.x - 4}
+              y={node.y - 4}
+              width={NODE_WIDTH + 8}
+              height={NODE_HEIGHT + 8}
+              rx={rx === NODE_HEIGHT / 2 ? rx + 4 : 20}
+              fill="none"
+              stroke={colors.border}
+              strokeWidth="1"
+              strokeOpacity="0.15"
+              filter={`url(#node-glow-${node.type})`}
+            />
+            <rect
+              x={node.x}
+              y={node.y}
+              width={NODE_WIDTH}
+              height={NODE_HEIGHT}
+              rx={rx}
+              fill="#0B101B"
+              stroke={colors.border}
+              strokeWidth="1"
+              strokeOpacity="0.3"
+              strokeDasharray={isTarget ? "6 4" : "none"}
+              className="workflow-node-bg"
+            />
+          </>
+        );
+      })()}
 
       {/* Top highlight line */}
-      <rect
-        x={node.x + 16}
-        y={node.y}
-        width={NODE_WIDTH - 32}
-        height={2}
-        rx={1}
-        fill={colors.border}
-        opacity={0.4}
-      />
+      {node.type !== "gateway" && node.type !== "plugin" && (
+        <rect
+          x={node.x + 16}
+          y={node.y}
+          width={NODE_WIDTH - 32}
+          height={2}
+          rx={1}
+          fill={colors.border}
+          opacity={0.4}
+        />
+      )}
 
       {/* Icon background circle */}
       <rect
