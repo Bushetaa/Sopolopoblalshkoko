@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "next lint",
@@ -45,7 +45,6 @@
     "@tailwindcss/postcss": "^4.2.1",
     "@tailwindcss/typography": "^0.5.19",
     "@tanstack/react-query": "^5.90.21",
-    "next-themes": "^0.4.3",
     "@types/react-syntax-highlighter": "^15.5.13",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -59,6 +58,7 @@
     "lucide-react": "^0.545.0",
     "memorystore": "^1.6.7",
     "next": "16.3.0-canary.20",
+    "next-themes": "^0.4.6",
     "pg": "^8.16.3",
     "postprocessing": "^6.39.1",
     "react": "^19.2.4",
@@ -94,6 +94,7 @@
     "drizzle-kit": "^0.31.4",
     "esbuild": "^0.25.0",
     "postcss": "^8.5.6",
+    "sharp": "^0.35.1",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.20.5",
     "typescript": "5.6.3"

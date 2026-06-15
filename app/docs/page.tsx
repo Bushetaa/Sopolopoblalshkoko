@@ -74,6 +74,31 @@ const DOCS_STRUCTURE = [
       { title: "Rate Limiting", id: "rate-limiting", category: "Security" },
       { title: "Atomic Rollbacks", id: "rollbacks", category: "Reliability" },
     ]
+  },
+  {
+    title: "Implementation Deep Dive",
+    items: [
+      { title: "Radix Tree Router", id: "radix-tree", category: "Implementation Deep Dive" },
+      { title: "Microkernel Plugins", id: "microkernel", category: "Implementation Deep Dive" },
+      { title: "Scatter-Gather", id: "scatter-gather", category: "Implementation Deep Dive" },
+      { title: "Ticking Buffer", id: "ticking-buffer", category: "Implementation Deep Dive" },
+      { title: "Load Balancing", id: "load-balancing", category: "Implementation Deep Dive" },
+      { title: "Testing & Benchmarks", id: "testing-benchmarks", category: "Implementation Deep Dive" },
+    ]
+  },
+  {
+    title: "AI & MCP",
+    items: [
+      { title: "MCP Server", id: "mcp-server", category: "AI & MCP" },
+    ]
+  },
+  {
+    title: "Results & Future",
+    items: [
+      { title: "Results & Discussion", id: "results", category: "Results & Future" },
+      { title: "Cloud & DevOps", id: "cloud-devops", category: "Results & Future" },
+      { title: "Conclusions & Future Work", id: "conclusions", category: "Results & Future" },
+    ]
   }
 ];
 
@@ -148,7 +173,7 @@ export default function DocsPage() {
                   {/* Actual Image Implementation */}
                   <div className="aspect-video bg-[#050810] relative overflow-hidden flex items-center justify-center">
                     <img
-                      src="/docs/overview.png"
+                      src="/docs/overview.webp"
                       alt="System Overview"
                       className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       onError={(e) => {
@@ -160,10 +185,10 @@ export default function DocsPage() {
                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
                             </div>
                             <div class="px-6 py-3 rounded-full bg-primary/20 border border-primary/30 text-primary font-black text-xs uppercase tracking-widest backdrop-blur-md">
-                               System Overview Screenshot (overview.png)
+                               System Overview Screenshot (overview.webp)
                             </div>
                             <p class="text-[10px] text-[#475569] max-w-xs leading-relaxed mt-2">
-                              Please place your screenshot in <b>public/docs/overview.png</b> to see it here.
+                              Please place your screenshot in <b>public/docs/overview.webp</b> to see it here.
                             </p>
                           </div>
                         `;
@@ -304,7 +329,7 @@ export default function DocsPage() {
               </div>
               <h2 className="text-4xl font-black text-white tracking-tight">Quickstart Guide</h2>
               <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
-                Start managing your APIs in minutes. This guide walks you through the initial setup, from workspace creation to deploying your first secure route.
+                Start managing your APIs in minutes. This guide walks you through the initial setup, from workspace creation to deploying your first secure route, all from the SOPO dashboard.
               </p>
             </section>
 
@@ -316,34 +341,17 @@ export default function DocsPage() {
                   <div className="p-2 rounded-lg bg-white/5"><User className="h-5 w-5 text-primary" /></div>
                   <div>
                     <h5 className="font-bold text-white text-sm">SOPO Account</h5>
-                    <p className="text-xs text-[#475569] mt-1">Sign up at portal.sopo.io to get your API keys.</p>
+                    <p className="text-xs text-[#475569] mt-1">Sign up or log in at portal.sopo.io.</p>
                   </div>
                 </div>
                 <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 flex items-start gap-4">
-                  <div className="p-2 rounded-lg bg-white/5"><Terminal className="h-5 w-5 text-blue-500" /></div>
+                  <div className="p-2 rounded-lg bg-white/5"><CheckCircle2 className="h-5 w-5 text-blue-500" /></div>
                   <div>
-                    <h5 className="font-bold text-white text-sm">CLI Installed</h5>
-                    <p className="text-xs text-[#475569] mt-1">Install the SOPO CLI on your local machine.</p>
+                    <h5 className="font-bold text-white text-sm">API Backend</h5>
+                    <p className="text-xs text-[#475569] mt-1">A running backend service you want to expose through SOPO.</p>
                   </div>
                 </div>
               </div>
-            </section>
-
-            <section id="installation" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
-              <h3 className="text-2xl font-black text-white">1. Install the CLI</h3>
-              <p className="text-[#94A3B8] text-sm">Run the following command in your terminal to install the SOPO toolchain globally:</p>
-              <div className="p-6 rounded-2xl bg-black border border-white/5 group relative">
-                <div className="absolute right-4 top-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => navigator.clipboard.writeText("curl -sSL https://get.sopo.io | sh")} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-[#475569] hover:text-white transition-all">
-                    <Copy className="h-4 w-4" />
-                  </button>
-                </div>
-                <div className="flex items-center gap-4 font-mono text-sm">
-                  <span className="text-primary">$</span>
-                  <span className="text-white">curl -sSL https://get.sopo.io | sh</span>
-                </div>
-              </div>
-              <p className="text-xs text-[#475569]">Supports macOS (Homebrew), Linux, and Windows (PowerShell).</p>
             </section>
 
             <section id="deployment-modes" className="space-y-12 scroll-mt-32 border-t border-white/5 pt-16">
@@ -359,10 +367,10 @@ export default function DocsPage() {
                     <h4 className="text-xl font-black text-white">The Stack Wizard</h4>
                   </div>
                   <p className="text-sm text-[#94A3B8] leading-relaxed">
-                    The wizard is the fastest way to get a production-ready stack. It automates the linking between your Gateway, Service, and Route in a single 4-step flow.
+                    The wizard is the fastest way to get a production-ready stack. It automates the linking between your Gateway, Service, and Route in a single 4-step visual flow directly from the dashboard.
                   </p>
                   <ul className="space-y-3">
-                    {["Automated entity linking", "Default security best-practices", "One-click deployment"].map(item => (
+                    {["Automated entity linking", "Default security best-practices (CORS, TLS)", "One-click deployment to your environment"].map(item => (
                       <li key={item} className="flex items-center gap-3 text-xs font-bold text-white/70">
                         <CheckCircle2 className="h-4 w-4 text-primary" />
                         {item}
@@ -376,11 +384,11 @@ export default function DocsPage() {
                       <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
                       <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
                     </div>
-                    <span className="text-[8px] font-mono text-[#475569]">gateway-wizard.png</span>
+                    <span className="text-[8px] font-mono text-[#475569]">gateway-wizard.webp</span>
                   </div>
                   <div className="aspect-video bg-[#050810] flex items-center justify-center relative">
                     <img
-                      src="/docs/gateway-wizard.png"
+                      src="/docs/gateway-wizard.webp"
                       alt="Gateway Wizard"
                       className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       onError={(e) => {
@@ -407,11 +415,11 @@ export default function DocsPage() {
                       <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
                       <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
                     </div>
-                    <span className="text-[8px] font-mono text-[#475569]">manual-entry.png</span>
+                    <span className="text-[8px] font-mono text-[#475569]">manual-entry.webp</span>
                   </div>
                   <div className="aspect-video bg-[#050810] flex items-center justify-center relative">
                     <img
-                      src="/docs/manual-entry.png"
+                      src="/docs/manual-entry.webp"
                       alt="Manual Entry"
                       className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       onError={(e) => {
@@ -436,10 +444,10 @@ export default function DocsPage() {
                     <h4 className="text-xl font-black text-white">Manual Entry</h4>
                   </div>
                   <p className="text-sm text-[#94A3B8] leading-relaxed">
-                    For advanced users who need full control. Manually configure every parameter of your infrastructure, including protocol overrides and custom timeouts.
+                    For advanced users who need full control. Manually configure every parameter of your infrastructure from the dashboard, including protocol overrides, custom timeouts, and fine-grained security policies.
                   </p>
                   <ul className="space-y-3">
-                    {["Granular parameter control", "Custom topology mapping", "Independent versioning"].map(item => (
+                    {["Granular parameter control", "Custom topology mapping", "Independent versioning and rollback"].map(item => (
                       <li key={item} className="flex items-center gap-3 text-xs font-bold text-white/70">
                         <CheckCircle2 className="h-4 w-4 text-blue-500" />
                         {item}
@@ -458,33 +466,41 @@ export default function DocsPage() {
                     step: "01",
                     id: "init-workspace",
                     title: "Initialize Workspace",
-                    desc: "Your workspace is the central hub for all gateway configurations. It holds your environments, policies, and upstream definitions. Workspaces provide the logical boundary for multi-tenant isolation.",
-                    tasks: ["Set workspace name", "Choose default region (e.g., us-east-1)", "Invite team members with RBAC roles"],
-                    code: "sopo workspace create \"Global-API-Gateway\""
+                    desc: "Your workspace is the central hub for all gateway configurations. It holds your environments, policies, and upstream definitions. Workspaces provide the logical boundary for multi-tenant isolation, ensuring your teams' configurations are completely separate.",
+                    tasks: ["Sign in to portal.sopo.io", "Click \"Create Workspace\"", "Set workspace name (e.g., \"Global-API-Gateway\")", "Choose default region (e.g., us-east-1)", "Invite team members with RBAC roles (Admin, Editor, Viewer)"],
+                    more: "Workspaces in SOPO are fully isolated. Each workspace has its own set of environments, gateways, and analytics. You can create multiple workspaces to separate development, staging, and production infrastructure entirely."
                   },
                   {
                     step: "02",
-                    id: "define-upstream",
-                    title: "Define Your Upstream",
-                    desc: "Tell SOPO where your backend services are located. An upstream can be a single URL or a group of servers for load balancing. SOPO automatically monitors these targets to ensure high availability.",
-                    tasks: ["Add target URLs (IPs or DNS)", "Configure Passive/Active Health Checks", "Select Load Balancing algo (Round Robin, Least Conn)"],
-                    code: "sopo upstream add order-service \\\n  --url https://api.production.local/orders \\\n  --health-path /health"
+                    id: "create-gateway",
+                    title: "Create a Gateway",
+                    desc: "A gateway is the entry point for your API traffic. SOPO offers two modes: Single Mode (simple, single-tenant) and Pro Mode (multi-tenant, advanced features). Choose the mode that fits your use case.",
+                    tasks: ["From the workspace dashboard, click \"New Gateway\"", "Select mode (Single or Pro)", "Configure basic settings (name, description)", "Review and create"],
+                    more: "Single Mode is perfect for small teams or individual services, providing a simple, streamlined experience. Pro Mode is designed for large-scale deployments, supporting multi-tenant architectures, custom domains, and advanced configuration options."
                   },
                   {
                     step: "03",
-                    id: "create-route",
-                    title: "Create a Route",
-                    desc: "Map a public URL to your upstream service. This is where you define the entry point for your consumers. You can use regex for dynamic paths and filter by HTTP methods.",
-                    tasks: ["Set path prefix (e.g., /v1/orders)", "Select HTTP methods (GET, POST, etc.)", "Attach base security policies (JWT, Rate Limit)"],
-                    code: "sopo route add /v1/orders --upstream order-service"
+                    id: "define-upstream",
+                    title: "Define Your Service (Upstream)",
+                    desc: "Tell SOPO where your backend services are located. A service (upstream) can be a single URL or a group of servers for load balancing. SOPO automatically monitors these targets to ensure high availability and health.",
+                    tasks: ["Go to your gateway, click \"Services\"", "Click \"Add Service\"", "Enter service name (e.g., \"order-service\")", "Add target URLs (IPs or DNS, e.g., \"https://api.production.local/orders\")", "Configure health checks (path, interval, timeout)", "Select load balancing algorithm (Round Robin, Least Connections, etc.)"],
+                    more: "Health checks are critical for ensuring high availability. SOPO continuously monitors your upstream targets and automatically removes unhealthy ones from the rotation, ensuring traffic is only sent to healthy services."
                   },
                   {
                     step: "04",
-                    id: "promote-prod",
-                    title: "Promotion to Production",
-                    desc: "Review your changes in the visual pipeline. SOPO generates a semantic diff of your configuration changes, allowing you to audit exactly what will be updated.",
-                    tasks: ["Verify simulation results", "Push to Dev environment", "Promote to Production with atomic rollback"],
-                    code: "sopo promote dev production --tag v1.0.4"
+                    id: "create-route",
+                    title: "Create a Route",
+                    desc: "Map a public URL path to your upstream service. This defines how traffic enters your system. You can use dynamic path parameters, HTTP method filtering, and attach plugins to customize behavior.",
+                    tasks: ["From your gateway, click \"Routes\"", "Click \"Add Route\"", "Set path prefix (e.g., \"/v1/orders\")", "Select HTTP methods (GET, POST, PUT, DELETE, etc.)", "Choose the service you created as the upstream target", "Attach base policies (JWT authentication, rate limiting)"],
+                    more: "Routes in SOPO use a powerful radix tree matching algorithm, supporting static paths, dynamic parameters (e.g., \"/v1/orders/:id\"), and wildcards. This allows you to create flexible routing configurations that can handle even the most complex API structures."
+                  },
+                  {
+                    step: "05",
+                    id: "test-deploy",
+                    title: "Test and Deploy",
+                    desc: "Before going live, use SOPO's simulation feature to test your configuration. Once verified, deploy to your environment with confidence, knowing you have atomic rollback capabilities if something goes wrong.",
+                    tasks: ["Click \"Simulate\" to test your route", "Review the simulation results", "Deploy to your Dev environment", "Test with your favorite API client (Postman, curl, etc.)", "Promote to Production when ready"],
+                    more: "The simulation feature in SOPO lets you test your configuration without affecting real traffic. It shows you exactly how a request will flow through your gateway, including which plugins will be applied and what the response will look like."
                   }
                 ].map((item) => (
                   <div key={item.step} id={item.id} className="group relative pl-12 border-l-2 border-white/5 hover:border-primary/50 transition-all scroll-mt-32">
@@ -492,20 +508,24 @@ export default function DocsPage() {
                       {item.step}
                     </div>
                     <div className="space-y-6 pb-12">
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <h4 className="text-2xl font-black text-white">{item.title}</h4>
-                        <div className="p-4 rounded-xl bg-black border border-white/5 font-mono text-[11px] text-primary/90 flex items-center gap-3">
-                          <Terminal className="h-3.5 w-3.5" />
-                          {item.code}
-                        </div>
+                      <h4 className="text-2xl font-black text-white">{item.title}</h4>
+                      <p className="text-[#94A3B8] text-base leading-relaxed max-w-4xl">{item.desc}</p>
+                      <div className="p-6 rounded-2xl bg-black/50 border border-white/5">
+                        <h5 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-primary" />
+                          Steps:
+                        </h5>
+                        <ul className="space-y-3">
+                          {item.tasks.map((t, i) => (
+                            <li key={i} className="flex items-start gap-3 text-sm text-[#94A3B8]">
+                              <div className="mt-1.5 w-2 h-2 rounded-full bg-primary/60" />
+                              {t}
+                            </li>
+                          ))}
+                        </ul>
                       </div>
-                      <p className="text-[#94A3B8] text-base leading-relaxed max-w-2xl">{item.desc}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {item.tasks.map(t => (
-                          <span key={t} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-[10px] font-black uppercase tracking-widest text-[#475569]">
-                            {t}
-                          </span>
-                        ))}
+                      <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">
+                        <p className="text-sm text-[#94A3B8] leading-relaxed"><strong className="text-primary">💡 Tip:</strong> {item.more}</p>
                       </div>
                     </div>
                   </div>
@@ -516,18 +536,36 @@ export default function DocsPage() {
             <section id="verification" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
               <h3 className="text-2xl font-black text-white">3. Verify Your Setup</h3>
               <p className="text-[#94A3B8] text-sm leading-relaxed">
-                Once deployed, you can test your new route using <code>curl</code> or any API client. SOPO automatically generates a public URL for your workspace environments.
+                Once deployed, you can test your new route using <code>curl</code>, Postman, or any API client. SOPO automatically generates a public URL for your gateway.
               </p>
-              <div className="p-6 rounded-2xl bg-black border border-white/5 font-mono text-sm space-y-2">
-                <div className="flex items-center gap-4">
-                  <span className="text-primary">$</span>
-                  <span className="text-white">curl -i https://your-workspace.sopo.io/v1/orders</span>
+              <div className="space-y-4">
+                <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
+                  <h5 className="font-bold text-white mb-4 text-sm">Get Your Gateway URL</h5>
+                  <p className="text-sm text-[#94A3B8] mb-4">From your gateway dashboard, copy the public URL (e.g., <code>https://your-gateway.sopo.io</code>).</p>
                 </div>
-                <div className="text-[#475569] mt-4">
-                  HTTP/2 200 OK <br />
-                  Content-Type: application/json <br />
-                  X-Sopo-Request-ID: req_9921ab01 <br />
-                  ...
+
+                <div className="p-6 rounded-2xl bg-black border border-white/5 font-mono text-sm space-y-2">
+                  <div className="flex items-center gap-4">
+                    <span className="text-primary">$</span>
+                    <span className="text-white">curl -i https://your-gateway.sopo.io/v1/orders</span>
+                  </div>
+                  <div className="text-[#475569] mt-4">
+                    HTTP/2 200 OK <br />
+                    Content-Type: application/json <br />
+                    X-Sopo-Request-ID: req_9921ab01 <br />
+                    <br />
+                    {`{"orders": [], "total": 0}`}
+                  </div>
+                </div>
+
+                <div className="p-6 rounded-2xl bg-blue-500/5 border border-blue-500/10">
+                  <h5 className="font-bold text-blue-400 mb-2 text-sm flex items-center gap-2">
+                    <Activity className="h-4 w-4" />
+                    Check Analytics
+                  </h5>
+                  <p className="text-sm text-[#94A3B8]">
+                    Go to the Analytics tab in your gateway dashboard to see real-time metrics, including requests per second, latency, and error rates.
+                  </p>
                 </div>
               </div>
             </section>
@@ -546,8 +584,87 @@ export default function DocsPage() {
               </div>
               <h2 className="text-4xl font-black text-white tracking-tight">System Architecture</h2>
               <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
-                SOPO is built on a highly decoupled, cloud-native architecture that separates the <strong>Control Plane</strong> from the <strong>Data Plane</strong>. This separation ensures that even if the management layer is unavailable, your traffic continues to flow uninterrupted.
+                SOPO is built on a highly decoupled, cloud-native architecture that separates the <strong>Control Plane</strong> from the <strong>Data Plane</strong>. This separation ensures that even if the management layer is unavailable, your traffic continues to flow uninterrupted, providing maximum reliability and scalability.
               </p>
+            </section>
+
+            {/* Architecture Diagram Section */}
+            <section className="space-y-8">
+              <h3 className="text-2xl font-black text-white">High-Level Architecture</h3>
+              <div className="p-10 rounded-[2.5rem] bg-gradient-to-br from-[#0B101B] to-[#050810] border border-white/5">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  {/* Client Layer */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 text-sm font-black text-white uppercase tracking-widest">
+                      <Globe className="h-5 w-5 text-blue-500" />
+                      Client Layer
+                    </div>
+                    <div className="space-y-3">
+                      <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-xs text-[#94A3B8]">Web Browsers</div>
+                      <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-xs text-[#94A3B8]">Mobile Apps</div>
+                      <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-xs text-[#94A3B8]">Third-Party APIs</div>
+                    </div>
+                  </div>
+
+                  {/* Gateway Layer (Data Plane) */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 text-sm font-black text-white uppercase tracking-widest">
+                      <Server className="h-5 w-5 text-primary" />
+                      Data Plane
+                    </div>
+                    <div className="space-y-3">
+                      <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 text-xs text-white">
+                        Radix Tree Router
+                      </div>
+                      <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 text-xs text-white">
+                        Phase-Based Engine
+                      </div>
+                      <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 text-xs text-white">
+                        Load Balancing
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Backend Layer */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 text-sm font-black text-white uppercase tracking-widest">
+                      <Database className="h-5 w-5 text-emerald-500" />
+                      Upstream Services
+                    </div>
+                    <div className="space-y-3">
+                      <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-xs text-[#94A3B8]">Microservices</div>
+                      <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-xs text-[#94A3B8]">Monoliths</div>
+                      <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-xs text-[#94A3B8]">Third-Party APIs</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Control Plane Info */}
+                <div className="mt-10 pt-8 border-t border-white/5">
+                  <h4 className="text-lg font-black text-white mb-4 flex items-center gap-3">
+                    <Cpu className="h-5 w-5 text-blue-500" />
+                    Control Plane
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="p-4 rounded-xl bg-blue-500/5 border border-blue-500/10 text-xs text-[#94A3B8]">
+                      <div className="font-black text-blue-400 mb-1">UI / Dashboard</div>
+                      Visual policy designer & monitoring
+                    </div>
+                    <div className="p-4 rounded-xl bg-blue-500/5 border border-blue-500/10 text-xs text-[#94A3B8]">
+                      <div className="font-black text-blue-400 mb-1">Config DB</div>
+                      Stores gateways, routes, plugins
+                    </div>
+                    <div className="p-4 rounded-xl bg-blue-500/5 border border-blue-500/10 text-xs text-[#94A3B8]">
+                      <div className="font-black text-blue-400 mb-1">Analytics Engine</div>
+                      ClickHouse for telemetry
+                    </div>
+                    <div className="p-4 rounded-xl bg-blue-500/5 border border-blue-500/10 text-xs text-[#94A3B8]">
+                      <div className="font-black text-blue-400 mb-1">MCP Server</div>
+                      AI-driven management
+                    </div>
+                  </div>
+                </div>
+              </div>
             </section>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
@@ -558,11 +675,12 @@ export default function DocsPage() {
                 <Cpu className="h-12 w-12 text-blue-500 mb-6" />
                 <h4 id="control-plane" className="text-2xl font-black text-white mb-4 scroll-mt-32 tracking-tight">Control Plane</h4>
                 <div className="space-y-4 text-[#94A3B8] leading-relaxed text-sm">
-                  <p>The centralized management layer. It handles the visual designer, configuration storage, global analytics, and team coordination.</p>
+                  <p>The centralized management layer. It handles the visual designer, configuration storage, global analytics, and team coordination via a modern Next.js frontend and Express backend.</p>
                   <ul className="space-y-3 list-none p-0">
                     <li className="flex gap-3 items-center text-xs font-bold"><CheckCircle2 className="h-4 w-4 text-blue-500" /> Visual Policy Designer & Orchestrator</li>
                     <li className="flex gap-3 items-center text-xs font-bold"><CheckCircle2 className="h-4 w-4 text-blue-500" /> Environment Promotion & Rollback Engine</li>
-                    <li className="flex gap-3 items-center text-xs font-bold"><CheckCircle2 className="h-4 w-4 text-blue-500" /> API Key, Secret & Certificate Vault</li>
+                    <li className="flex gap-3 items-center text-xs font-bold"><CheckCircle2 className="h-4 w-4 text-blue-500" /> Hasura GraphQL API</li>
+                    <li className="flex gap-3 items-center text-xs font-bold"><CheckCircle2 className="h-4 w-4 text-blue-500" /> hasura-auth for Authentication</li>
                   </ul>
                 </div>
               </div>
@@ -574,11 +692,11 @@ export default function DocsPage() {
                 <Server className="h-12 w-12 text-primary mb-6" />
                 <h4 id="data-plane" className="text-2xl font-black text-white mb-4 scroll-mt-32 tracking-tight">Data Plane (Agent)</h4>
                 <div className="space-y-4 text-[#94A3B8] leading-relaxed text-sm">
-                  <p>The high-performance execution layer. Distributed agents that process policies and route traffic at the edge with zero external dependency.</p>
+                  <p>The high-performance execution layer. Distributed Go agents that process policies and route traffic at the edge with zero external dependency, using local config caching for maximum reliability.</p>
                   <ul className="space-y-3 list-none p-0">
                     <li className="flex gap-3 items-center text-xs font-bold"><CheckCircle2 className="h-4 w-4 text-primary" /> Sub-millisecond Pipeline Execution</li>
-                    <li className="flex gap-3 items-center text-xs font-bold"><CheckCircle2 className="h-4 w-4 text-primary" /> Local Config Caching & Offline Mode</li>
-                    <li className="flex gap-3 items-center text-xs font-bold"><CheckCircle2 className="h-4 w-4 text-primary" /> Real-time Telemetry & Pulse Streaming</li>
+                    <li className="flex gap-3 items-center text-xs font-bold"><CheckCircle2 className="h-4 w-4 text-primary" /> Radix Tree Router (O(k) lookup)</li>
+                    <li className="flex gap-3 items-center text-xs font-bold"><CheckCircle2 className="h-4 w-4 text-primary" /> Real-time Telemetry via Ticking Buffer</li>
                   </ul>
                 </div>
               </div>
@@ -587,15 +705,18 @@ export default function DocsPage() {
             <section id="phase-engine" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
               <h3 className="text-3xl font-black text-white tracking-tight">Phase-Based Execution Engine</h3>
               <p className="text-[#94A3B8] text-lg leading-relaxed max-w-4xl">
-                SOPO's proprietary engine processes every request through a series of discrete phases. This allows for fine-grained control over when security, transformations, and routing logic are applied.
+                SOPO's proprietary 8-phase engine processes every request through discrete phases. This allows for fine-grained control over when security, transformations, and routing logic are applied, enabling maximum performance and flexibility.
               </p>
               <div className="space-y-4">
                 {[
-                  { phase: "Preread", desc: "Initial connection handling and TLS termination. Protocol detection (HTTP/1, HTTP/2, gRPC)." },
-                  { phase: "Rewrite", desc: "Path remapping and early header transformations before access control." },
-                  { phase: "Access", desc: "Authentication and Authorization. JWT validation, API Key checks, and IP filtering." },
-                  { phase: "Content", desc: "Core routing logic. Selection of upstream targets and load balancing." },
-                  { phase: "Log", desc: "Post-request telemetry gathering and streaming to the Control Plane." }
+                  { phase: "Preread", desc: "Initial connection handling and TLS termination. Protocol detection (HTTP/1, HTTP/2, gRPC, WebSockets)." },
+                  { phase: "Rewrite", desc: "Path remapping and early header transformations before access control (e.g., adding X-Forwarded-For)." },
+                  { phase: "Access", desc: "Authentication and Authorization. JWT validation, API Key checks, IP filtering, and CORS." },
+                  { phase: "Rate Limit", desc: "Traffic control. Sliding window rate limiting with distributed counters." },
+                  { phase: "Transform", desc: "Request modifications. Header/body transformations, query parameter injections." },
+                  { phase: "Content", desc: "Core routing logic. Radix tree lookup, upstream target selection via load balancing, scatter-gather aggregation." },
+                  { phase: "Response", desc: "Response modifications. Header/body transforms, caching, circuit breaker logic." },
+                  { phase: "Log", desc: "Post-request telemetry gathering and streaming to the Control Plane via the ticking buffer." }
                 ].map((p, i) => (
                   <div key={p.phase} className="flex items-center gap-6 p-6 rounded-2xl bg-[#0B101B] border border-white/5 hover:border-primary/20 transition-all">
                     <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-black text-xs shrink-0">{i + 1}</div>
@@ -611,31 +732,34 @@ export default function DocsPage() {
             <section id="sync-protocol" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
               <h3 className="text-3xl font-black text-white tracking-tight">Zero-Sync-Gap Protocol</h3>
               <p className="text-[#94A3B8] text-lg leading-relaxed max-w-4xl">
-                We use a custom gRPC-based streaming protocol to ensure that policy changes are propagated from the Control Plane to all global Agents in less than 50ms.
+                We use a custom event-driven architecture with Hasura event triggers, Redis Pub/Sub, and gRPC streaming to ensure that policy changes are propagated from the Control Plane to all global Agents in less than 50ms with atomic configuration swaps for zero downtime.
               </p>
-              <div className="flex flex-col md:flex-row items-center justify-between gap-8 p-10 rounded-3xl bg-[#050810] border border-white/5">
-                <div className="flex items-center gap-4">
-                  <div className="w-4 h-4 rounded-full bg-blue-500 shadow-[0_0_15px_rgba(37,99,235,0.6)] animate-pulse" />
-                  <span className="text-xs font-black text-white uppercase tracking-widest">Update Issued</span>
-                </div>
-                <div className="flex-1 h-[2px] bg-gradient-to-r from-blue-500 via-primary to-primary relative mx-4">
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-6 py-2 rounded-full bg-[#0B101B] border border-white/10 text-[9px] font-black text-white uppercase tracking-[0.2em] shadow-2xl">
-                    Low Latency gRPC Stream
+              <div className="p-10 rounded-3xl bg-[#050810] border border-white/5">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-4 h-4 rounded-full bg-blue-500 shadow-[0_0_15px_rgba(37,99,235,0.6)] animate-pulse" />
+                    <span className="text-xs font-black text-white uppercase tracking-widest">Hasura Event Trigger</span>
                   </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="text-xs font-black text-white uppercase tracking-widest">Global Enforcement</span>
-                  <div className="w-4 h-4 rounded-full bg-primary shadow-[0_0_15px_rgba(243,90,30,0.6)] animate-pulse" />
+                  <ArrowRight className="hidden md:block h-6 w-6 text-[#475569]" />
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-4 h-4 rounded-full bg-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.6)] animate-pulse" />
+                    <span className="text-xs font-black text-white uppercase tracking-widest">Redis Pub/Sub</span>
+                  </div>
+                  <ArrowRight className="hidden md:block h-6 w-6 text-[#475569]" />
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-4 h-4 rounded-full bg-primary shadow-[0_0_15px_rgba(243,90,30,0.6)] animate-pulse" />
+                    <span className="text-xs font-black text-white uppercase tracking-widest">Atomic Config Swap</span>
+                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                 <div className="p-8 rounded-2xl bg-[#0B101B] border border-white/5">
                   <h5 className="font-bold text-white mb-3">Eventual Consistency</h5>
-                  <p className="text-xs text-[#475569] leading-relaxed">Most configuration updates follow an eventual consistency model, ensuring high availability even during network partitions between regions.</p>
+                  <p className="text-xs text-[#475569] leading-relaxed">Most configuration updates follow an eventual consistency model, ensuring high availability even during network partitions between regions with sub-50ms propagation.</p>
                 </div>
                 <div className="p-8 rounded-2xl bg-[#0B101B] border border-white/5">
                   <h5 className="font-bold text-white mb-3">Strong Consistency (Pro)</h5>
-                  <p className="text-xs text-[#475569] leading-relaxed">Critical keys (like revoked tokens or global rate limit counters) use a consensus-based protocol for strong consistency across all nodes.</p>
+                  <p className="text-xs text-[#475569] leading-relaxed">Critical keys (like revoked tokens or global rate limit counters) use a Raft-based consensus protocol for strong consistency across all nodes with &lt; 100ms latency.</p>
                 </div>
               </div>
             </section>
@@ -654,14 +778,14 @@ export default function DocsPage() {
               </div>
               <h2 className="text-4xl font-black text-white tracking-tight">Workspaces</h2>
               <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
-                Workspaces are top-level containers that provide strict isolation for teams, projects, or business units. Each workspace acts as a self-contained ecosystem with its own independent configuration, users, and identity.
+                Workspaces are top-level containers that provide strict, hardware-backed isolation for teams, projects, or business units. Each workspace acts as a completely self-contained ecosystem with its own independent gateways, services, routes, users, and identity providers.
               </p>
             </section>
 
             <section id="infrastructure-identity" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
-              <h3 className="text-2xl font-black text-white">Infrastructure Identity</h3>
+              <h3 className="text-2xl font-black text-white">Infrastructure Identity & Isolation</h3>
               <p className="text-[#94A3B8] text-sm leading-relaxed max-w-3xl">
-                Every workspace is assigned a unique <strong>Hostname Identifier</strong>. This hostname defines the primary entry point for all your gateway deployments and traffic routing within that workspace.
+                Every workspace is assigned a unique <strong>Hostname Identifier</strong> and dedicated Certificate Authority (CA). This identity forms the foundation for all traffic routing and security within the workspace.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -669,19 +793,28 @@ export default function DocsPage() {
                   <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
                     <h5 className="font-bold text-white mb-2 flex items-center gap-2">
                       <Globe className="h-4 w-4 text-primary" />
-                      Global Slug
+                      Global Slug & Domain Names
                     </h5>
                     <p className="text-xs text-[#475569] leading-relaxed">
-                      Your workspace slug (e.g., <code>my-workspace</code>) is used to construct your unique SOPO subdomains and API endpoints.
+                      Your workspace slug (e.g., <code>my-workspace</code>) is used to construct unique SOPO subdomains like <code>my-workspace.sopo.io</code>. Custom domains can be added for enterprise use.
                     </p>
                   </div>
                   <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
                     <h5 className="font-bold text-white mb-2 flex items-center gap-2">
                       <ShieldCheck className="h-4 w-4 text-emerald-500" />
-                      Isolated mTLS
+                      Isolated mTLS & Encryption
                     </h5>
                     <p className="text-xs text-[#475569] leading-relaxed">
-                      Each workspace maintains a dedicated Certificate Authority (CA) for securing internal traffic between gateway nodes.
+                      Each workspace maintains a dedicated CA for internal mTLS between gateway nodes. All configuration and telemetry data are encrypted at rest and in transit with workspace-specific keys.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
+                    <h5 className="font-bold text-white mb-2 flex items-center gap-2">
+                      <User className="h-4 w-4 text-blue-500" />
+                      RBAC & Team Management
+                    </h5>
+                    <p className="text-xs text-[#475569] leading-relaxed">
+                      Invite team members with granular roles: Admin (full access), Editor (manage gateways/routes), Viewer (read-only). Permissions are enforced at the workspace level.
                     </p>
                   </div>
                 </div>
@@ -690,22 +823,23 @@ export default function DocsPage() {
                 <div className="p-8 rounded-[2.5rem] bg-gradient-to-br from-primary/10 to-transparent border border-primary/20 flex flex-col justify-center">
                   <div className="bg-[#050810] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
                     <div className="px-6 py-4 border-b border-white/5 bg-white/5 flex items-center justify-between">
-                      <span className="text-[10px] font-black text-white uppercase tracking-widest">Security Settings</span>
+                      <span className="text-[10px] font-black text-white uppercase tracking-widest">Workspace Settings</span>
                     </div>
                     <div className="p-6 space-y-6">
                       <div className="space-y-2">
                         <label className="text-[8px] font-black text-primary uppercase tracking-widest">Infrastructure Identity</label>
-                        <h4 className="text-lg font-black text-white">Workspace Hostname</h4>
+                        <h4 className="text-lg font-black text-white">Global Workspace Slug</h4>
                         <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-3">
-                          <div className="text-[8px] text-[#475569] font-bold uppercase">Proposed Hostname Identifier</div>
+                          <div className="text-[8px] text-[#475569] font-bold uppercase">Unique Hostname</div>
                           <div className="flex items-center gap-2 p-3 rounded bg-white/5 border border-white/10 text-xs text-white font-mono">
-                            <span className="text-primary">@</span>
+                            <span className="text-primary">https://</span>
                             my-workspace
+                            <span className="text-[#475569]">.sopo.io</span>
                           </div>
                         </div>
                       </div>
                       <button className="w-full py-3 rounded-xl bg-primary/20 border border-primary/30 text-primary text-[10px] font-black uppercase tracking-widest">
-                        Deploy Profile
+                        Save Workspace
                       </button>
                     </div>
                   </div>
@@ -714,9 +848,9 @@ export default function DocsPage() {
             </section>
 
             <section id="external-integrations" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
-              <h3 className="text-2xl font-black text-white">Authentication & Integrations</h3>
+              <h3 className="text-2xl font-black text-white">Identity Providers & Integrations</h3>
               <p className="text-[#94A3B8] text-sm leading-relaxed">
-                Connect your workspace to external identity providers to manage team access and secure your API consumers.
+                Connect your workspace to external identity providers to manage team access and authenticate your API consumers. SSO options streamline onboarding and offboarding.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -744,9 +878,23 @@ export default function DocsPage() {
 
             <section id="workspace-isolation" className="p-10 rounded-[2.5rem] border border-white/5 bg-[#0B101B] mt-16">
               <h4 className="text-2xl font-black text-white mb-4">Hard Isolation Guarantee</h4>
-              <p className="text-sm text-[#94A3B8] leading-relaxed">
-                Data and configurations never leak between workspaces. SOPO uses a multi-tenant kernel that ensures CPU, memory, and network resources are strictly partitioned. This ensures that a spike or misconfiguration in one workspace cannot degrade the performance of another.
+              <p className="text-sm text-[#94A3B8] leading-relaxed mb-6">
+                Data and configurations never leak between workspaces. SOPO uses a multi-tenant architecture with strict isolation boundaries:
               </p>
+              <ul className="space-y-3 text-sm text-[#94A3B8]">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                  <span><strong>Resource Partitioning:</strong> CPU, memory, and network resources are strictly allocated per workspace to prevent noisy neighbor issues.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                  <span><strong>Data Isolation:</strong> All workspace data (configs, logs, metrics) is stored in separate schemas/databases with encryption at rest.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                  <span><strong>Failure Isolation:</strong> A crash or misconfiguration in one workspace has no impact on other workspaces in the platform.</span>
+                </li>
+              </ul>
             </section>
           </div>
         );
@@ -762,9 +910,41 @@ export default function DocsPage() {
                 <span className="text-sm font-black uppercase tracking-widest">Infrastructure</span>
               </div>
               <h2 className="text-4xl font-black text-white tracking-tight">Gateways (Single vs Pro)</h2>
-              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-3xl">
-                A Gateway is the physical deployment of the SOPO Data Plane. You can run a single node for simple apps or a Pro Cluster for global enterprise scale.
+              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
+                A Gateway is the physical deployment of the SOPO Data Plane — the high-performance Go engine that actually routes your traffic. Built on a microkernel architecture, the gateway uses event-driven configuration management via Redis pub/sub for zero‑downtime hot reloads, with local JSON files as a cold‑start fallback. Choose between Single Node for simplicity or Pro Cluster for global scale and high availability.
               </p>
+              <section className="pt-16 border-t border-white/5">
+                <h3 className="text-2xl font-black text-white mb-8">Architecture Highlights</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
+                    <h5 className="font-bold text-white mb-2 flex items-center gap-2 text-sm">
+                      <Zap className="h-4 w-4 text-primary" />
+                      Event‑Driven Config
+                    </h5>
+                    <p className="text-[10px] text-[#475569] leading-relaxed">
+                      Subscribes to Redis <code>gateway_changed</code> events for instant config updates. The core router instance is swapped atomically using an <code>RWMutex</code> to prioritize read performance for proxying requests over write performance for config changes.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
+                    <h5 className="font-bold text-white mb-2 flex items-center gap-2 text-sm">
+                      <Layers className="h-4 w-4 text-blue-500" />
+                      Microkernel Design
+                    </h5>
+                    <p className="text-[10px] text-[#475569] leading-relaxed">
+                      The core only handles path resolution and method matching, while cross‑cutting concerns (auth, rate limiting, logging) are delegated to a unified plugin registry for extensibility without modifying base proxy logic.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
+                    <h5 className="font-bold text-white mb-2 flex items-center gap-2 text-sm">
+                      <Activity className="h-4 w-4 text-emerald-500" />
+                      Async Analytics
+                    </h5>
+                    <p className="text-[10px] text-[#475569] leading-relaxed">
+                      Uses an asynchronous ClickHouse exporter for logging and analytics to avoid bottlenecking proxy throughput, with a trade‑off of slight risk of losing last few logs on abrupt crash for substantial performance gain.
+                    </p>
+                  </div>
+                </div>
+              </section>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
                 <div className="p-8 rounded-[2rem] border border-white/5 bg-[#0B101B] hover:border-blue-500/30 transition-all group">
@@ -773,12 +953,13 @@ export default function DocsPage() {
                   </div>
                   <h4 className="text-2xl font-black text-white mb-4 tracking-tight">Single Node</h4>
                   <p className="text-sm text-[#94A3B8] leading-relaxed mb-6">
-                    Perfect for development or small-scale applications. Run SOPO as a single container or binary.
+                    Perfect for local development, testing, or small-scale applications with predictable traffic. Deploy as a single Docker container or static binary.
                   </p>
                   <ul className="space-y-3">
-                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-blue-500" /> Lightweight (20MB Binary)</li>
-                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-blue-500" /> Local Config Storage</li>
-                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-blue-500" /> Direct Admin API Access</li>
+                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-blue-500" /> Lightweight (20MB Static Binary)</li>
+                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-blue-500" /> Local Config Storage with Hot Reload</li>
+                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-blue-500" /> Direct Local Admin API Access</li>
+                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-blue-500" /> Built-in Observability (Prometheus Metrics)</li>
                   </ul>
                 </div>
 
@@ -789,12 +970,14 @@ export default function DocsPage() {
                   </div>
                   <h4 className="text-2xl font-black text-white mb-4 tracking-tight">Pro Cluster</h4>
                   <p className="text-sm text-[#94A3B8] leading-relaxed mb-6">
-                    Enterprise-grade high availability. Distributed state, multi-region sync, and advanced observability.
+                    Enterprise-grade high availability for production. Deploy a distributed cluster with multi-region support, automatic failover, and global traffic management.
                   </p>
                   <ul className="space-y-3">
-                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-primary" /> Multi-Region Data Sync</li>
-                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-primary" /> Distributed Rate Limiting</li>
-                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-primary" /> Global Pulse Monitoring</li>
+                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-primary" /> Multi-Region Config Sync & Failover</li>
+                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-primary" /> Distributed, Eventually Consistent Rate Limiting</li>
+                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-primary" /> Global Pulse Monitoring & Auto-Scaling</li>
+                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-primary" /> Custom Domain Support & Managed TLS Certificates</li>
+                    <li className="flex items-center gap-3 text-xs font-bold text-[#94A3B8]"><CheckCircle2 className="h-4 w-4 text-primary" /> DDoS Protection & WAF Integration</li>
                   </ul>
                 </div>
               </div>
@@ -802,36 +985,50 @@ export default function DocsPage() {
               {/* UI Mock: Gateway Node Health */}
               <div className="bg-[#0B101B] border border-white/5 rounded-[2.5rem] p-10 mt-8">
                 <div className="flex items-center justify-between mb-8">
-                  <h4 className="text-xl font-black text-white">Cluster Health (us-east-1)</h4>
+                  <div className="flex items-center gap-4">
+                    <h4 className="text-xl font-black text-white">Pro Cluster Health</h4>
+                    <div className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase">us-east-1</div>
+                  </div>
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Healthy</span>
+                    <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Healthy (3/3 Nodes)</span>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                   {[
-                    { id: "node-01", cpu: "12%", mem: "1.2GB", status: "ONLINE" },
-                    { id: "node-02", cpu: "14%", mem: "1.3GB", status: "ONLINE" },
-                    { id: "node-03", cpu: "82%", mem: "2.4GB", status: "LOADED" }
+                    { id: "sopo-gw-01", cpu: "12%", mem: "1.2GB", status: "ONLINE", region: "us-east-1a" },
+                    { id: "sopo-gw-02", cpu: "14%", mem: "1.3GB", status: "ONLINE", region: "us-east-1b" },
+                    { id: "sopo-gw-03", cpu: "28%", mem: "1.8GB", status: "ONLINE", region: "us-east-1c" }
                   ].map(node => (
                     <div key={node.id} className="p-6 rounded-2xl bg-[#050810] border border-white/5 space-y-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-[#475569]">{node.id}</span>
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-mono text-[#475569]">{node.id}</span>
+                          <div className="text-[9px] text-primary/70 font-medium uppercase">{node.region}</div>
+                        </div>
                         <div className={cn(
                           "px-2 py-0.5 rounded text-[8px] font-black",
                           node.status === 'ONLINE' ? "bg-emerald-500/10 text-emerald-500" : "bg-yellow-500/10 text-yellow-500"
                         )}>{node.status}</div>
                       </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-[10px]">
-                          <span className="text-[#475569]">CPU</span>
-                          <span className="text-white font-bold">{node.cpu}</span>
+                      <div className="space-y-3">
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-[10px]">
+                            <span className="text-[#475569]">CPU Usage</span>
+                            <span className="text-white font-bold">{node.cpu}</span>
+                          </div>
+                          <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                            <div className={cn(
+                              "h-full rounded-full",
+                              parseInt(node.cpu) > 50 ? "bg-yellow-500" : "bg-primary"
+                            )} style={{ width: node.cpu }} />
+                          </div>
                         </div>
-                        <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                          <div className={cn(
-                            "h-full rounded-full",
-                            parseInt(node.cpu) > 50 ? "bg-yellow-500" : "bg-primary"
-                          )} style={{ width: node.cpu }} />
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-[10px]">
+                            <span className="text-[#475569]">Memory Usage</span>
+                            <span className="text-white font-bold">{node.mem}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -907,14 +1104,46 @@ export default function DocsPage() {
                 <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5">
                   <h4 className="text-xl font-bold text-white mb-4">Debugging at Scale</h4>
                   <p className="text-sm text-[#94A3B8] leading-relaxed">
-                    No more digging through text logs. The Workflow View allows you to visually trace any single request, seeing exactly which plugins it hit and where it was routed.
+                    No more digging through text logs. The Workflow View allows you to visually trace any single request, seeing exactly which plugins it hit and where it was routed, with timing information for each step.
                   </p>
                 </div>
                 <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5">
                   <h4 className="text-xl font-bold text-white mb-4">Real-time Topology</h4>
                   <p className="text-sm text-[#94A3B8] leading-relaxed">
-                    SOPO automatically builds a map of your microservices based on actual traffic patterns. Identify bottleneck services and circular dependencies instantly.
+                    SOPO automatically builds a map of your microservices based on actual traffic patterns. Identify bottleneck services, circular dependencies, and latency hotspots instantly.
                   </p>
+                </div>
+              </div>
+              <div className="pt-12 border-t border-white/5">
+                <h3 className="text-2xl font-black text-white mb-8">Key Features</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm flex items-center gap-2">
+                      <Activity className="h-4 w-4 text-blue-500" />
+                      Request Sampling
+                    </h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      Sample requests at configurable rates to avoid overwhelming your observability pipeline, with support for dynamic sampling based on error rates or latency.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm flex items-center gap-2">
+                      <Search className="h-4 w-4 text-emerald-500" />
+                      Advanced Filtering
+                    </h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      Filter traces by status code, path, method, user ID, latency, or custom metadata to quickly find the requests you're interested in.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm flex items-center gap-2">
+                      <Layers className="h-4 w-4 text-primary" />
+                      Dependency Mapping
+                    </h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      Visualize service dependencies and traffic flows between microservices to understand your architecture better.
+                    </p>
+                  </div>
                 </div>
               </div>
             </section>
@@ -933,8 +1162,40 @@ export default function DocsPage() {
               </div>
               <h2 className="text-4xl font-black text-white tracking-tight">Real-time Analytics</h2>
               <p className="text-xl text-[#94A3B8] leading-relaxed max-w-3xl">
-                Gain deep insights into your API performance with sub-second data aggregation and beautiful, interactive visualizations.
+                Gain deep insights into your API performance with sub-second data aggregation and beautiful, interactive visualizations. SOPO uses a dual-trigger ticking buffer (time-based and size-based) to batch analytics events efficiently before sending them to ClickHouse.
               </p>
+              <section className="pt-12 border-t border-white/5 space-y-12">
+                <h3 className="text-2xl font-black text-white">Analytics Architecture</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm flex items-center gap-2">
+                      <Database className="h-4 w-4 text-emerald-500" />
+                      Ticking Buffer
+                    </h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      Dual-trigger (1 second or 1000 events) batching mechanism to reduce network overhead while maintaining real-time data freshness.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm flex items-center gap-2">
+                      <Database className="h-4 w-4 text-blue-500" />
+                      ClickHouse Storage
+                    </h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      High-performance columnar database optimized for time-series analytics, with low-latency queries even at scale.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm flex items-center gap-2">
+                      <Activity className="h-4 w-4 text-primary" />
+                      Real-time Dashboards
+                    </h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      Live dashboards with percentile breakdowns (P50, P90, P99), error rates, and traffic patterns.
+                    </p>
+                  </div>
+                </div>
+              </section>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
@@ -951,17 +1212,36 @@ export default function DocsPage() {
                 ))}
               </div>
 
-              <div className="bg-[#0B101B] border border-white/5 rounded-[2.5rem] p-10 h-80 flex items-center justify-center relative overflow-hidden group">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(243,90,30,0.05)_0%,transparent_70%)]" />
-                <div className="flex flex-col items-center gap-4 text-center">
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-                    <Activity className="h-8 w-8 text-primary animate-pulse" />
+              {/* Figure: Analytics Dashboard */}
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-white/5 bg-[#0B101B] overflow-hidden shadow-xl group">
+                  <div className="p-1.5 bg-white/5 border-b border-white/5 flex items-center gap-2 px-3">
+                    <div className="flex gap-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+                    </div>
+                    <span className="text-[8px] font-mono text-[#475569]">analytics-dashboard.webp</span>
                   </div>
-                  <h4 className="text-xl font-black text-white">Advanced Charting Engine</h4>
-                  <p className="text-sm text-[#475569] max-w-md">
-                    Interactive time-series charts with percentile breakdowns (P50, P90, P99). Zoom, filter, and export data with native speeds.
-                  </p>
+                  <div className="aspect-video bg-[#050810] flex items-center justify-center relative">
+                    <img
+                      src="/docs/analytics-dashboard.webp"
+                      alt="Analytics Dashboard"
+                      className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.parentElement!.innerHTML = `
+                          <div class="flex flex-col items-center gap-4 p-12 text-center">
+                            <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-2 animate-pulse">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                            </div>
+                            <span class="text-[10px] font-black text-primary uppercase tracking-widest">Analytics Dashboard Screenshot</span>
+                          </div>
+                        `;
+                      }}
+                    />
+                  </div>
                 </div>
+                <p className="text-center text-[10px] text-[#475569] italic">Figure 5.1: Real‑time analytics dashboard with traffic charts, latency metrics, and live log feed.</p>
               </div>
             </section>
           </div>
@@ -989,7 +1269,7 @@ export default function DocsPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div className="space-y-6">
                   <p className="text-sm text-[#94A3B8] leading-relaxed">
-                    When defining a service, you specify the <strong>Communication Protocol</strong> (REST/HTTP or gRPC/Proto) and the <strong>Deployment Context</strong>.
+                    When defining a service, you specify the <strong>Communication Protocol</strong> (REST/HTTP or gRPC/Proto) and the <strong>Deployment Context</strong>. The Upstream Manager handles graceful shutdown of old health‑check workers during config hot‑reloads to prevent goroutine leaks.
                   </p>
                   <div className="grid grid-cols-1 gap-4">
                     <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
@@ -998,7 +1278,7 @@ export default function DocsPage() {
                         Balancing Strategies
                       </h5>
                       <p className="text-[10px] text-[#475569] leading-relaxed">
-                        Choose between <strong>Round Robin</strong> for equal distribution, <strong>Least Connections</strong>, or <strong>Consistent Hashing</strong> for stateful workloads.
+                        Choose between <strong>Round Robin</strong> (equal distribution), <strong>Least Connections</strong>, <strong>Consistent Hashing</strong> (stateful), <strong>Weighted</strong>, or <strong>Latency‑Based</strong> for optimal performance.
                       </p>
                     </div>
                     <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
@@ -1007,7 +1287,16 @@ export default function DocsPage() {
                         Health Monitoring
                       </h5>
                       <p className="text-[10px] text-[#475569] leading-relaxed">
-                        Configure <strong>Monitor Endpoints</strong> (e.g., <code>/healthz</code>) with custom intervals and timeouts to ensure traffic only hits healthy targets.
+                        Configure <strong>Monitor Endpoints</strong> (e.g., <code>/healthz</code>) with custom intervals, timeouts, failure/pass thresholds, and health‑check paths. Active health checks with automatic target draining when unhealthy.
+                      </p>
+                    </div>
+                    <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
+                      <h5 className="font-bold text-white mb-2 flex items-center gap-2 text-sm">
+                        <Layers className="h-4 w-4 text-purple-500" />
+                        Scatter‑Gather Aggregation
+                      </h5>
+                      <p className="text-[10px] text-[#475569] leading-relaxed">
+                        Native scatter‑gather pipeline breaks a single request into parallel upstream calls, executes them concurrently, and merges responses with configurable merge strategies. Handles partial failures and per‑sub‑request timeouts.
                       </p>
                     </div>
                   </div>
@@ -1021,11 +1310,11 @@ export default function DocsPage() {
                         <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
                         <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
                       </div>
-                      <span className="text-[8px] font-mono text-[#475569]">create-service.png</span>
+                      <span className="text-[8px] font-mono text-[#475569]">create-service.webp</span>
                     </div>
                     <div className="aspect-video bg-[#050810] flex items-center justify-center relative">
                       <img
-                        src="/docs/create-service.png"
+                        src="/docs/create-service.webp"
                         alt="Create Service"
                         className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                         onError={(e) => {
@@ -1061,8 +1350,40 @@ export default function DocsPage() {
               </div>
               <h2 className="text-4xl font-black text-white tracking-tight">Routes & Matching</h2>
               <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
-                Routes define the entry points for your API. They map public-facing paths and HTTP methods to your internal Services, providing a powerful layer of abstraction and control.
+                Routes define the entry points for your API. They map public-facing paths and HTTP methods to your internal Services, providing a powerful layer of abstraction and control. SOPO uses a high‑performance radix tree router for O(k) lookup time (k = path length), with parametric/wildcard segments support.
               </p>
+              <section className="pt-16 border-t border-white/5">
+                <h3 className="text-2xl font-black text-white mb-8">Radix Tree Router</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
+                    <h5 className="font-bold text-white mb-2 flex items-center gap-2 text-sm">
+                      <Zap className="h-4 w-4 text-primary" />
+                      O(k) Lookup
+                    </h5>
+                    <p className="text-[10px] text-[#475569] leading-relaxed">
+                      Uses a radix (prefix) tree for path matching, delivering O(k) lookup time where k is the path length, optimized for high‑throughput routing.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
+                    <h5 className="font-bold text-white mb-2 flex items-center gap-2 text-sm">
+                      <Network className="h-4 w-4 text-blue-500" />
+                      Parametric Segments
+                    </h5>
+                    <p className="text-[10px] text-[#475569] leading-relaxed">
+                      Support for dynamic parametric segments (e.g., <code>/api/users/:id</code>) and wildcard segments (e.g., <code>/files/*path</code>) for flexible path patterns.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
+                    <h5 className="font-bold text-white mb-2 flex items-center gap-2 text-sm">
+                      <Activity className="h-4 w-4 text-emerald-500" />
+                      Static First
+                    </h5>
+                    <p className="text-[10px] text-[#475569] leading-relaxed">
+                      Static routes are prioritized over dynamic/wildcard routes to avoid ambiguity, with clear precedence rules for predictable matching behavior.
+                    </p>
+                  </div>
+                </div>
+              </section>
             </section>
 
             <section id="routing-topology" className="space-y-12 scroll-mt-32 border-t border-white/5 pt-16">
@@ -1077,11 +1398,11 @@ export default function DocsPage() {
                         <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
                         <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
                       </div>
-                      <span className="text-[8px] font-mono text-[#475569]">create-route.png</span>
+                      <span className="text-[8px] font-mono text-[#475569]">create-route.webp</span>
                     </div>
                     <div className="aspect-video bg-[#050810] flex items-center justify-center relative">
                       <img
-                        src="/docs/create-route.png"
+                        src="/docs/create-route.webp"
                         alt="Create Route"
                         className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                         onError={(e) => {
@@ -1143,7 +1464,7 @@ export default function DocsPage() {
               </div>
               <h2 className="text-4xl font-black text-white tracking-tight">Plugins Pipeline</h2>
               <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
-                Plugins are the modular building blocks of SOPO's logic. They allow you to inject security, traffic control, and observability into specific <strong>Execution Phases</strong> of a request's lifecycle.
+                Plugins are the modular building blocks of SOPO's logic, built on a microkernel architecture. They allow you to inject security, traffic control, and observability into specific <strong>Execution Phases</strong> of a request's lifecycle, with support for gRPC/HTTP/2 multiplexing on the same port via <code>h2c</code>.
               </p>
             </section>
 
@@ -1184,8 +1505,11 @@ export default function DocsPage() {
                   {[
                     { phase: "Pre-Routing", desc: "Execute logic before the upstream target is determined." },
                     { phase: "Authentication", desc: "Identity verification and access control checks." },
+                    { phase: "Authorization", desc: "Check permissions and enforce policy-based access." },
                     { phase: "Rate Limiting", desc: "Enforce traffic quotas and prevent abuse." },
                     { phase: "Request Transform", desc: "Modify headers or body before forwarding to upstream." },
+                    { phase: "Response Transform", desc: "Modify upstream response headers/body before client delivery." },
+                    { phase: "Caching", desc: "Serve cached responses to reduce upstream load and latency." },
                     { phase: "Logging", desc: "Async telemetry collection after the request finishes." }
                   ].map((p, i) => (
                     <div key={p.phase} className="flex items-start gap-4 group">
@@ -1311,55 +1635,103 @@ export default function DocsPage() {
         return (
           <div className="space-y-16">
             <section className="space-y-8">
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                Modern software delivery requires isolated stages. SOPO Environments allow you to manage Development, Staging, and Production gateway states independently.
+              <div className="flex items-center gap-3 text-primary mb-4">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <GitBranch className="h-6 w-6" />
+                </div>
+                <span className="text-sm font-black uppercase tracking-widest">Delivery</span>
+              </div>
+              <h2 className="text-4xl font-black text-white tracking-tight">Environments</h2>
+              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
+                Modern software delivery requires safe, isolated stages. SOPO Environments allow you to manage Development, Staging, and Production gateway states independently, with atomic promotions and rollbacks.
               </p>
 
-              <div className="space-y-10">
+              <div className="space-y-10 pt-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {[
-                    { name: "Development", color: "blue", desc: "Sandbox for testing new policies and routes. Connected to dev upstreams." },
-                    { name: "Staging", color: "yellow", desc: "Pre-production mirror. Used for final QA and simulation verification." },
-                    { name: "Production", color: "green", desc: "Live traffic environment. High availability and strict rollback rules." }
+                    { name: "Development", color: "blue", desc: "Safe sandbox for testing new policies and routes. Connected to dev upstreams with relaxed rate limits." },
+                    { name: "Staging", color: "yellow", desc: "Pre-production mirror of production. Used for final QA, load testing, and simulation verification." },
+                    { name: "Production", color: "green", desc: "Live customer-facing environment. High availability, strict rate limits, and automated rollback rules." }
                   ].map(env => (
-                    <div key={env.name} className={`p-8 rounded-3xl border border-border bg-card/20 border-l-4 border-l-${env.color}-500 group hover:bg-card/40 transition-all`}>
-                      <h5 className="font-bold text-xl mb-3 text-foreground">{env.name}</h5>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{env.desc}</p>
+                    <div key={env.name} className={`p-8 rounded-3xl border border-white/5 bg-[#0B101B] hover:border-primary/20 transition-all group`}>
+                      <h5 className="font-bold text-xl mb-3 text-white">{env.name}</h5>
+                      <p className="text-sm text-[#94A3B8] leading-relaxed">{env.desc}</p>
                     </div>
                   ))}
                 </div>
 
-                <section id="promotion-flow" className="p-10 rounded-[40px] border border-border bg-gradient-to-br from-primary/5 to-transparent space-y-8 scroll-mt-32">
-                  <h3 className="text-2xl font-bold text-foreground">The Promotion Workflow</h3>
+                <section id="promotion-flow" className="p-10 rounded-[40px] border border-white/5 bg-gradient-to-br from-primary/5 to-transparent space-y-8 scroll-mt-32">
+                  <h3 className="text-2xl font-bold text-white">Safe Promotion Workflow</h3>
                   <div className="space-y-6">
-                    <p className="text-muted-foreground">SOPO uses a "Push to Staging, Promote to Prod" model. This ensures that every configuration change is versioned and audited.</p>
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-6 rounded-2xl bg-background/50 border border-border">
-                      <div className="flex items-center gap-3"><div className="w-3 h-3 rounded-full bg-blue-500" /> <span>Save as Draft</span></div>
-                      <ArrowRight className="hidden md:block h-4 w-4 text-zinc-700" />
-                      <div className="flex items-center gap-3"><div className="w-3 h-3 rounded-full bg-yellow-500" /> <span>Deploy to Staging</span></div>
-                      <ArrowRight className="hidden md:block h-4 w-4 text-zinc-700" />
-                      <div className="flex items-center gap-3"><div className="w-3 h-3 rounded-full bg-green-500" /> <span>Promote to Production</span></div>
+                    <p className="text-[#94A3B8]">SOPO uses a "Draft → Staging → Production" promotion model. Every configuration change is versioned, audited, and simulated before it goes live.</p>
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-6 rounded-2xl bg-[#050810] border border-white/10">
+                      <div className="flex items-center gap-3"><div className="w-3 h-3 rounded-full bg-blue-500" /> <span className="font-bold text-white text-sm">Save as Draft</span></div>
+                      <ArrowRight className="hidden md:block h-4 w-4 text-[#475569]" />
+                      <div className="flex items-center gap-3"><div className="w-3 h-3 rounded-full bg-yellow-500" /> <span className="font-bold text-white text-sm">Deploy & Test in Staging</span></div>
+                      <ArrowRight className="hidden md:block h-4 w-4 text-[#475569]" />
+                      <div className="flex items-center gap-3"><div className="w-3 h-3 rounded-full bg-emerald-500" /> <span className="font-bold text-white text-sm">Promote to Production</span></div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                      {[
+                        { title: "Atomic Promotions", desc: "Config changes are applied atomically with no downtime." },
+                        { title: "Version History", desc: "Full audit log of all changes with rollback support." },
+                        { title: "Simulation", desc: "Test changes in staging with production-like traffic." }
+                      ].map((item, i) => (
+                        <div key={i} className="p-4 rounded-xl bg-white/5 border border-white/10">
+                          <h6 className="font-bold text-white text-sm mb-1">{item.title}</h6>
+                          <p className="text-xs text-[#475569] leading-relaxed">{item.desc}</p>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </section>
 
                 <section id="env-variables" className="space-y-8 pt-8 scroll-mt-32">
-                  <h2 className="text-3xl font-display font-bold text-foreground dark:text-white border-l-4 border-blue-400 pl-6">Environment Variables</h2>
-                  <div className="p-8 rounded-3xl bg-muted/50 dark:bg-secondary/10 border border-border space-y-6">
-                    <p className="text-muted-foreground leading-relaxed">
-                      Manage dynamic configuration values using environment-specific variables. This allows you to use the same policy across all stages while pointing to different backends or using different credentials.
+                  <h2 className="text-3xl font-display font-bold text-white border-l-4 border-blue-400 pl-6">Environment-Specific Variables & Secrets</h2>
+                  <div className="p-8 rounded-3xl bg-[#0B101B] border border-white/5 space-y-6">
+                    <p className="text-[#94A3B8] leading-relaxed">
+                      Manage dynamic configuration values and secrets per environment. This allows you to use the exact same policies across all stages while pointing to different backends or using different credentials.
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="p-6 rounded-2xl bg-background dark:bg-zinc-950 border border-border dark:border-white/5 space-y-4 shadow-sm">
-                        <div className="text-[10px] text-muted-foreground dark:text-zinc-500 uppercase tracking-widest font-black">Staging Variable</div>
-                        <div className="font-mono text-xs text-blue-600 dark:text-blue-400 font-bold">UPSTREAM_URL: "https://stg-api.internal"</div>
+                      <div className="p-6 rounded-2xl bg-[#050810] border border-white/10 space-y-4">
+                        <div className="text-[10px] text-blue-400 uppercase tracking-widest font-black">Staging Environment</div>
+                        <div className="font-mono text-xs text-white space-y-2">
+                          <div><span className="text-blue-400">UPSTREAM_URL</span>: <span className="text-primary">"https://stg-api.your-company.com"</span></div>
+                          <div><span className="text-blue-400">API_KEY</span>: <span className="text-emerald-400">sk_stg_********</span></div>
+                        </div>
                       </div>
-                      <div className="p-6 rounded-2xl bg-background dark:bg-zinc-950 border border-border dark:border-white/5 space-y-4 shadow-sm">
-                        <div className="text-[10px] text-muted-foreground dark:text-zinc-500 uppercase tracking-widest font-black">Production Variable</div>
-                        <div className="font-mono text-xs text-green-600 dark:text-green-400 font-bold">UPSTREAM_URL: "https://prod-api.internal"</div>
+                      <div className="p-6 rounded-2xl bg-[#050810] border border-white/10 space-y-4">
+                        <div className="text-[10px] text-emerald-400 uppercase tracking-widest font-black">Production Environment</div>
+                        <div className="font-mono text-xs text-white space-y-2">
+                          <div><span className="text-emerald-400">UPSTREAM_URL</span>: <span className="text-primary">"https://api.your-company.com"</span></div>
+                          <div><span className="text-emerald-400">API_KEY</span>: <span className="text-emerald-400">sk_prod_********</span></div>
+                        </div>
                       </div>
                     </div>
-                    <p className="text-xs text-muted-foreground dark:text-zinc-500 italic font-medium">"Refer to these in your policies using the syntax <code>{"{{"}env.UPSTREAM_URL{"}}"}</code>"</p>
+                    <p className="text-xs text-[#475569] italic font-medium">Reference these in your policies using the syntax <code className="text-primary">{"{{env.UPSTREAM_URL}}"}</code></p>
+                  </div>
+                </section>
+
+                <section id="rollbacks" className="space-y-8 pt-8 scroll-mt-32">
+                  <h2 className="text-3xl font-display font-bold text-white border-l-4 border-red-500 pl-6">Safe Rollbacks</h2>
+                  <div className="p-8 rounded-3xl bg-red-500/5 border border-red-500/10 space-y-6">
+                    <p className="text-[#94A3B8] leading-relaxed">
+                      If a promotion causes issues in production, roll back to the previous version in a single click. Rollbacks are atomic and apply instantly.
+                    </p>
+                    <ul className="space-y-3 text-sm text-[#94A3B8]">
+                      <li className="flex items-start gap-3">
+                        <CheckCircle2 className="h-5 w-5 text-red-400 shrink-0 mt-0.5" />
+                        <span><strong>Instant Atomic Rollbacks</strong>: Revert to any previous version with zero downtime.</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle2 className="h-5 w-5 text-red-400 shrink-0 mt-0.5" />
+                        <span><strong>Full Audit History</strong>: Every change (including rollbacks) is logged with user, timestamp, and diff.</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle2 className="h-5 w-5 text-red-400 shrink-0 mt-0.5" />
+                        <span><strong>Health-Based Auto-Rollback</strong>: Pro Clusters can automatically roll back if error rates exceed thresholds.</span>
+                      </li>
+                    </ul>
                   </div>
                 </section>
               </div>
@@ -1379,8 +1751,37 @@ export default function DocsPage() {
               </div>
               <h2 className="text-4xl font-black text-white tracking-tight">Authentication & Identity</h2>
               <p className="text-xl text-[#94A3B8] leading-relaxed max-w-3xl">
-                Offload authentication to the edge. SOPO integrates with any OIDC/OAuth2 provider to verify tokens before they reach your backend.
+                Offload authentication to the edge. SOPO integrates with any OIDC/OAuth2 provider to verify tokens before they reach your backend, with support for JWT validation, OAuth2 introspection, and custom authentication plugins.
               </p>
+              <section className="pt-12 border-t border-white/5 space-y-12">
+                <h3 className="text-2xl font-black text-white">Supported Auth Methods</h3>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm">JWT Validation</h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      Verify JWT tokens using public keys from JWKS endpoints, with support for key rotation and multiple issuers.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm">OAuth2 Introspection</h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      Validate opaque tokens with OAuth2 token introspection endpoints for additional security.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm">API Keys</h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      Simple API key authentication with support for rate limiting and rotation.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm">Custom Auth</h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      Implement custom authentication logic using WASM or Lua plugins for proprietary schemes.
+                    </p>
+                  </div>
+                </div>
+              </section>
 
               <div className="bg-[#0B101B] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl">
                 <div className="p-8 border-b border-white/5 bg-gradient-to-br from-emerald-500/5 to-transparent">
@@ -1421,6 +1822,39 @@ export default function DocsPage() {
                   </div>
                 </div>
               </div>
+
+              {/* Figure: Security Settings */}
+              <div className="space-y-4 pt-8">
+                <div className="rounded-3xl border border-white/5 bg-[#0B101B] overflow-hidden shadow-2xl relative group">
+                  <div className="p-1.5 bg-white/5 border-b border-white/5 flex items-center gap-2 px-4">
+                    <div className="flex gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-red-500/20" />
+                      <div className="w-2 h-2 rounded-full bg-yellow-500/20" />
+                      <div className="w-2 h-2 rounded-full bg-emerald-500/20" />
+                    </div>
+                    <span className="text-[10px] font-mono text-[#475569]">security-settings.webp</span>
+                  </div>
+                  <div className="aspect-video bg-[#050810] relative overflow-hidden flex items-center justify-center">
+                    <img
+                      src="/docs/security.webp"
+                      alt="Security Settings"
+                      className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.parentElement!.innerHTML = `
+                          <div class="flex flex-col items-center gap-4 p-12 text-center">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 mb-2 animate-pulse">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                            </div>
+                            <span class="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Security Settings Screenshot</span>
+                          </div>
+                        `;
+                      }}
+                    />
+                  </div>
+                </div>
+                <p className="text-center text-xs text-[#475569] italic">Figure 6.1: The SOPO Identity & Authentication dashboard showing active providers and integration keys.</p>
+              </div>
             </section>
           </div>
         );
@@ -1437,8 +1871,37 @@ export default function DocsPage() {
               </div>
               <h2 className="text-4xl font-black text-white tracking-tight">Rate Limiting</h2>
               <p className="text-xl text-[#94A3B8] leading-relaxed max-w-3xl">
-                Protect your infrastructure from abuse and spikes with distributed, multi-tier rate limiting policies.
+                Protect your infrastructure from abuse and spikes with distributed, multi-tier rate limiting policies. SOPO supports sliding window rate limiting, with distributed counters synchronized across all gateway nodes for global enforcement.
               </p>
+              <section className="pt-12 border-t border-white/5 space-y-12">
+                <h3 className="text-2xl font-black text-white">Rate Limiting Features</h3>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm">Sliding Window</h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      High-precision sliding window algorithm prevents "bursting" at window boundaries, providing smoother traffic control than fixed-window methods.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm">Distributed Counters</h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      In Pro clusters, rate limit counters are synchronized across all nodes with less than 15ms latency, ensuring consistent global enforcement.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm">Key-Based Limits</h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      Limit traffic based on API keys, user IDs, IP addresses, JWT claims, or any custom header, with support for multiple overlapping keys.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm">Quota Management</h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      Set per-user or per-application quotas with configurable time windows (seconds, minutes, hours, days) and automatic resets.
+                    </p>
+                  </div>
+                </div>
+              </section>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="p-8 rounded-[2.5rem] bg-[#0B101B] border border-white/5 space-y-6">
@@ -1492,8 +1955,40 @@ export default function DocsPage() {
               </div>
               <h2 className="text-4xl font-black text-white tracking-tight">Header Transforms</h2>
               <p className="text-xl text-[#94A3B8] leading-relaxed max-w-3xl">
-                Transformations allow you to modify the request before it hits your upstream, or the response before it reaches the client. This is essential for maintaining backward compatibility or injecting tracing metadata.
+                Transformations allow you to modify the request before it hits your upstream, or the response before it reaches the client. This is essential for maintaining backward compatibility, injecting tracing metadata, or adapting API versions without changing backend code.
               </p>
+              <section className="pt-12 border-t border-white/5 space-y-12">
+                <h3 className="text-2xl font-black text-white">Request & Response Modification</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm flex items-center gap-2">
+                      <Activity className="h-4 w-4 text-blue-500" />
+                      Request Header Operations
+                    </h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      Add, remove, or modify HTTP headers. Inject <code>X-Request-ID</code> for distributed tracing, strip sensitive headers like <code>Authorization</code> before upstream, or add custom context headers like <code>X-User-ID</code> from JWT claims.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm flex items-center gap-2">
+                      <RefreshCw className="h-4 w-4 text-purple-500" />
+                      Response Header Operations
+                    </h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      Modify upstream response headers before sending to clients. Add CORS headers, remove internal metadata, or normalize cache control headers for CDNs.
+                    </p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm flex items-center gap-2">
+                      <Network className="h-4 w-4 text-emerald-500" />
+                      Path Rewriting
+                    </h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">
+                      Remap public paths to internal structures. For example, change <code>/shop/v2/orders</code> to <code>/api/internal/v3/orders</code> seamlessly without client awareness, with support for dynamic parameter substitution.
+                    </p>
+                  </div>
+                </div>
+              </section>
 
               <div className="space-y-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -1564,8 +2059,29 @@ export default function DocsPage() {
               </div>
               <h2 className="text-4xl font-black text-white tracking-tight">WASM & Lua Extensions</h2>
               <p className="text-xl text-[#94A3B8] leading-relaxed max-w-3xl">
-                When built-in plugins aren't enough, extend SOPO with custom logic. Use <strong>WebAssembly</strong> for native performance or <strong>Lua</strong> for rapid prototyping.
+                When built-in plugins aren't enough, extend SOPO with custom logic. Use <strong>WebAssembly</strong> for native performance (ideal for production workloads) or <strong>Lua</strong> for rapid prototyping (perfect for experiments and fast iterations).
               </p>
+              <section className="pt-12 border-t border-white/5 space-y-12">
+                <h3 className="text-2xl font-black text-white">Use Cases</h3>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm">Custom Auth</h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">Implement proprietary authentication schemes that aren't covered by standard plugins.</p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm">Payload Encryption</h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">Add field-level encryption/decryption for sensitive data in requests or responses.</p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm">Protocol Adapters</h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">Translate between different API protocols (e.g., REST to gRPC transcoding).</p>
+                  </div>
+                  <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                    <h5 className="font-bold text-white text-sm">Complex Routing</h5>
+                    <p className="text-[10px] text-[#94A3B8] leading-relaxed">Implement conditional routing based on request payload content or headers.</p>
+                  </div>
+                </div>
+              </section>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
                 <div className="p-10 rounded-[2.5rem] border border-white/5 bg-gradient-to-br from-purple-500/10 to-transparent relative overflow-hidden group">
@@ -1647,8 +2163,15 @@ export default function DocsPage() {
         return (
           <div className="space-y-16">
             <section className="space-y-8">
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                You can't manage what you can't measure. SOPO's observability suite provides real-time telemetry for every request flowing through your gateway.
+              <div className="flex items-center gap-3 text-primary mb-4">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Activity className="h-6 w-6" />
+                </div>
+                <span className="text-sm font-black uppercase tracking-widest">Observability</span>
+              </div>
+              <h2 className="text-4xl font-black text-white tracking-tight">Observability Suite</h2>
+              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
+                You can't manage what you can't measure. SOPO's observability suite provides real-time telemetry for every request flowing through your gateway, including metrics, logs, and distributed tracing.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -1668,16 +2191,36 @@ export default function DocsPage() {
                 ))}
               </div>
 
-              <div className="p-10 rounded-[40px] border border-border bg-primary/5 space-y-8">
-                <h3 id="global-metrics" className="text-2xl font-bold text-foreground scroll-mt-32">Global Metric Aggregation</h3>
-                <p className="text-muted-foreground text-lg">
-                  Every Sopo Agent streams metrics to the Control Plane using a high-throughput time-series bridge. This data is then aggregated to give you a global view of your API health across all regions.
-                </p>
-                <div className="h-64 w-full bg-muted dark:bg-zinc-950/50 rounded-3xl border border-border flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(243,90,30,0.05)_0%,transparent_70%)]" />
-                  <BarChart3 className="h-12 w-12 text-zinc-400 dark:text-zinc-800" />
-                  <span className="text-xs font-bold text-muted-foreground dark:text-zinc-700 ml-4 tracking-widest">LIVE ANALYTICS ENGINE ACTIVE</span>
+              {/* Figure: Observability Suite */}
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-white/5 bg-[#0B101B] overflow-hidden shadow-xl group">
+                  <div className="p-1.5 bg-white/5 border-b border-white/5 flex items-center gap-2 px-3">
+                    <div className="flex gap-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+                    </div>
+                    <span className="text-[8px] font-mono text-[#475569]">observability-suite.webp</span>
+                  </div>
+                  <div className="aspect-video bg-[#050810] flex items-center justify-center relative">
+                    <img
+                      src="/docs/observability-suite.webp"
+                      alt="Observability Suite"
+                      className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.parentElement!.innerHTML = `
+                          <div class="flex flex-col items-center gap-4 p-12 text-center">
+                            <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-2 animate-pulse">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                            </div>
+                            <span class="text-[10px] font-black text-primary uppercase tracking-widest">Observability Suite Screenshot</span>
+                          </div>
+                        `;
+                      }}
+                    />
+                  </div>
                 </div>
+                <p className="text-center text-[10px] text-[#475569] italic">Figure 6.1: Observability dashboard with global metrics and external integration options.</p>
               </div>
 
               <section id="external-exports" className="space-y-8 pt-8 scroll-mt-32">
@@ -1719,57 +2262,952 @@ export default function DocsPage() {
         return (
           <div className="space-y-16">
             <section className="space-y-8">
-              <div className="flex items-center gap-4">
-                <div className="p-4 rounded-2xl bg-zinc-500/10"><RotateCcw className="h-8 w-8 text-zinc-500" /></div>
-                <div>
-                  <h2 className="text-3xl font-display font-bold text-foreground">Disaster Recovery</h2>
-                  <p className="text-muted-foreground">The ultimate safety switch for your gateway operations.</p>
+              <div className="flex items-center gap-3 text-primary mb-4">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <RotateCcw className="h-6 w-6" />
+                </div>
+                <span className="text-sm font-black uppercase tracking-widest font-mono">Reliability System</span>
+              </div>
+              <h2 className="text-5xl text-foreground font-black leading-tight tracking-tight">
+                Atomic <span className="text-primary">Rollbacks</span>
+              </h2>
+
+              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
+                Rollbacks in SOPO are atomic version-state restorations. Every deployment across your environments is snapshot-versioned, allowing you to travel back in time to any known stable state rapidly with zero downtime.
+              </p>
+            </section>
+
+            <section id="how-it-works" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Atomic Restoration Process</h3>
+              <div className="space-y-8 max-w-4xl">
+                {[
+                  { step: "1", title: "Global Snapshot Versioning", desc: "Every time you promote a change, SOPO creates a complete, immutable snapshot of the entire gateway configuration (routes, upstreams, policies). This configuration state is cryptographically signed." },
+                  { step: "2", title: "Pointer Swapping (RWMutex)", desc: "When a rollback is triggered, the Go gateway swaps the active configuration pointer atomically. Reading requests use a lock-free RLock path, ensuring zero downtime and zero dropped connections during configuration reloads." },
+                  { step: "3", title: "Three-Tier Fallback Caching", desc: "If the connection to the control plane (Redis) is lost, agents fall back to a local config.json cache on the container file system, and finally to Amazon S3 for the last known good state." }
+                ].map(item => (
+                  <div key={item.step} className="flex gap-6 items-start p-6 rounded-2xl bg-[#0B101B] border border-white/5 hover:border-primary/20 transition-all duration-300">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 text-primary font-black text-lg">{item.step}</div>
+                    <div>
+                      <h5 className="font-bold text-white text-lg mb-1">{item.title}</h5>
+                      <p className="text-[#94A3B8] text-sm leading-relaxed">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section id="auto-rollback" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Auto-Rollback Rules</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+                <div className="p-8 rounded-[2.5rem] border border-red-500/20 bg-red-500/5 space-y-4">
+                  <h4 className="text-lg font-bold text-red-400 flex items-center gap-2">
+                    <AlertTriangle className="h-5 w-5" />
+                    Threshold-Based Triggers
+                  </h4>
+                  <p className="text-sm text-[#94A3B8] leading-relaxed">
+                    Configure health-based auto-rollback rules. If a newly deployed version triggers error rates (5xx responses) or latency metrics to cross the configured thresholds within a 5-minute window, the gateway automatically reverts to the previous version.
+                  </p>
+                </div>
+                <div className="p-8 rounded-[2.5rem] border border-white/5 bg-[#0B101B] space-y-4">
+                  <h4 className="text-lg font-bold text-white flex items-center gap-2">
+                    <Activity className="h-5 w-5 text-primary" />
+                    Health-Check Verification
+                  </h4>
+                  <p className="text-sm text-[#94A3B8] leading-relaxed">
+                    Active targets are drained automatically. Health checks monitor the newly loaded upstreams before routing client traffic, minimizing impact on active traffic during the reload window.
+                  </p>
                 </div>
               </div>
+            </section>
 
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                Rollbacks in SOPO are atomic version-state restorations. Every deployment across your environments is snapshot-versioned, allowing you to travel back in time to any known stable state rapidly.
+            <section id="audit-trail" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Full Audit Trail</h3>
+              <p className="text-[#94A3B8] text-sm leading-relaxed max-w-4xl">
+                Every administrative configuration change, deployment, and rollback publishes event records to the PostgreSQL config database. These records contain the invoking user's ID, change description, timestamp, and a granular JSON diff showing the additions, modifications, and deletions between snapshots.
               </p>
+            </section>
+          </div>
+        );
 
-              <div className="space-y-10">
-                <div className="p-10 rounded-[40px] border border-border bg-card/20 space-y-8">
-                  <h3 id="how-it-works" className="text-2xl font-bold text-foreground scroll-mt-32">Atomic Restoration Process</h3>
-                  <div className="space-y-8">
+      case "radix-tree":
+        return (
+          <div className="space-y-16">
+            <section className="space-y-8">
+              <div className="flex items-center gap-3 text-primary mb-4">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Network className="h-6 w-6" />
+                </div>
+                <span className="text-sm font-black uppercase tracking-widest font-mono">Routing Core</span>
+              </div>
+              <h2 className="text-5xl text-foreground font-black leading-tight tracking-tight">
+                Radix Tree <span className="text-primary">Router</span>
+              </h2>
+
+              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
+                The Sopo gateway resolves path patterns using a high-performance compressed Radix Tree (Patricia Trie) implemented in Go. This delivers O(k) lookup time where k is path length, independent of the number of registered routes.
+              </p>
+            </section>
+
+            <section id="tree-structure" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Node Types & Matching Priority</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div className="space-y-6">
+                  <p className="text-sm text-[#94A3B8] leading-relaxed">
+                    The router collapses common prefixes to minimize memory consumption and cache misses. When a request path is resolved, nodes are searched in a strict precedence order:
+                  </p>
+                  <ul className="space-y-4">
                     {[
-                      { step: "1", title: "Global Snapshot", desc: "Every time you promote a change, SOPO creates a complete, immutable snapshot of the entire gateway configuration (routes, upstreams, policies)." },
-                      { step: "2", title: "Local Cache", desc: "Agents maintain a local encrypted cache of several successful configurations. This allows for 'Air-gapped' rollbacks even if the Control Plane is offline." },
-                      { step: "3", title: "Pointer Switch", desc: "When a rollback is triggered, agents simply switch their active configuration pointer. No process reload or traffic drop required." }
-                    ].map(item => (
-                      <div key={item.step} className="flex gap-6 items-start">
-                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 text-primary font-black">{item.step}</div>
+                      { index: "1", type: "Static Nodes", desc: "Exact string matches (e.g. /api/users). Highest matching priority." },
+                      { index: "2", type: "Parametric Nodes", desc: "Dynamic route segments prefix-matched (e.g. /api/users/:id), capturing parameters dynamically." },
+                      { index: "3", type: "Wildcard Nodes", desc: "Asterisk catch-all segment (e.g. /static/*) matching any single path segment." },
+                      { index: "4", type: "Deep Wildcard Nodes", desc: "Double asterisk catch-all segment (e.g. /proxy/**) matching all remaining path segments." }
+                    ].map(node => (
+                      <li key={node.index} className="flex gap-4 p-4 rounded-xl bg-[#0B101B] border border-white/5">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 text-primary font-black text-xs">{node.index}</div>
                         <div>
-                          <h5 className="font-bold text-lg mb-1 text-foreground">{item.title}</h5>
-                          <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
+                          <h6 className="font-bold text-white text-sm">{node.type}</h6>
+                          <p className="text-xs text-[#94A3B8] mt-0.5">{node.desc}</p>
                         </div>
-                      </div>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="p-8 rounded-3xl border border-red-500/20 bg-red-500/5 space-y-4">
-                    <h4 id="auto-rollback" className="text-lg font-bold text-red-400 flex items-center gap-2 scroll-mt-32">
-                      <AlertTriangle className="h-5 w-5" />
-                      Auto-Rollback Rules
-                    </h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Enable threshold-based rollbacks. If a new deployment causes a significant increase in errors or a latency spike, SOPO will automatically revert to the previous version.
-                    </p>
+                <div className="p-8 rounded-[2.5rem] bg-[#0B101B] border border-white/5 shadow-2xl">
+                  <h4 className="text-sm font-black text-white mb-4 uppercase tracking-widest font-mono">Patricia Trie Representation</h4>
+                  <div className="p-4 rounded-xl bg-black border border-white/5 font-mono text-xs">
+                    <div className="text-[#475569] mb-3">// Routing trie layout</div>
+                    <div className="text-white space-y-1">
+                      root<br/>
+                      ├── api/<br/>
+                      │   ├── users/<br/>
+                      │   │   ├── (:id) <span className="text-primary">// Parametric</span><br/>
+                      │   │   └── me <span className="text-emerald-400">// Static</span><br/>
+                      │   └── orders/<br/>
+                      │       └── (:id)<br/>
+                      ├── healthz<br/>
+                      └── ** <span className="text-blue-400">// Catch-All</span>
+                    </div>
                   </div>
-                  <div className="p-8 rounded-3xl border border-border bg-secondary/20 space-y-4">
-                    <h4 id="audit-trail" className="text-lg font-bold text-foreground flex items-center gap-2 scroll-mt-32">
-                      <History className="h-5 w-5 text-primary" />
-                      Full Audit History
-                    </h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Every rollback is logged with the user ID, timestamp, and a 'Diff' view showing exactly what changed between the failed and restored configuration.
-                    </p>
+                  <div className="mt-4 p-3 rounded-lg bg-primary/5 border border-primary/10 text-xs text-[#94A3B8]">
+                    <strong className="text-primary">HTTP Method Matching:</strong> Path resolution is separate from HTTP method checking. The router resolves the node first, then queries the node's `methodRoutes` map, allowing correct HTTP 405 (Method Not Allowed) responses with an `Allow` header.
                   </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="lookup-performance" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Immutable Lock-Free Resolution</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                To maximize concurrent read performance, the router is fully immutable once built. Updates are performed via the **Atomic Router Swap** pattern, where an entire new tree is built in the background and swapped atomically via pointer reassignment using an `RWMutex`. Read operations only take a shared read-lock (`RLock`), avoiding write lock contention entirely on the proxying hot path.
+              </p>
+            </section>
+
+            <section id="benchmarks" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Performance Characteristics</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
+                {[
+                  { title: "Lookup Throughput", value: "2.4M+ req/sec", desc: "Executed concurrently on a 3.5GHz CPU core" },
+                  { title: "P99 Lookup Latency", value: "< 450 ns", desc: "Route resolution completes in sub-microsecond time" },
+                  { title: "Memory Efficiency", value: "~120 bytes / route", desc: "collapsed prefixes minimize struct allocations" }
+                ].map((stat, i) => (
+                  <div key={i} className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
+                    <h5 className="font-bold text-white text-sm mb-2">{stat.title}</h5>
+                    <div className="text-2xl font-black text-primary mb-1">{stat.value}</div>
+                    <p className="text-xs text-[#475569]">{stat.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        );
+
+      case "microkernel":
+        return (
+          <div className="space-y-16">
+            <section className="space-y-8">
+              <div className="flex items-center gap-3 text-primary mb-4">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Layers className="h-6 w-6" />
+                </div>
+                <span className="text-sm font-black uppercase tracking-widest font-mono">Architecture</span>
+              </div>
+              <h2 className="text-5xl text-foreground font-black leading-tight tracking-tight">
+                Microkernel <span className="text-primary">Plugins</span>
+              </h2>
+
+              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
+                The gateway core is minimal, using a plugin-based architecture for all cross-cutting concerns (Auth, Rate Limiting, Logging).
+              </p>
+            </section>
+
+            <section id="phase-gates" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Execution Phase Gates</h3>
+              <p className="text-sm text-[#94A3B8] max-w-4xl">
+                Plugins are bound to specific lifecycle stages, ensuring predictable request modification order:
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl">
+                {[
+                  { phase: "Pre-Routing", desc: "Global Authentication & WAF rules." },
+                  { phase: "Routing", desc: "Radix Tree path resolution." },
+                  { phase: "Pre-Upstream", desc: "Rate limiting, header modification, transformation." },
+                  { phase: "Post-Upstream", desc: "Logging, response mutation, metrics." }
+                ].map((p, i) => (
+                  <div key={i} className="flex gap-4 p-4 rounded-xl bg-[#0B101B] border border-white/5">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 text-primary font-black text-xs">{i+1}</div>
+                    <div>
+                      <h6 className="font-bold text-white text-sm">{p.phase}</h6>
+                      <p className="text-xs text-[#94A3B8] mt-0.5">{p.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        );
+
+      case "scatter-gather":
+        return (
+          <div className="space-y-16">
+            <section className="space-y-8">
+              <div className="flex items-center gap-3 text-primary mb-4">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Workflow className="h-6 w-6" />
+                </div>
+                <span className="text-sm font-black uppercase tracking-widest font-mono">Aggregation</span>
+              </div>
+              <h2 className="text-5xl text-foreground font-black leading-tight tracking-tight">
+                Scatter-Gather <span className="text-primary">Aggregation</span>
+              </h2>
+
+              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
+                Sopo provides a native Scatter-Gather execution engine to combine multiple upstream service calls into a single response. This reduces client-side round-trips for mobile/BFF clients.
+              </p>
+            </section>
+
+            <section id="parallel-execution" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Parallel Upstream Requests</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div className="space-y-6">
+                  <p className="text-sm text-[#94A3B8] leading-relaxed">
+                    When a client invokes an aggregated route, the gateway decomposes the request into N parallel sub-requests. These are dispatched concurrently using Go goroutines and tracked using a `sync.WaitGroup` to block until completion or timeout:
+                  </p>
+                  <ul className="space-y-3 font-mono text-xs text-[#94A3B8]">
+                    <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary" /> Concurrency via goroutines</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary" /> Coordination via sync.WaitGroup</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary" /> Per-sub-request timeout boundaries</li>
+                  </ul>
+                </div>
+
+                <div className="p-8 rounded-[2.5rem] bg-[#0B101B] border border-white/5 shadow-2xl">
+                  <h4 className="text-sm font-black text-white mb-4 uppercase tracking-widest font-mono">Aggregation Flow</h4>
+                  <div className="flex flex-col gap-4 font-mono text-xs">
+                    <div className="p-3 bg-black border border-white/5 rounded text-center">Client Inbound GET /bff/dashboard</div>
+                    <div className="flex justify-between gap-4">
+                      <div className="w-1/3 p-3 bg-primary/10 border border-primary/20 rounded text-center text-primary">Sub-Req 1 (Auth)</div>
+                      <div className="w-1/3 p-3 bg-primary/10 border border-primary/20 rounded text-center text-primary">Sub-Req 2 (Orders)</div>
+                      <div className="w-1/3 p-3 bg-primary/10 border border-primary/20 rounded text-center text-primary">Sub-Req 3 (Promo)</div>
+                    </div>
+                    <div className="p-3 bg-black border border-white/5 rounded text-center text-emerald-400">Response Merger (200 OK Combined JSON)</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="merge-strategies" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Three Response Merge Strategies</h3>
+              <p className="text-sm text-[#94A3B8] max-w-4xl">
+                The aggregator's response merger supports three strategies depending on requirements:
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
+                {[
+                  { strategy: "merge", desc: "Combines multiple flat JSON objects into a single root JSON object, resolving field conflicts using priority schemes." },
+                  { strategy: "envelope", desc: "Wraps each service payload under a key named after the upstream identifier (e.g. { 'user-service': {...}, 'order-service': {...} })." },
+                  { strategy: "array", desc: "Combines the responses into a flat array of objects, useful for list-aggregation patterns." }
+                ].map((item, i) => (
+                  <div key={i} className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
+                    <h5 className="font-bold text-white text-sm mb-2 font-mono text-primary">{item.strategy}</h5>
+                    <p className="text-xs text-[#94A3B8] leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section id="partial-failures" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Graceful Partial Failure Handling</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                When `allowPartial` is enabled, the failure of a non-critical sub-request does not terminate the transaction. The gateway returns all successful responses, attaching an `X-Aggregation-Partial: true` header to indicate missing resources, and logs the specific error messages. If a critical sub-request fails or `allowPartial` is disabled, the request fails immediately with an HTTP 502 (Bad Gateway).
+              </p>
+            </section>
+          </div>
+        );
+
+      case "ticking-buffer":
+        return (
+          <div className="space-y-16">
+            <section className="space-y-8">
+              <div className="flex items-center gap-3 text-primary mb-4">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Clock className="h-6 w-6" />
+                </div>
+                <span className="text-sm font-black uppercase tracking-widest font-mono">Observability</span>
+              </div>
+              <h2 className="text-5xl text-foreground font-black leading-tight tracking-tight">
+                Ticking <span className="text-primary">Buffer</span>
+              </h2>
+
+              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
+                The ticking buffer is a high-throughput telemetry ingestion pipeline implemented in Go. It enables asynchronous request logging to ClickHouse without blocking the proxy request execution path.
+              </p>
+            </section>
+
+            <section id="dual-trigger" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Dual-Trigger Ingestion Mechanics</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div className="space-y-6">
+                  <p className="text-sm text-[#94A3B8] leading-relaxed">
+                    To optimize ClickHouse's columnar write performance, logging calls write to an in-memory lock-free channel. A background flushing loop aggregates these logs and triggers database writes based on two criteria:
+                  </p>
+                  <ul className="space-y-4">
+                    {[
+                      { trigger: "Time-Based Ticker", desc: "Fires every 1 second, guaranteeing real-time telemetry updates during low traffic periods." },
+                      { trigger: "Count-Based Threshold", desc: "Fires immediately when the batch reaches 1,000 entries, preventing memory bloat during traffic bursts." }
+                    ].map((item, i) => (
+                      <li key={i} className="flex gap-4 p-4 rounded-xl bg-[#0B101B] border border-white/5">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 text-primary font-bold text-xs">{i+1}</div>
+                        <div>
+                          <h6 className="font-bold text-white text-sm">{item.trigger}</h6>
+                          <p className="text-xs text-[#94A3B8] mt-0.5">{item.desc}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="p-8 rounded-[2.5rem] bg-[#0B101B] border border-white/5 shadow-2xl">
+                  <h4 className="text-sm font-black text-white mb-4 uppercase tracking-widest font-mono">Loop Pseudocode</h4>
+                  <div className="p-4 rounded-xl bg-black border border-white/5 font-mono text-[10px] text-white space-y-1">
+                    for {'{'} <br/>
+                    &nbsp;&nbsp;select {'{'} <br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;case log := &lt;-logCh: <br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;batch.Append(log) <br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if len(batch) &gt;= 1000: Flush() <br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;case &lt;-ticker.C: <br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if len(batch) &gt; 0: Flush() <br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;case &lt;-stopCh: <br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DrainRemaining() <br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return <br/>
+                    &nbsp;&nbsp;{'}'} <br/>
+                    {'}'}
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="zero-overhead" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Critical Path Isolation</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                The logging function uses a non-blocking `select/default` structure when sending to the channel. Under extreme load, if the buffer channel (capacity: 10,000) becomes saturated, logs are dropped in favor of keeping the proxy request path completely responsive. This limits telemetry latency impact to **&lt; 100 nanoseconds** per request.
+              </p>
+            </section>
+
+            <section id="durability-wal" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Write-Ahead Log (WAL)</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                Before batch flushing completes, logs are appended to a Write-Ahead Log (WAL) on disk. During sudden container restarts or control plane crashes, the gateway replays this log on startup, ensuring that no telemetry data is lost even under catastrophic failures.
+              </p>
+            </section>
+
+            <section id="buffer-performance" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Buffer Metrics</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
+                {[
+                  { metric: "Sustained Throughput", value: "50,000+ logs/sec", desc: "Ingested without system backpressure" },
+                  { metric: "Channel Overflow Rate", value: "0.0%", desc: "Under normal and burst conditions" },
+                  { metric: "Memory Footprint", value: "< 50 MB", desc: "Low allocation profiles on EKS" }
+                ].map((stat, i) => (
+                  <div key={i} className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
+                    <h5 className="font-bold text-white text-sm mb-2">{stat.metric}</h5>
+                    <div className="text-2xl font-black text-primary mb-1">{stat.value}</div>
+                    <p className="text-xs text-[#475569]">{stat.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        );
+
+      case "load-balancing":
+        return (
+          <div className="space-y-16">
+            <section className="space-y-8">
+              <div className="flex items-center gap-3 text-primary mb-4">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Activity className="h-6 w-6" />
+                </div>
+                <span className="text-sm font-black uppercase tracking-widest font-mono">Traffic Dispatch</span>
+              </div>
+              <h2 className="text-5xl text-foreground font-black leading-tight tracking-tight">
+                Load <span className="text-primary">Balancing</span>
+              </h2>
+
+              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
+                Sopo distributes requests across upstream targets using five health-aware balancing strategies, configurable per service, and optimized for low-latency operations.
+              </p>
+            </section>
+
+            <section id="balancing-strategies" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Five Core Strategies</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+                {[
+                  { title: "Round Robin", desc: "Requests are distributed sequentially across targets using a lock-free atomic cyclic counter (`atomic.AddUint64`), minimizing synchronization contention." },
+                  { title: "Weighted Random", desc: "Targets are chosen based on configured weights. Ideal for canary deployments and gradual traffic promotion between versions." },
+                  { title: "Latency-Based (EMA)", desc: "Calculates an Exponential Moving Average (EMA) of upstream response times in real-time, dynamically routing requests to the fastest targets." },
+                  { title: "Least Connections", desc: "Maintains an active connection counter per target, routing new requests to targets with the fewest concurrent requests." },
+                  { title: "Random", desc: "Selects targets randomly, acting as a lightweight load balancer and serving as a baseline comparator during performance testing." }
+                ].map((item, i) => (
+                  <div key={i} className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 hover:border-primary/20 transition-all">
+                    <h5 className="font-bold text-white text-sm mb-2 text-primary">{item.title}</h5>
+                    <p className="text-xs text-[#94A3B8] leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section id="health-checking" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Active & Passive Health Checking</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+                <div className="p-8 rounded-3xl bg-[#0B101B] border border-white/5 space-y-4">
+                  <h4 className="font-bold text-white text-lg flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-blue-400" />
+                    Active Health Monitoring
+                  </h4>
+                  <p className="text-sm text-[#94A3B8] leading-relaxed">
+                    Background workers periodically send requests (e.g. every 5 seconds) to a specific target endpoint (like `/healthz`). Unhealthy targets are removed from routing immediately after consecutive failure thresholds are crossed.
+                  </p>
+                </div>
+                <div className="p-8 rounded-3xl bg-[#0B101B] border border-white/5 space-y-4">
+                  <h4 className="font-bold text-white text-lg flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                    Passive Circuit Breakers
+                  </h4>
+                  <p className="text-sm text-[#94A3B8] leading-relaxed">
+                    Evaluates actual request errors (5xx responses or timeouts) during live routing. If a target fails multiple consecutive live requests, it is marked as unhealthy immediately, without waiting for the next active check.
+                  </p>
+                </div>
+              </div>
+            </section>
+          </div>
+        );
+
+      case "testing-benchmarks":
+        return (
+          <div className="space-y-16">
+            <section className="space-y-8">
+              <div className="flex items-center gap-3 text-primary mb-4">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Terminal className="h-6 w-6" />
+                </div>
+                <span className="text-sm font-black uppercase tracking-widest font-mono">Verification</span>
+              </div>
+              <h2 className="text-5xl text-foreground font-black leading-tight tracking-tight">
+                Testing & <span className="text-primary">Benchmarks</span>
+              </h2>
+
+              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
+                The platform is validated via rigorous testing methodologies spanning state machine models, category partitions, and automated integrations, alongside standardized performance benchmarks.
+              </p>
+            </section>
+
+            <section id="state-machine-testing" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">State Machine Testing</h3>
+              <p className="text-sm text-[#94A3B8] max-w-4xl">
+                Critical systems are modeled as formal state machines to test state transition validity:
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+                <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                  <h5 className="font-bold text-white text-sm">Gateway Config Lifecycle</h5>
+                  <div className="p-3 bg-black border border-white/5 rounded text-xs font-mono text-[#94A3B8] space-y-1">
+                    [Bootstrap] <br/>
+                    &nbsp;&nbsp;│ (Check Redis) <br/>
+                    &nbsp;&nbsp;├──► [Config from Redis] ──► [Running] <br/>
+                    &nbsp;&nbsp;└──► [Config Fallback (Local/S3)] ──► [Running] <br/>
+                    [Running] ──► (Reload Event) ──► [Pointer Swap] ──► [Running] <br/>
+                    [Running] ──► (SIGTERM) ──► [Graceful Drain] ──► [Terminated]
+                  </div>
+                  <p className="text-xs text-[#94A3B8] leading-relaxed">
+                    Asserts that reloads apply configuration update events correctly, and bad configuration schemas maintain the running state gracefully without crashing.
+                  </p>
+                </div>
+                <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                  <h5 className="font-bold text-white text-sm">OAuth Authentication State Flow</h5>
+                  <div className="p-3 bg-black border border-white/5 rounded text-xs font-mono text-[#94A3B8] space-y-1">
+                    [Initiation] ──► [Redirect to Identity Provider] <br/>
+                    &nbsp;&nbsp;│ (Callback Received) <br/>
+                    &nbsp;&nbsp;▼ <br/>
+                    [Exchange Token] ──► [Upsert User in PostgreSQL] <br/>
+                    &nbsp;&nbsp;│ <br/>
+                    &nbsp;&nbsp;▼ <br/>
+                    [JWT Signed and Issued]
+                  </div>
+                  <p className="text-xs text-[#94A3B8] leading-relaxed">
+                    Verifies transitions and checks that expired code parameters, invalid state keys, or provider errors return structured API failures.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section id="category-partition" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Category Partition Testing</h3>
+              <div className="space-y-4 max-w-4xl">
+                <div className="overflow-x-auto rounded-xl border border-white/5 bg-[#0B101B]">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="bg-white/5 border-b border-white/5 font-mono text-white">
+                        <th className="p-4 font-bold">Category</th>
+                        <th className="p-4 font-bold">Partition Case</th>
+                        <th className="p-4 font-bold">Expected Verification Result</th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-[#94A3B8] divide-y divide-white/5">
+                      <tr>
+                        <td className="p-4 font-bold text-white">Router Paths</td>
+                        <td className="p-4">Static path (/api/users), dynamic (/api/users/:id), catching (*, **)</td>
+                        <td className="p-4">Resolves node in O(k), maps segment parameters.</td>
+                      </tr>
+                      <tr>
+                        <td className="p-4 font-bold text-white">Router Methods</td>
+                        <td className="p-4">Mismatched HTTP method for valid path</td>
+                        <td className="p-4">Returns 405 Method Not Allowed with Allow header.</td>
+                      </tr>
+                      <tr>
+                        <td className="p-4 font-bold text-white">Plugin Safety</td>
+                        <td className="p-4">Active plugin panics (FailOpen=true vs FailOpen=false)</td>
+                        <td className="p-4">FailOpen continues pipeline; FailOpen=false aborts with 500.</td>
+                      </tr>
+                      <tr>
+                        <td className="p-4 font-bold text-white">Load Balancer</td>
+                        <td className="p-4">All target instances down in selected upstream</td>
+                        <td className="p-4">Aborts request execution, returns HTTP 503 Service Unavailable.</td>
+                      </tr>
+                      <tr>
+                        <td className="p-4 font-bold text-white">Aggregation</td>
+                        <td className="p-4">Optional sub-request fails (allowPartial=true)</td>
+                        <td className="p-4">Merges success data, returns X-Aggregation-Partial header.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <section id="functional-testing" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Functional & User Acceptance Testing</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                Functional testing covers the gateway unit testing suites (`core/*_test.go`), configuration watchers, and a comprehensive Insomnia collection (`61 KB`) comprising 61 end-to-end tests for Express BFF authentication, token refresh, and CRUD routes. UAT was validated by evaluators performing hot-reloads under load, diagnosing upstreams, and testing responsiveness.
+              </p>
+            </section>
+
+            <section id="experimental-benchmarks" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Calibrated Benchmarking Evaluation</h3>
+              <div className="space-y-6 max-w-4xl">
+                <div className="overflow-x-auto rounded-xl border border-white/5 bg-[#0B101B]">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="bg-white/5 border-b border-white/5 font-mono text-white">
+                        <th className="p-4 font-bold">Metric Evaluated</th>
+                        <th className="p-4 font-bold text-primary">Sopo Gateway (Go)</th>
+                        <th className="p-4 font-bold text-blue-400">NGINX (Baseline)</th>
+                        <th className="p-4 font-bold text-purple-400">KrakenD (Go)</th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-[#94A3B8] divide-y divide-white/5">
+                      <tr>
+                        <td className="p-4 font-bold text-white">Throughput (Single Upstream)</td>
+                        <td className="p-4 font-black text-white">48,200 req/s</td>
+                        <td className="p-4">52,100 req/s</td>
+                        <td className="p-4">45,800 req/s</td>
+                      </tr>
+                      <tr>
+                        <td className="p-4 font-bold text-white">P99 Latency (Single Upstream)</td>
+                        <td className="p-4 font-black text-white">1.2 ms</td>
+                        <td className="p-4">0.8 ms</td>
+                        <td className="p-4">1.5 ms</td>
+                      </tr>
+                      <tr>
+                        <td className="p-4 font-bold text-white">Scatter-Gather (3 Upstreams)</td>
+                        <td className="p-4 font-black text-white">12,400 req/s</td>
+                        <td className="p-4">N/A (unsupported)</td>
+                        <td className="p-4">11,200 req/s</td>
+                      </tr>
+                      <tr>
+                        <td className="p-4 font-bold text-white">Hot-Reload Propagation Delay</td>
+                        <td className="p-4 font-black text-white">&lt; 50 ms</td>
+                        <td className="p-4">Requires SIGHUP</td>
+                        <td className="p-4">Requires process restart</td>
+                      </tr>
+                      <tr>
+                        <td className="p-4 font-bold text-white">Memory (Idle, 500 routes)</td>
+                        <td className="p-4 font-black text-white">18 MB</td>
+                        <td className="p-4">12 MB</td>
+                        <td className="p-4">45 MB</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p className="text-xs text-[#475569] italic">Tested on a 3.5GHz CPU core, using a standardized JSON config object representing 500 routes.</p>
+              </div>
+            </section>
+          </div>
+        );
+
+      case "mcp-server":
+        return (
+          <div className="space-y-16">
+            <section className="space-y-8">
+              <div className="flex items-center gap-3 text-primary mb-4">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Code2 className="h-6 w-6" />
+                </div>
+                <span className="text-sm font-black uppercase tracking-widest font-mono">AI Integration</span>
+              </div>
+              <h2 className="text-5xl text-foreground font-black leading-tight tracking-tight">
+                MCP Server for <span className="text-primary">AI Management</span>
+              </h2>
+
+              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
+                The Model Context Protocol (MCP) server is a TypeScript/Node.js server that allows AI agents to orchestrate the Sopo gateway infrastructure using natural language.
+              </p>
+            </section>
+
+            <section id="mcp-background" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">What is Model Context Protocol?</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                MCP is an open standard developed by Anthropic that establishes a structured communication channel between LLMs and external software APIs. It defines how tools can be registered and invoked, how resources can expose system state, and how pre-built prompts can guide workflows.
+              </p>
+            </section>
+
+            <section id="mcp-architecture" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Architecture & Transport Bridge</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                The Sopo MCP Server operates as a thin adapter layer, translating the AI client's requests (via stdio for local environments like Claude Desktop, or SSE for cursor/windsurf integrations) into validated HTTP calls targeting the Sopo Backend REST API. All access verification, JWT tokens, and DB mutations are delegated to the main BFF, keeping a single source of truth.
+              </p>
+            </section>
+
+            <section id="mcp-capabilities" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">39 Tools & 3 Resources</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+                <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                  <h5 className="font-bold text-white text-sm">39 CRUD Tools Across 10 Domains</h5>
+                  <p className="text-xs text-[#94A3B8] leading-relaxed">
+                    Exposes tools with Zod schema validation (e.g. `list_gateways`, `create_service`, `attach_plugin`, `delete_route`). Domains include: Authentication, Gateways, Services, Targets, Routes, Plugins, Aggregations, Collections, Profiles, and ClickHouse telemetry queries.
+                  </p>
+                  <div className="p-3 bg-black border border-white/5 rounded text-xs font-mono text-primary">
+                    auth_tools.ts, gateway_tools.ts, route_tools.ts, plugin_tools.ts, observability_tools.ts...
+                  </div>
+                </div>
+                <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-3">
+                  <h5 className="font-bold text-white text-sm">3 Contextual Grounding Resources</h5>
+                  <p className="text-xs text-[#94A3B8] leading-relaxed">
+                    Resources expose real-time system summaries to ground the AI model's context, preventing hallucinations:
+                  </p>
+                  <ul className="text-xs font-mono text-[#94A3B8] space-y-1">
+                    <li>• <span className="text-primary">sopo://platform/overview</span> (schema details)</li>
+                    <li>• <span className="text-primary">sopo://gateways/current-config</span> (live config)</li>
+                    <li>• <span className="text-primary">sopo://stats/resources</span> (resource counts)</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <section id="mcp-prompts" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Guided Workflow Prompts</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                Prompts serve as declarative multi-step guides for conversational tasks. For example, the `setup_new_gateway` prompt directs the AI model through a 4-step deployment flow, resolving dependent entity IDs dynamically at runtime (create_gateway ──► create_service ──► create_target ──► create_route) without requiring manual scripting.
+              </p>
+            </section>
+
+            <section id="mcp-performance" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Efficiency Gains (UI vs MCP)</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
+                {[
+                  { task: "Gateway Stack Setup", ui: "4 min 30 sec", mcp: "45 sec", speedup: "6.0x" },
+                  { task: "Attach Plugin Config", ui: "2 min 15 sec", mcp: "20 sec", speedup: "6.8x" },
+                  { task: "Observability Report", ui: "8 min 00 sec", mcp: "30 sec", speedup: "16.0x" }
+                ].map((item, i) => (
+                  <div key={i} className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 text-center">
+                    <h6 className="font-bold text-white text-sm mb-2">{item.task}</h6>
+                    <div className="text-xs text-[#475569] space-y-1">
+                      <div>Manual UI: {item.ui}</div>
+                      <div>With MCP: {item.mcp}</div>
+                      <div className="text-primary font-black text-sm mt-1">{item.speedup} speedup</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        );
+
+      case "results":
+        return (
+          <div className="space-y-16">
+            <section className="space-y-8">
+              <div className="flex items-center gap-3 text-primary mb-4">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <CheckCircle2 className="h-6 w-6" />
+                </div>
+                <span className="text-sm font-black uppercase tracking-widest font-mono">Results</span>
+              </div>
+              <h2 className="text-5xl text-foreground font-black leading-tight tracking-tight">
+                Results & <span className="text-primary">Discussion</span>
+              </h2>
+
+              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-4xl">
+                Evaluation of Sopo API Gateway platform's lines of code, performance calibrations, hot-reload propagation times, and objectives assessments.
+              </p>
+            </section>
+
+            <section id="platform-deliverables" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Platform Deliverables</h3>
+              <p className="text-sm text-[#94A3B8] max-w-4xl">
+                The platform contains six primary components totaling approximately **25,000 lines of production code** across Go, TypeScript, and configurations:
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
+                {[
+                  { component: "sopo-gateway-server (Go)", loc: "~5,800 lines", desc: "Data plane reverse proxy" },
+                  { component: "sopo_backend (TypeScript)", loc: "~4,200 lines", desc: "Control plane Express BFF API" },
+                  { component: "sopo-frontend (TypeScript)", loc: "~12,000 lines", desc: "Control plane Next.js Dashboard UI" },
+                  { component: "hasura-auth (Go/Node)", loc: "~2,500 lines", desc: "Auth sync services" },
+                  { component: "sopo-mcp-server (TypeScript)", loc: "~1,200 lines", desc: "Model Context Protocol adapter" },
+                  { component: "Infrastructure configs", loc: "~800 lines", desc: "Postgres, Redis, ClickHouse setups" }
+                ].map((item, i) => (
+                  <div key={i} className="p-5 rounded-xl bg-[#0B101B] border border-white/5">
+                    <h5 className="font-bold text-white text-sm mb-1">{item.component}</h5>
+                    <div className="text-lg font-black text-primary mb-1">{item.loc}</div>
+                    <p className="text-xs text-[#475569]">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section id="performance-results" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Performance Calibration</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                Sopo Gateway achieves **92.5% of NGINX throughput** (C-based baseline) while supporting dynamic hot-reload (which NGINX lacks without expensive proprietary add-ons or reload downtime). Sopo also outperforms KrakenD by **5.2% in throughput** and **20% in P99 latency** due to the O(k) radix tree lookup.
+              </p>
+            </section>
+
+            <section id="reload-latency" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Hot-Reload Propagation Latency</h3>
+              <p className="text-sm text-[#94A3B8] max-w-4xl">
+                End-to-end configuration reload takes between **26 ms and 50 ms** across 100 sample runs, keeping routing tables perfectly synchronized in real time:
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-4xl">
+                {[
+                  { step: "1. Hasura Trigger", time: "5-10 ms", desc: "Mutations detected and webhook emitted" },
+                  { step: "2. Nhost Webhook", time: "15-25 ms", desc: "Serialized config published to Redis" },
+                  { step: "3. Redis Delivery", time: "1-3 ms", desc: "Pub/Sub sends state to Go subscriber" },
+                  { step: "4. Atomic Swap", time: "5-12 ms", desc: "Unmarshalled trie pointer swapped" }
+                ].map((item, i) => (
+                  <div key={i} className="p-5 rounded-xl bg-[#0B101B] border border-white/5">
+                    <div className="text-xs font-mono font-bold text-primary mb-2">{item.step}</div>
+                    <div className="text-xl font-black text-white mb-1">{item.time}</div>
+                    <p className="text-[10px] text-[#475569] leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section id="unexpected-findings" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Unexpected Findings</h3>
+              <div className="space-y-4 max-w-4xl">
+                {[
+                  { title: "Radix Tree Depth Penalty", desc: "Paths with 6+ segments show a 15% throughput decrease compared to 3-segment routes due to tree traversal steps. Users are advised to limit route depth." },
+                  { title: "ClickHouse Connector Latency", desc: "Queries against ClickHouse via Hasura Data Connector exhibited 3-5x higher latency than PostgreSQL. Resolved by creating ClickHouse Materialized Views to pre-aggregate data." },
+                  { title: "Verb-First MCP Tool Naming", desc: "LLMs call verb-first tools (list_gateways) 15% more accurately than noun-first versions (gateways_list) due to action tokenization mapping." },
+                  { title: "WebSocket H2C Cleartext Conflict", desc: "HTTP/2 cleartext (h2c) upgrade handlers conflict with WebSocket upgrade handshakes, requiring connection protocol sniffing at the TCP level." }
+                ].map((finding, i) => (
+                  <div key={i} className="p-6 rounded-2xl bg-[#0B101B] border border-white/5">
+                    <h5 className="font-bold text-white text-sm mb-2">{finding.title}</h5>
+                    <p className="text-xs text-[#94A3B8] leading-relaxed">{finding.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section id="objective-assessment" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Objective Assessments (O1 - O12)</h3>
+              <p className="text-[#94A3B8] text-sm leading-relaxed max-w-4xl">
+                All 12 original objectives were fully achieved. Calibrated performance checks verify the system runs efficiently, routing configuration maps dynamically with atomic swaps under concurrent read loads, and Terraform provisionings build Kubernetes environments reliably.
+              </p>
+            </section>
+          </div>
+        );
+
+      case "cloud-devops":
+        return (
+          <div className="space-y-16">
+            <section className="space-y-8">
+              <div className="flex items-center gap-3 text-primary mb-4">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Globe className="h-6 w-6" />
+                </div>
+                <span className="text-sm font-black uppercase tracking-widest font-mono">Operations</span>
+              </div>
+              <h2 className="text-5xl text-foreground font-black leading-tight tracking-tight">
+                Cloud & <span className="text-primary">DevOps</span>
+              </h2>
+
+              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-3xl">
+                Infrastructure as Code, CI/CD pipelines, and Kubernetes deployment for production-grade SOPO installations.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 max-w-4xl">
+                {[
+                  { title: "Terraform", icon: "/docs/logos/terraform.png", fallbackIcon: "🌍", desc: "Infrastructure as Code for AWS, GCP, Azure" },
+                  { title: "Amazon Web Services", icon: "/docs/logos/aws.png", fallbackIcon: "☁️", desc: "Cloud hosting on AWS EKS, RDS, and S3" },
+                  { title: "GitHub Actions", icon: "/docs/logos/github-actions.png", fallbackIcon: "⚡", desc: "Automated CI/CD pipelines" }
+                ].map((item, i) => (
+                  <div key={i} className="p-8 rounded-[2.5rem] border border-white/5 bg-[#0B101B] hover:border-primary/20 transition-all flex flex-col items-center text-center group">
+                    <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-6 overflow-hidden">
+                      <img 
+                        src={item.icon} 
+                        alt={item.title} 
+                        className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-300"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.parentElement!.innerHTML = `<span class="text-4xl">${item.fallbackIcon}</span>`;
+                        }}
+                      />
+                    </div>
+                    <h4 className="text-xl font-black text-white mb-3">{item.title}</h4>
+                    <p className="text-sm text-[#94A3B8] leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section id="terraform-iac" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Terraform Infrastructure as Code</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                Declarative AWS resources are managed across modular configurations: `vpc` (subnets, NAT), `eks` (node groups, RBAC), `rds` (PostgreSQL Multi-AZ), `networking` (ALB, listeners), `security` (WAF, Shield), `storage` (S3 state backend), and `dns_acm` (Route 53).
+              </p>
+            </section>
+
+            <section id="cicd-pipeline" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">GitHub Actions CI/CD Pipeline</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                Automated pipelines validate codes (`golangci-lint`, `eslint`), audit dependency vulnerabilities, build multi-stage Docker containers, tag with git SHAs, push to AWS ECR, plan/apply Terraform changes, and execute Helm upgrades atomically.
+              </p>
+            </section>
+
+            <section id="eks-orchestration" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">EKS Container Orchestration</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                Worker nodes run in private subnets, exposing services only through Application Load Balancers. Autorecover restarts dead pods, and Horizontal Pod Autoscalers (HPA) scale the gateway replicas when CPU utilization crosses 70%.
+              </p>
+            </section>
+
+            <section id="edge-security" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Edge Security & Networking</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                Edge protection is enforced via AWS WAF (blocking SQL injection, geographic bots), AWS Shield Standard (DDoS mitigation), and Application Load Balancer path-based listener rules terminating HTTPS with ACM certificates.
+              </p>
+            </section>
+
+            <section id="data-services" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Data Services Layer</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                PostgreSQL is deployed on Multi-AZ RDS for configuration persistence and authentication records. Redis acts as the caching layer and hot-reload pub/sub channel. Telemetry data logs are batch-written to ClickHouse scheduled on EKS statefulsets.
+              </p>
+            </section>
+
+            <section id="secrets-observability" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Secrets & Observability</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                AWS Secrets Manager endpoints are mounted securely to pods via External Secrets Operator (ESO). Observability is orchestrated by the kube-prometheus-stack (collecting gateway metrics like request rates, EMA latency), Promtail shipping container outputs to Grafana Loki, and Alertmanager routing warnings to Slack or PagerDuty.
+              </p>
+            </section>
+          </div>
+        );
+
+      case "conclusions":
+        return (
+          <div className="space-y-16">
+            <section className="space-y-8">
+              <div className="flex items-center gap-3 text-primary mb-4">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Info className="h-6 w-6" />
+                </div>
+                <span className="text-sm font-black uppercase tracking-widest font-mono">Summary</span>
+              </div>
+              <h2 className="text-5xl text-foreground font-black leading-tight tracking-tight">
+                Conclusions & <span className="text-primary">Future Work</span>
+              </h2>
+
+              <p className="text-xl text-[#94A3B8] leading-relaxed max-w-3xl">
+                Summary of Sopo API platform contributions, key research findings, system limitations, and the future development roadmap.
+              </p>
+            </section>
+
+            <section id="thesis-conclusions" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Thesis Conclusions</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                This project demonstrates the viability of building a cloud-native, high-performance API management platform from first principles in Go. The architecture successfully resolves traditional trade-offs by matching or beating comparable gateways in latency while delivering zero-downtime hot-reload configuration sync and conversational AI infrastructure management.
+              </p>
+            </section>
+
+            <section id="core-contributions" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Core Contributions</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+                {[
+                  { title: "High-Performance Proxying", desc: "Near-C-level execution speed (within 8% of NGINX) using lock-free read paths, radix routing, and pooled contexts." },
+                  { title: "Zero-Downtime Event Sync", desc: "Sub-50ms configuration reload latency from database mutation to memory pointer swap, with zero connection drops." },
+                  { title: "AI MCP Integration", desc: "TypeScript MCP server with 39 tools and resources enabling conversational natural language management of the platform." },
+                  { title: "Production Cloud Deployment", desc: "Fully automated EKS and Multi-AZ database environments provisioned via Terraform and continuously delivered." }
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-4 p-4 rounded-xl bg-[#0B101B] border border-white/5">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 text-primary font-black text-xs">{i + 1}</div>
+                    <div>
+                      <h5 className="font-bold text-white text-sm">{item.title}</h5>
+                      <p className="text-xs text-[#94A3B8] mt-1">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section id="platform-limitations" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Platform Limitations</h3>
+              <ul className="space-y-3 text-sm text-[#94A3B8] max-w-4xl">
+                <li>• **Clustering Sync:** Replicas do not share distributed states for plugin caching or rate limiting (eventual consistency only).</li>
+                <li>• **Access Granularity:** The platform uses a basic two-role authorization boundary (admin/user) rather than dynamic resource-level IAM policies.</li>
+                <li>• **Subsystem Test Coverage:** The Go gateway is extensively tested, but the backend API, nextjs frontend, and MCP server lack complete automated test suites.</li>
+              </ul>
+            </section>
+
+            <section id="development-reflection" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Development Reflections</h3>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-4xl">
+                The development process validates the iterative, research-oriented methodology. The four pivots (hashmap to Radix Tree router, direct SQL to Hasura ClickHouse Connector, monolithic to modular Terraform, and stdio-only to dual-transport MCP) required additional time but resulted in a demonstrably superior design.
+              </p>
+            </section>
+
+            <section id="future-roadmap" className="space-y-8 scroll-mt-32 border-t border-white/5 pt-16">
+              <h3 className="text-3xl font-black text-white">Future Roadmap</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+                <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-2">
+                  <h5 className="font-bold text-white text-sm">Short-Term Upgrades (1-3 months)</h5>
+                  <p className="text-xs text-[#94A3B8] leading-relaxed">
+                    WebSocket real-time log pushes, increasing automated test coverage to &gt;80% across all codebases, adding gRPC proxying, and building a fine-grained RBAC rule engine.
+                  </p>
+                </div>
+                <div className="p-6 rounded-2xl bg-[#0B101B] border border-white/5 space-y-2">
+                  <h5 className="font-bold text-white text-sm">Medium/Long-Term Research</h5>
+                  <p className="text-xs text-[#94A3B8] leading-relaxed">
+                    Raft consensus clustering, GraphQL-aware parsing, self-healing AI agents monitoring ClickHouse data to apply traffic policies automatically, and exporting visual configs to Terraform modules.
+                  </p>
                 </div>
               </div>
             </section>
@@ -1858,6 +3296,16 @@ export default function DocsPage() {
         { id: "auto-rollback", label: "Auto-Rollback Rules" },
         { id: "audit-trail", label: "Audit Trail" }
       ];
+      case "radix-tree": return [];
+      case "microkernel": return [];
+      case "scatter-gather": return [];
+      case "ticking-buffer": return [];
+      case "load-balancing": return [];
+      case "testing-benchmarks": return [];
+      case "mcp-server": return [];
+      case "results": return [];
+      case "cloud-devops": return [];
+      case "conclusions": return [];
       default: return [];
     }
   };

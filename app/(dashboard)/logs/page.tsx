@@ -1,22 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
-import { ScrollText, Search, Filter, RefreshCw, ChevronDown, AlertCircle, CheckCircle2, Clock, Globe, ArrowRight } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { ScrollText, Search, RefreshCw, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-// Mock log entries
-const mockLogs = [
-  { id: '1', timestamp: '2026-05-13 13:45:21', method: 'GET', path: '/api/v1/users', status: 200, latency: '12ms', gateway: 'Main E-Commerce', ip: '192.168.1.45' },
-  { id: '2', timestamp: '2026-05-13 13:45:19', method: 'POST', path: '/api/v1/payments', status: 201, latency: '89ms', gateway: 'Main E-Commerce', ip: '10.0.0.12' },
-  { id: '3', timestamp: '2026-05-13 13:45:18', method: 'GET', path: '/api/v1/products', status: 200, latency: '23ms', gateway: 'Main E-Commerce', ip: '192.168.1.45' },
-  { id: '4', timestamp: '2026-05-13 13:45:15', method: 'GET', path: '/internal/health', status: 200, latency: '2ms', gateway: 'Internal Tools', ip: '127.0.0.1' },
-  { id: '5', timestamp: '2026-05-13 13:45:12', method: 'POST', path: '/api/v1/auth/login', status: 401, latency: '45ms', gateway: 'Main E-Commerce', ip: '203.0.113.50' },
-  { id: '6', timestamp: '2026-05-13 13:45:10', method: 'DELETE', path: '/api/v1/users/42', status: 403, latency: '8ms', gateway: 'Main E-Commerce', ip: '203.0.113.50' },
-  { id: '7', timestamp: '2026-05-13 13:45:08', method: 'GET', path: '/api/v1/orders', status: 500, latency: '1200ms', gateway: 'Main E-Commerce', ip: '10.0.0.12' },
-  { id: '8', timestamp: '2026-05-13 13:45:05', method: 'PUT', path: '/api/v1/users/15', status: 200, latency: '34ms', gateway: 'Main E-Commerce', ip: '192.168.1.100' },
-  { id: '9', timestamp: '2026-05-13 13:45:02', method: 'GET', path: '/api/v1/dashboard/stats', status: 200, latency: '156ms', gateway: 'Legacy API', ip: '10.0.0.45' },
-  { id: '10', timestamp: '2026-05-13 13:44:58', method: 'POST', path: '/api/v1/webhooks', status: 502, latency: '5000ms', gateway: 'Main E-Commerce', ip: '10.0.0.12' },
-];
+import { useLiveLogs } from '@/hooks/useLiveLogs';
 
 const getStatusColor = (status: number) => {
   if (status >= 500) return { bg: 'bg-red-500/10', text: 'text-red-400', border: 'border-red-500/20', dot: 'bg-red-500' };
@@ -38,22 +25,25 @@ const getMethodColor = (method: string) => {
 
 export default function LogsPage() {
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [isLive, setIsLive] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<'all' | '2xx' | '4xx' | '5xx'>('all');
 
-  const filteredLogs = mockLogs.filter(log => {
-    if (search && !log.path.toLowerCase().includes(search.toLowerCase()) && !log.gateway.toLowerCase().includes(search.toLowerCase())) return false;
-    if (statusFilter === '2xx' && (log.status < 200 || log.status >= 300)) return false;
-    if (statusFilter === '4xx' && (log.status < 400 || log.status >= 500)) return false;
-    if (statusFilter === '5xx' && log.status < 500) return false;
-    return true;
-  });
+  const { logs, isPaused, togglePause } = useLiveLogs();
+
+  const filteredLogs = useMemo(() => {
+    return logs.filter(log => {
+      if (search && !log.path.toLowerCase().includes(search.toLowerCase()) && !log.apiName.toLowerCase().includes(search.toLowerCase())) return false;
+      if (statusFilter === '2xx' && (log.statusCode < 200 || log.statusCode >= 300)) return false;
+      if (statusFilter === '4xx' && (log.statusCode < 400 || log.statusCode >= 500)) return false;
+      if (statusFilter === '5xx' && log.statusCode < 500) return false;
+      return true;
+    });
+  }, [logs, search, statusFilter]);
 
   // Stats
-  const total = mockLogs.length;
-  const success = mockLogs.filter(l => l.status >= 200 && l.status < 300).length;
-  const clientErr = mockLogs.filter(l => l.status >= 400 && l.status < 500).length;
-  const serverErr = mockLogs.filter(l => l.status >= 500).length;
+  const total = logs.length;
+  const success = logs.filter(l => l.statusCode >= 200 && l.statusCode < 300).length;
+  const clientErr = logs.filter(l => l.statusCode >= 400 && l.statusCode < 500).length;
+  const serverErr = logs.filter(l => l.statusCode >= 500).length;
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
@@ -68,16 +58,16 @@ export default function LogsPage() {
         </div>
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setIsLive(!isLive)}
+            onClick={togglePause}
             className={cn(
               "flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border",
-              isLive
+              !isPaused
                 ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                 : "bg-gray-800 text-gray-400 border-gray-700 hover:border-gray-600"
             )}
           >
-            <span className={cn("w-2 h-2 rounded-full", isLive ? "bg-emerald-400 animate-pulse" : "bg-gray-500")} />
-            {isLive ? "Live" : "Paused"}
+            <span className={cn("w-2 h-2 rounded-full", !isPaused ? "bg-emerald-400 animate-pulse" : "bg-gray-500")} />
+            {!isPaused ? "Live" : "Paused"}
           </button>
           <button className="p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-lg transition-colors border border-gray-800">
             <RefreshCw className="w-4 h-4" />
@@ -121,7 +111,7 @@ export default function LogsPage() {
           {['all', '2xx', '4xx', '5xx'].map((f) => (
             <button
               key={f}
-              onClick={() => setStatusFilter(f)}
+              onClick={() => setStatusFilter(f as any)}
               className={cn(
                 "px-3 py-1.5 rounded-md text-xs font-medium transition-colors",
                 statusFilter === f
@@ -146,7 +136,7 @@ export default function LogsPage() {
               <th className="px-5 py-3 font-medium">Status</th>
               <th className="px-5 py-3 font-medium">Latency</th>
               <th className="px-5 py-3 font-medium">Gateway</th>
-              <th className="px-5 py-3 font-medium">IP</th>
+              <th className="px-5 py-3 font-medium">Request ID</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-800/50">
@@ -159,16 +149,15 @@ export default function LogsPage() {
               </tr>
             ) : (
               filteredLogs.map((log) => {
-                const statusColor = getStatusColor(log.status);
-                const latencyMs = parseInt(log.latency);
-                const isSlowRequest = latencyMs > 1000;
+                const statusColor = getStatusColor(log.statusCode);
+                const isSlowRequest = log.latency > 1000;
 
                 return (
                   <tr key={log.id} className="hover:bg-gray-800/20 transition-colors group">
                     <td className="px-5 py-3">
                       <span className="text-[11px] font-mono text-gray-500 flex items-center gap-1.5">
                         <Clock className="w-3 h-3 text-gray-600" />
-                        {log.timestamp.split(' ')[1]}
+                        {log.timestamp.split('T')[1].split('.')[0]}
                       </span>
                     </td>
                     <td className="px-5 py-3">
@@ -182,19 +171,19 @@ export default function LogsPage() {
                     <td className="px-5 py-3">
                       <span className={cn("inline-flex items-center gap-1.5 text-[11px] font-bold px-2 py-0.5 rounded-md border", statusColor.bg, statusColor.text, statusColor.border)}>
                         <span className={cn("w-1.5 h-1.5 rounded-full", statusColor.dot)} />
-                        {log.status}
+                        {log.statusCode}
                       </span>
                     </td>
                     <td className="px-5 py-3">
                       <span className={cn("text-[11px] font-mono", isSlowRequest ? "text-red-400 font-bold" : "text-gray-400")}>
-                        {log.latency}
+                        {log.latency}ms
                       </span>
                     </td>
                     <td className="px-5 py-3">
-                      <span className="text-[11px] text-gray-500">{log.gateway}</span>
+                      <span className="text-[11px] text-gray-500">{log.apiName}</span>
                     </td>
                     <td className="px-5 py-3">
-                      <span className="text-[11px] font-mono text-gray-600">{log.ip}</span>
+                      <span className="text-[11px] font-mono text-gray-600">{log.requestId}</span>
                     </td>
                   </tr>
                 );
