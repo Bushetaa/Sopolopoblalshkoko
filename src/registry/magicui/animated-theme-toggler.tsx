@@ -1,5 +1,5 @@
 "use client";
-import { useTheme } from "@teispace/next-themes";
+import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import React from "react";

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, Sun, Moon, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@teispace/next-themes";
+import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 

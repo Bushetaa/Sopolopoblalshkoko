@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Hyperspeed } from "@/src/components/ui/hyperspeed";
 import { hyperspeedPresets } from "@/src/components/ui/hyperspeed-presets";
 import Link from "next/link";
-import { useTheme } from "@teispace/next-themes";
+import { useTheme } from "next-themes";
 import { useMemo } from "react";
 
 const HeroSection = () => {

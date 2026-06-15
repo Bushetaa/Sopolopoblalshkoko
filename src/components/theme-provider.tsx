@@ -1,5 +1,5 @@
 "use client";
-import { ThemeProvider as NextThemeProvider } from "@teispace/next-themes";
+import { ThemeProvider as NextThemeProvider } from "next-themes";
 import React from "react";
 
 export function ThemeProvider({
